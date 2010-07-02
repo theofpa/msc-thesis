@@ -1,0 +1,68 @@
+%%This is a very basic article template.
+%%There is just one section and two subsections.
+\documentclass[a4paper,12pt,oneside]{book}
+\usepackage[latin1]{inputenc}
+\usepackage[left=1in, right=1in]{geometry}
+\usepackage[font=footnotesize, center]{caption}	% Changes font size of figure captions to small
+\usepackage{tikz}
+\usepackage{fancyhdr}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage{nomencl}
+\usepackage{pslatex} % To have Times New Roman font
+
+\setcounter{tocdepth}{2}
+\renewcommand{\baselinestretch}{1.5}
+\setlength{\headheight}{15pt}
+%%\renewcommand{\chaptername}{}
+%%\renewcommand{\thechapter}{}
+%%\makenomenclature
+
+\begin{document}
+\title{Grid Monitoring}
+\author{Theofilos Papapanagiotou}
+\date{\today}
+\maketitle
+\frontmatter
+
+\tableofcontents
+%%\printnomenclature
+\clearpage
+\mainmatter
+\pagestyle{fancy}
+
+\chapter[Interim Report]{Interim Report}
+\section{Introduction}
+Develop an interface which allows the customisable aggregation and display and
+information on the performance of a computational grid.
+\section{Aims and Objectives}
+A clear statement of the Aims and Objectives. Remember, aim is a general statement of what
+is to be achieved, and objectives are the procedures used to achieve the aim of the project
+\section{Literature Review}
+This section should provide a more detailed review of the technical field, largely based upon
+survey material. This review is a quick preliminary survey, to discover something of the
+'shape' of the relevant field of information; in doing this you will identify key abstracts,
+journals, books, series of reports, and so on. Key technical issues will be summarised.
+\section[Experimental]{Experimental/investigative methods to be adopted}
+An outline of the key activities necessary to complete the project, itemising the experimental
+methods to be used (in, for example, a design-based project), or the investigative techniques to
+be adopted (in the case of, say, a critical survey).
+\section[Time plan]{Time-plan (Gantt Chart)}
+Strongly related to the key activities identified above.
+\begin{center}
+%\input {gantt}
+\end{center}
+\section[Deliverables]{Deliverables or specific outcomes}
+A clear statement of the expected outcome(s).
+ 
+\cite{Bonacorsi2004,Byrom,Byroma,gerndt2004performance,Hobson2007,Huang2007,li2005grid,Taylor2006,zanikolas2007importance}
+
+
+\backmatter
+
+\bibliographystyle{plain}
+\bibliography{books}
+
+\end{document}
