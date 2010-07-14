@@ -11,8 +11,7 @@
 \usepackage{graphics}
 \usepackage{graphicx}
 \usepackage{nomencl}
-\usepackage{pslatex} % To have Times New Roman font
-
+\usepackage{pslatex}
 \setcounter{tocdepth}{2}
 \renewcommand{\baselinestretch}{1.5}
 \setlength{\headheight}{15pt}
@@ -21,25 +20,12 @@
 %%\makenomenclature
 
 \begin{document}
-\title{Grid Monitoring}
-\author{Theofilos Papapanagiotou}
-\date{\today}
-\maketitle
+
 \frontmatter
-
-\tableofcontents
-%%\printnomenclature
-\clearpage
-
+\input{cover}
+\input{frontmatter}
 
 \mainmatter
-\pagestyle{fancy}
-\renewcommand{\headrulewidth}{1pt}
-\renewcommand{\footrulewidth}{1pt}
-\addtolength{\headheight}{0pt}
-\fancyfoot[LE]{\thepage}
-\fancyfoot[RO]{Theofylaktos Papa1panagiotou (0940199)}
-\addtolength{\textheight}{70pt}
 
 \chapter[Interim Report]{Interim Report}
 \input{chapters/interim_report}
