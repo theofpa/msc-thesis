@@ -23,12 +23,13 @@
 
 \frontmatter
 \input{cover}
+\input{chapters/declaration}
+
 \input{frontmatter}
 
 \mainmatter
 
-\chapter[Interim Report]{Interim Report}
-\input{chapters/interim_report}
+
 
 \chapter[Introduction]
 \input{chapters/introduction}
@@ -46,5 +47,14 @@
 
 \bibliographystyle{plain}
 \bibliography{books}
+\chapter[Management of the Project]{Interim Report}
+\label{appa}
+\lhead{Appendix A. \emph{Interim Report}}
+\input{chapters/interim_report}
+\chapter{Tables, Figures, Report}
+\label{appb}
+\lhead{Appendix B. \emph{Tables Figures, Report}}
+\input{chapters/tables}
+\input{chapters/mentor_report}
 
 \end{document}
