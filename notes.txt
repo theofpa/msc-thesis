@@ -1,0 +1,47 @@
+# get a list of production sites providing CE for Atlas
+/opt/lcg/bin/lcg-infosites --vo atlas ce --is prod-bdii.cern.ch
+
+# generate ssl request
+openssl req -new -nodes -out hostreq.pem -keyout hostkey.pem -config host.cnf
+
+-------------host.cnf--------------------------
+[ req ]
+default_bits           = 1024
+default_keyfile        = keyfile.pem
+distinguished_name     = req_distinguished_name
+attributes             = req_attributes
+prompt                 = no
+[ req_distinguished_name ]
+C                      = GR
+O                      = HellasGrid
+OU                     = oslab.teipir.gr
+CN                     = osweb.teipir.gr
+[ req_attributes ]
+challengePassword              = fl0......
+------------------------------------------------
+
+# backup directory for certificates
+/root/.certifs
+
+# svn installation of myegee
+svn co http://svnweb.cern.ch/guest/sam/trunk/myegee
+
+# check configuration for nagios installation
+/opt/glite/yaim/bin/yaim -v -s /root/yaim/site-info.def -n NAGIOS
+
+# atp, myegee, nagios database password
+grant all on atp.* to atp@'localhost' identified by 'ffh3u4t923u49i134r123r4';
+grant all on myegee.* to myegee@'localhost' identified by 'er@@e!w3';
+grant select,insert,update,delete on nagios.* to ndouser@localhost identified by 'gfeirt458tuj45t8ut4t89';
+GRANT ALL PRIVILEGES ON gstat.* TO 'gstat'@'localhost' IDENTIFIED BY 'gstat';
+
+# nagios commands.cfg for bdii checks
+http://www.sysadmin.hep.ac.uk/svn/grid-monitoring/tags/apps/gstat/R_0_0_17/config/bdii-commands.cfg
+
+# install gstat
+yum install gstat-web
+
+# list of bdiis
+lcg.bdii.cern.ch # CERN production
+gilda-bdii.ct.infn.it # Gilda testbed
+http://lcg-bdii-conf.cern.ch/bdii-conf/bdii.conf
