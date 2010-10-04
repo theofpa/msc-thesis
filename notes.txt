@@ -45,3 +45,22 @@ yum install gstat-web
 lcg.bdii.cern.ch # CERN production
 gilda-bdii.ct.infn.it # Gilda testbed
 http://lcg-bdii-conf.cern.ch/bdii-conf/bdii.conf
+
+# install gstat
+http://wiki.pscigrid.gov.ph/index.php/GStat
+/opt/glite/yaim/bin/yaim -c -s /opt/glite/yaim/etc/gstat-site-info.def -n GSTAT
+/etc/gstat/ref-bdii.conf
+/etc/gstat/gstat.ini
+/usr/bin/gstat-update
+configure-nagios
+
+# install atp
+yum install atp
+/etc/atp/atp_db.conf
+mysql_upgrade -u root -p
+/usr/share/doc/atp-1.14.3/mysql_schema/ver_1_4/CREATE_ATP_SCHEMA.txt
+atp_synchro -c /etc/atp/atp_synchro.conf -d /etc/atp/atp_db.conf -l /etc/atp/atp_logging_files.conf
+
+
+# skaei
+[root@osweb hosts]# /opt/glite/yaim/bin/yaim -s /root/yaim/site-info.def -c -n NAGIOS
