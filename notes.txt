@@ -1,7 +1,10 @@
+# to dn tou pistopoihtikou mou
+/C=GR/O=HellasGrid/OU=teipir.gr/CN=Theofylaktos Papapanagiotou
+
 # get a list of production sites providing CE for Atlas
 /opt/lcg/bin/lcg-infosites --vo atlas ce --is prod-bdii.cern.ch
 
-# generate ssl request
+# generate ssl request sto /etc/grid-security/
 openssl req -new -nodes -out hostreq.pem -keyout hostkey.pem -config host.cnf
 
 -------------host.cnf--------------------------
@@ -23,8 +26,11 @@ challengePassword              = fl0......
 # backup directory for certificates
 /root/.certifs
 
-# svn installation of myegee
+# svn download of myegee
 svn co http://svnweb.cern.ch/guest/sam/trunk/myegee
+
+# egkatastasi akolouthwntas autes tis odigies:
+https://tomtools.cern.ch/confluence/display/SAM/Clean+egee-NAGIOS+installation
 
 # check configuration for nagios installation
 /opt/glite/yaim/bin/yaim -v -s /root/yaim/site-info.def -n NAGIOS
@@ -34,6 +40,9 @@ grant all on atp.* to atp@'localhost' identified by 'ffh3u4t923u49i134r123r4';
 grant all on myegee.* to myegee@'localhost' identified by 'er@@e!w3';
 grant select,insert,update,delete on nagios.* to ndouser@localhost identified by 'gfeirt458tuj45t8ut4t89';
 GRANT ALL PRIVILEGES ON gstat.* TO 'gstat'@'localhost' IDENTIFIED BY 'gstat';
+# oi 4 parapanw databases eginan delete giati enopoihthikan se mia:
+database: mrs
+username: mrs
 
 # nagios commands.cfg for bdii checks
 http://www.sysadmin.hep.ac.uk/svn/grid-monitoring/tags/apps/gstat/R_0_0_17/config/bdii-commands.cfg
@@ -64,3 +73,6 @@ atp_synchro -c /etc/atp/atp_synchro.conf -d /etc/atp/atp_db.conf -l /etc/atp/atp
 
 # skaei
 [root@osweb hosts]# /opt/glite/yaim/bin/yaim -s /root/yaim/site-info.def -c -n NAGIOS
+
+#rgma
+   INFO: YAIM has detected the OS is SL5. The rgma client is no longer configured in SL5.
