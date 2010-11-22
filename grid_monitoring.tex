@@ -8,6 +8,7 @@
 \usepackage{fancyhdr}
 \usepackage{verbatim}
 \usepackage{listings}
+\usepackage{pstricks}
 \usepackage{graphics}
 \usepackage{graphicx}
 \usepackage{nomencl}
@@ -17,44 +18,46 @@
 \setlength{\headheight}{15pt}
 %%\renewcommand{\chaptername}{}
 %%\renewcommand{\thechapter}{}
-%%\makenomenclature
-
+\makenomenclature
 \begin{document}
 
 \frontmatter
-\input{cover}
-\input{chapters/declaration}
-
-\input{frontmatter}
+\input{extra/cover}
+\input{extra/declaration}
+\input{extra/abstract}
+\input{extra/frontmatter}
 
 \mainmatter
 
 
 
-\chapter[Introduction]
+\chapter{Introduction}
 \input{chapters/introduction}
-\chapter[Methods]
+\chapter{Methods}
 \input{chapters/methods}
-\chapter[Results]
+\chapter{Results}
 \input{chapters/results}
-\chapter[Analysis]
+\chapter{Analysis}
 \input{chapters/analysis}
-\chapter[Conclusions]
-\input{chaptes/conclusions}
+\chapter{Conclusions}
+\input{chapters/conclusions}
 
 
 \backmatter
 
 \bibliographystyle{plain}
-\bibliography{books}
+\bibliography{extra/books}
 \chapter[Management of the Project]{Interim Report}
-\label{appa}
-\lhead{Appendix A. \emph{Interim Report}}
-\input{chapters/interim_report}
 \chapter{Tables, Figures, Report}
-\label{appb}
-\lhead{Appendix B. \emph{Tables Figures, Report}}
-\input{chapters/tables}
-\input{chapters/mentor_report}
+\label{appa}
+\lhead{Appendix A. \emph{Tables Figures, Report}}
+\input{extra/tables}
+%%\label{appb}
+%%\lhead{Appendix B. \emph{Interim Report}}
+%%\input{chapters/interim_report}
+\input{extra/nomenclature}
+\printnomenclature
+\input{extra/mentor_report}
+
 
 \end{document}
