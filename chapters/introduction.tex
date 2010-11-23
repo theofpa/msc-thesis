@@ -1,11 +1,11 @@
 \section{Context}
-\begin{figure}
+
+\begin{figure}[htb]
 \centering
-\input{images/dia.tex}
+\includegraphics[width=150mm]{images/gstat-architecture.jpg}
 \caption{A caption}
 \label{figure:alabel}
 \end{figure}
-
 
 \section{Aims \& Objectives}
 Different role users are going to use a portal to get information about the
@@ -30,6 +30,7 @@ operations on the grid should also be discovered. The european initiative
 milestones on the operations of the regional level should be considered as a
 route, and registration to news about the upcoming research projects that
 are going to use the grid should also be take place.
+
 
 After that wide-opening to get the whole picture, a targeted and focused
 view should follow. Existing monitoring tools must be used to check the problems
@@ -74,6 +75,7 @@ of grid computing nowadays takes place in academic and research environments,
 but applications in industry-based needs such as promising Power Grid control
 \cite{Taylor2006} are emerging.
 
+\subsection{Grid Monitoring}
 Standards are being published about the operational models that the grid
 computing initiative will use. Last decade the EGEE I, II \& III was adopted by
 european universities to fund and establish a collaborative community of
@@ -84,12 +86,14 @@ and availability monitoring tools and views also follow that format, phasing out
 commonly used SAM \cite{egee3dsa122} and having the adoption of Nagios as the
 monitoring of regional performance tool.
 
+\subsection{Resource Brokers}
 Resource Brokers \cite{Kertesz06ataxonomy} where developed to manage the
 workload on Computer elements and Resource elements. Globus which is 
 non-service based RB was replaced by gLite RB which is service based. A Workload
 Management System (WMS) exists in gLite to do the distribution and management of
 the Computing and Storage oriented tasks.
 
+\subsection{Architecture}
 A Grid Monitoring Architecture \cite{tierney2002grid} was proposed in early
 2000's. Information systems were developed to create repositories of information
 needed to be stored for monitoring and statistical reporting reasons. Such an
@@ -107,6 +111,7 @@ problem, such as MDS2 (GIIS \& GRIS), GMA and R-GMA
 \cite{byrom-production} and scales to reach huge needs such as CMS project
 \cite{Bonacorsi2004,Byrom}.
 
+\subsection{Tools}
 A taxonomy effort has been made \cite{gerndt2004performance} to present the
 differencies of performance monitoring systems of the grid, and later a more
 general \cite{zanikolas2007importance} taxonomy paper was published to give a
@@ -116,6 +121,7 @@ the performance metrics of ROCs in high level reports
 meet the milestone of EGI to have a regional monitoring tool (Nagios) to report
 the reliability of the joined sites and report the values for SLA reasons.
 
+\subsection{Sam to Nagios}
 Latest EGI directive to form regional operation tools pushed the use of Nagios
 \cite{imamagic2007grid} as the main tools of availability \& performance (an so
 reliability) monitoring of the grid. Each NGI/ROC (regional level) has its own
@@ -130,6 +136,7 @@ an integration of SAM views to a Nagios customized interface, to offer the last
 good known SAM interface to the old users. Nagios also integrates with GGUS, a
 ticketing system that european grid initiative uses.
 
+\subsection{NGS}
 Brunel Univesity takes part in regional and european initiatives. 4 different
 Computer Elements exist, and 3 Storage Elements, consisting the UKI-LT2-Brunel
 site. LT2 stands for London Grid, a co-operation with other London Universities.
