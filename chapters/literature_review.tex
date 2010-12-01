@@ -44,8 +44,6 @@ problem, such as MDS2 (GIIS \& GRIS), GMA and R-GMA
 \cite{byrom-production} and scales to reach huge needs such as CMS project
 \cite{Bonacorsi2004,Byrom}.
 
-\subsection{ATP}
-List of requirements.
 
 
 \subsection{Glue}
@@ -60,6 +58,35 @@ LDAP Schema Implementation (draft) \& recommended LDAP DIT
 \caption{LDAP DIT}
 \label{figure:gluedit}
 \end{figure}
+
+\subsection{BDII}
+
+
+
+
+\section{monitoring framework}
+
+\subsection{ATP}
+Aggregated Topology Provider (ATP) : ATP is a repository of grid topology
+containing information about projects (WLCG), grid infrastructures (EGEE, OSG,
+NDGF), Sites, Services, VOs and their groupings, site / service downtimes and
+its history. It synchronizes topology information from OSG IM, GOCDB and BDII.
+
+\subsection{MDDB}
+Metric Description Database (MDDB) : Project-level component that contains
+meta-data about metrics and how those metrics can be combined to calculate
+different availabilities.
+
+\subsection{MRS}
+Metric Result Store (MRS) : A Repository of metric results containing Metric
+results for service end-points for the grid infrastructure.
+
+\subsection{ACE}
+Availability Computation Engine (ACE) : The Availability Computation Engine
+(ACE) module computes availability of Grid Resources using Test Results form
+MRS, topology data from ATP and profile definition from MDDB. It supports
+multiple algorithms for computation of Grid Resources.
+
 
 \section{Tools}
 A taxonomy effort has been made \cite{gerndt2004performance} to present the
