@@ -1,3 +1,19 @@
+1. request a client certificate, join VOs
+2. request and install a server certificate
+3. create of site-info.def
+4. execution of yaim
+4.1 databases: mysql, atp, mddb databasestel
+4.2 information system: ldap, bdii, glue
+4.3 monitoring software: nagios, nrpe, ncg
+4.4 underline middleware: globus, gsissh
+4.5 authentication & authorization: voms2htpasswd, certificates, apache & nagios
+4.6 frontends: apache, django, atp-web, myegi, myegee, gstat
+5. ganglia, gmond, gmetad
+5.1 ganglia XML & glue schema
+6. UKI
+6.1 Tiers, GridPP
+6.2 Brunel topology
+
 # to dn tou pistopoihtikou mou
 /C=GR/O=HellasGrid/OU=teipir.gr/CN=Theofylaktos Papapanagiotou
 
@@ -26,8 +42,8 @@ challengePassword              = fl0......
 # backup directory for certificates
 /root/.certifs
 
-# svn download of myegee
-svn co http://svnweb.cern.ch/guest/sam/trunk/myegee
+# svn download of myegi
+svn co http://svnweb.cern.ch/guest/sam/trunk/myegi
 
 # egkatastasi akolouthwntas autes tis odigies:
 https://tomtools.cern.ch/confluence/display/SAM/Clean+egee-NAGIOS+installation
@@ -55,6 +71,9 @@ lcg.bdii.cern.ch # CERN production
 gilda-bdii.ct.infn.it # Gilda testbed
 http://lcg-bdii-conf.cern.ch/bdii-conf/bdii.conf
 
+# list of sam instances (nagios & myegi)
+https://wiki.egi.eu/wiki/SAM_Instances
+
 # install gstat
 http://wiki.pscigrid.gov.ph/index.php/GStat
 /opt/glite/yaim/bin/yaim -c -s /opt/glite/yaim/etc/gstat-site-info.def -n GSTAT
@@ -70,9 +89,30 @@ mysql_upgrade -u root -p
 /usr/share/doc/atp-1.14.3/mysql_schema/ver_1_4/CREATE_ATP_SCHEMA.txt
 atp_synchro -c /etc/atp/atp_synchro.conf -d /etc/atp/atp_db.conf -l /etc/atp/atp_logging_files.conf
 
+# ntp sync hosts
+yum install ntp
+ntpdate chronos.duth.gr
+
 
 # skaei
 [root@osweb hosts]# /opt/glite/yaim/bin/yaim -s /root/yaim/site-info.def -c -n NAGIOS
 
 #rgma
    INFO: YAIM has detected the OS is SL5. The rgma client is no longer configured in SL5.
+
+   
+# ganglia
+# gmetad
+yum install rrdtool perl-rrdtool rrdtool-devel apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
+GANGLIA_ACK_SYSCONFDIR=1 ./configure --with-gmetad
+make
+make install
+mkdir -p /var/lib/ganglia/rrds
+chown -R nobody /var/lib/ganglia
+# gmond
+yum install apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
+GANGLIA_ACK_SYSCONFDIR=1 ./configure
+make
+make install
+iptables -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 8649 -j ACCEPT
+oslab1841a(config)#ip nat inside source static tcp 10.0.0.28 80 195.251.70.54 80 extendable       
