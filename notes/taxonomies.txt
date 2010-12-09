@@ -8,3 +8,5 @@ Middleware Development
 
 Information systems
 Standards
+
+Globus Monitoring and Discovery Service (MDS2) is part of Globus Toolkit. 
