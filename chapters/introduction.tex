@@ -6,17 +6,22 @@ reports of grid performance, decisions on capacity planning are being made.
 Customizable visualization of performance status in different levels helps
 scientists and managers focus on the exact point of the infrastructure where a
 bottleneck on service exists.
- 
 %%why you are investigating it;
 Current interfaces delivers performance graphs without following the standard
-topology schema that is presented by the grid information system. 
+topology schema that is presented by the grid information system.
+
 %%which aspects you will consider, and why;
-
+ATP standard and GLUE schema are examined to understand the gathering process of
+metrics. Ganglia's hierarchical delegation to create managable monitoring
+domains is an important aspect. MyEGI which is based in Django python
+framework, access easily the unified metrics database. 
 %%which aspects you will not consider, and why;
-
+Performance in the aspect of how many jobs are served by each site is not
+examined in this project.
 %%what you hope to find out;
 Whether it is possible to integrate Ganglia performance graphs in MyEGI
 and Nagios interfaces, using the standard Information System of ATP.
+
 %%what your starting point(s) will be
 Build a lab to gather performance data and start working on the development of
 the integration parts.
@@ -28,12 +33,6 @@ the GLUE schema on site BDII, Nagios/MyEGI monitoring frameworks.
 A web interface is available to present the work of the integration of Ganglia
 into Nagios/MyEGI.
 
-\begin{figure}[htb]
-\centering
-\includegraphics[width=150mm]{images/gstat-architecture.jpg}
-\caption{A caption}
-\label{figure:alabel}
-\end{figure}
 
 \section{Aims \& Objectives}
 %%the aim and objectives of the work presented in the report
@@ -93,6 +92,45 @@ monitoring may by made, as long as the EGI roadmap updates. Finally with the
 appropriate supervision and follow-up of meetings and presentations, a paper publishing
 might take place.
 
-\section{Organization}.
+
+
+\section{Organization}
+
+\subsection[Tools]{Tools}
+This project was developed in \LaTeX using Eclipse and TeXlipse plugin. Its
+releases may be found in Google Code, where Mercurial was used for source
+control. Operating Systems Laboratory of Technological Education Institute of
+Piraeus was used to build a testbed of grid site and tools to study existing
+monitoring tools.
 
 %%the initial time plan for the project work
+\subsection[Time plan]{Time-plan (Gantt Chart)}
+
+\begin{table}[ht]
+\begin{tabular}{ | l | l | l | l | r |}    
+\hline
+Task & Start date & End date & Duration in days \\ \hline
+  Preliminary & 09/29/10 & 10/24/10 & 20 \\ \hline 
+  -  Identify Concepts & 09/29/10 & 10/08/10 & 8 \\ \hline 
+  -  Gain Access & 10/08/10 & 10/24/10 & 12 \\ \hline 
+  Planning & 11/12/10 & 12/04/10 & 17 \\ \hline 
+  -  Explore existing technologies & 11/12/10 & 11/28/10 & 12 \\ \hline 
+  -  Write Interim Report & 11/28/10 & 12/04/10 & 5 \\ \hline 
+  Experimental-Development & 12/04/10 & 02/14/11 & 51 \\ \hline 
+  -  Evaluate performance monitoring tools & 12/04/10 & 12/25/10 & 15 \\ \hline 
+  -  Information/topology databases & 12/17/10 & 12/29/10 & 8 \\ \hline 
+  -  Develop Customized Interface & 12/29/10 & 02/14/11 & 34 \\ \hline 
+  ---    Coding of information aggregation & 12/29/10 & 01/21/11 & 16 \\ \hline 
+  ---    Development of the frontend & 01/21/11 & 02/10/11 & 14 \\ \hline 
+  ---    Complete the interface (auth, scale, etc) & 02/10/11 & 02/14/11 & 4 \\
+      \hline Report & 02/16/11 & 03/29/11 & 32 \\ \hline 
+  -  Begin Writing & 02/17/11 & 03/01/11 & 11 \\ \hline 
+  -  Submit Draft \& Make Changes & 03/01/11 & 15/14/11 & 9 \\ \hline 
+  -  Prepare Final & 03/14/11 & 03/29/11 & 11 \\ \hline 
+\end{tabular}
+%\caption{Key activities necessary to complete the project}
+\label{tab:tasks}
+\end{table}
+
+\input {chapters/gantt}
+
