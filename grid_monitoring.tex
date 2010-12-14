@@ -1,5 +1,6 @@
 \documentclass[a4paper,12pt,oneside]{book}
 
+% TODO remove draft watermark
 \usepackage{draftwatermark}
 % Use the following to make modification
 %\SetWatermarkAngle{45}
@@ -10,7 +11,7 @@
 
 \usepackage[latin1]{inputenc}
 \usepackage[left=1in, right=1in]{geometry}
-\usepackage[font=footnotesize, center]{caption}	% Changes font size of figure captions to small
+\usepackage[font=footnotesize, center]{caption}
 \usepackage{tikz}
 \usepackage{fancyhdr}
 \usepackage{verbatim}
@@ -21,12 +22,14 @@
 \usepackage{nomencl}
 \usepackage{pslatex}
 \usepackage{hyperref}
+\usepackage{makeidx}
 \setcounter{tocdepth}{2}
 \renewcommand{\baselinestretch}{1.5}
 \setlength{\headheight}{15pt}
-%%\renewcommand{\chaptername}{}
-%%\renewcommand{\thechapter}{}
+%\renewcommand{\chaptername}{}
+%\renewcommand{\thechapter}{}
 \makenomenclature
+\makeindex
 
 \begin{document}
 
@@ -38,7 +41,7 @@
 
 \mainmatter
 
-
+% TODO spell checking
 
 \chapter{Introduction}
 \input{chapters/introduction}
@@ -53,22 +56,20 @@
 \chapter{Conclusions}
 \input{chapters/conclusions}
 
-
 \backmatter
 
 \bibliographystyle{plain}
 \bibliography{extra/books}
-\chapter[Management of the Project]{Interim Report}
 \chapter{Tables, Figures, Report}
 \label{appa}
 \lhead{Appendix A. \emph{Tables Figures, Report}}
 \input{extra/tables}
-%%\label{appb}
-%%\lhead{Appendix B. \emph{Interim Report}}
-%%\input{chapters/interim_report}
+%\label{appb}
+%\lhead{Appendix B. \emph{Interim Report}}
+%\input{chapters/interim_report}
 \input{extra/nomenclature}
 \printnomenclature[3cm]
 \input{extra/mentor_report}
-
+\printindex
 
 \end{document}

@@ -1,41 +1,41 @@
 \section{Context}
 
-%%what the subject is;
+%what the subject is;
 Performance monitoring of a grid is a key part in grid computing. Based on the
 reports of grid performance, decisions on capacity planning are being made.
 Customizable visualization of performance status in different levels helps
 scientists and managers focus on the exact point of the infrastructure where a
 bottleneck on service exists.
-%%why you are investigating it;
+%why you are investigating it;
 Current interfaces delivers performance graphs without following the standard
 topology schema that is presented by the grid information system.
 
-%%which aspects you will consider, and why;
+%which aspects you will consider, and why;
 ATP standard and GLUE schema are examined to understand the gathering process of
 metrics. Ganglia's hierarchical delegation to create managable monitoring
 domains is an important aspect. MyEGI which is based in Django python
 framework, access easily the unified metrics database. 
-%%which aspects you will not consider, and why;
+%which aspects you will not consider, and why;
 Performance in the aspect of how many jobs are served by each site is not
 examined in this project.
-%%what you hope to find out;
+%what you hope to find out;
 Whether it is possible to integrate Ganglia performance graphs in MyEGI
 and Nagios interfaces, using the standard Information System of ATP.
 
-%%what your starting point(s) will be
+%what your starting point(s) will be
 Build a lab to gather performance data and start working on the development of
 the integration parts.
-%%what assumptions you are making
+%what assumptions you are making
 It is assumed that the environment is a grid site, that already have the
 components needed to work together. Ganglia daemons on each node, presented by
 the GLUE schema on site BDII, Nagios/MyEGI monitoring frameworks.
-%%how you will present the subject.
+%how you will present the subject.
 A web interface is available to present the work of the integration of Ganglia
 into Nagios/MyEGI.
 
 
 \section{Aims \& Objectives}
-%%the aim and objectives of the work presented in the report
+%the aim and objectives of the work presented in the report
 
 Different role users are going to use a portal to get information about the
 performance status of the grid, to export the appropriate report for their job.
@@ -103,7 +103,7 @@ control. Operating Systems Laboratory of Technological Education Institute of
 Piraeus was used to build a testbed of grid site and tools to study existing
 monitoring tools.
 
-%%the initial time plan for the project work
+%the initial time plan for the project work
 \subsection[Time plan]{Time-plan (Gantt Chart)}
 
 \begin{table}[ht]
@@ -128,9 +128,8 @@ Task & Start date & End date & Duration in days \\ \hline
   -  Submit Draft \& Make Changes & 03/01/11 & 15/14/11 & 9 \\ \hline 
   -  Prepare Final & 03/14/11 & 03/29/11 & 11 \\ \hline 
 \end{tabular}
-%\caption{Key activities necessary to complete the project}
+\caption{Key activities necessary to complete the project}
 \label{tab:tasks}
 \end{table}
 
 \input {chapters/gantt}
-
