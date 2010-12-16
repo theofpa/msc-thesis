@@ -9,4 +9,12 @@ Middleware Development
 Information systems
 Standards
 
+Metacomputing Directory Service (MDS) part of Globus.
 Globus Monitoring and Discovery Service (MDS2) is part of Globus Toolkit. 
+
+Grids:
+Datagrid -> EGEE -> EGI
+Terragrid
+OSG
+Testbed:
+Crossgrid-Gilda

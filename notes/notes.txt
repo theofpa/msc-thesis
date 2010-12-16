@@ -117,3 +117,34 @@ make
 make install
 iptables -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 8649 -j ACCEPT
 oslab1841a(config)#ip nat inside source static tcp 10.0.0.28 80 195.251.70.54 80 extendable       
+
+
+# which glue services does the information base provides?
+[root@osweb ~]# ldapsearch -h dgc-grid-44.brunel.ac.uk -p 2170 -x -b "mds-vo-name=uki-lt2-brunel,o=grid" '(&(objectclass=glueservice)(GlueServiceType=*))' GlueServiceType |grep "^GlueServiceType" |sort|uniq
+GlueServiceType: bdii_site
+GlueServiceType: org.edg.gatekeeper
+GlueServiceType: org.glite.rgma.Browser
+GlueServiceType: org.glite.rgma.Consumer
+GlueServiceType: org.glite.rgma.OnDemandProducer
+GlueServiceType: org.glite.rgma.PrimaryProducer
+GlueServiceType: org.glite.rgma.SecondaryProducer
+GlueServiceType: org.glite.RTEPublisher
+GlueServiceType: SRM
+GlueServiceType: srm_v1
+[root@osweb ~]# ldapsearch -h dgc-grid-42.brunel.ac.uk -p 2170 -x -b "mds-vo-name=uki-lt2-brunel,o=grid" '(&(objectclass=glueservice)(GlueServiceType=*))' GlueServiceType |grep "^GlueServiceType" |sort|uniq
+GlueServiceType: bdii_site
+GlueServiceType: org.edg.gatekeeper
+GlueServiceType: org.glite.ce.CREAM
+GlueServiceType: org.glite.ce.Monitor
+GlueServiceType: org.glite.rgma.Browser
+GlueServiceType: org.glite.rgma.Consumer
+GlueServiceType: org.glite.rgma.OnDemandProducer
+GlueServiceType: org.glite.rgma.PrimaryProducer
+GlueServiceType: org.glite.rgma.SecondaryProducer
+GlueServiceType: org.glite.RTEPublisher
+GlueServiceType: SRM
+[root@osweb ~]# ldapsearch -h gridmonbox.cs.tcd.ie  -p 2170 -x -b "o=grid" '(&(objectclass=glueservice)(GlueServiceType=*))' GlueServiceType |grep "^GlueServiceType" |sort|uniq
+GlueServiceType: bdii_site
+GlueServiceType: gridice
+GlueServiceType: SRM
+

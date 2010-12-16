@@ -1,4 +1,82 @@
+% TODO na valw to gmond sto LTSP
+laboratory
+
 \section{Approach Adopted}
 \section{Design Methods}
+
+\subsection{Information Infrastructure}
+% TODO to MDS me dika mou logia
+``Performance''.  The applications of interest to us frequently 
+operate on  a  large scale  (e.g.,  hundreds  of  proces- 
+sors) and have demanding performance requirements. 
+Hence, an information infrastructure must permit rapid 
+access to frequently used configuration information. It 
+is not acceptable to contact  a  server  for every  item: 
+caching is required.
+``Scalability and cost''. The infrastructure must scale to large
+numbers of components and permit concurrent access
+by many entities. At the same time, its organization
+must permit easy discovery of information. The human
+and resource costs (CPU cycles, disk space, network
+bandwidth) of creating and maintaining information
+must also be low, both at individual sites and in total.
+``Uniformity''. Our goal is to simplify the development of
+tools and applications that use data to guide configuration
+decisions. We require a uniform data model
+as well as an application programming interface (MI)
+for common operations on the data represented via that
+model. One aspect of this uniformity is a standard representation
+for data about common resources, such as
+processors and networks.
+``The X.500 standard'' defines a directory service
+that can be used to provide extensible distributed directory
+services within a wide area environment. A directory service
+is a service that provides read-optimized access to general
+data about entities, such as people, corporations, and computers.
+X.500 provides a framework that could, in principle,
+be used to organize the information that is of interest to us.
+\cite{mds1}
+
+
 \section{Data-acquisition Systems}
+4 layers to performance investigation:
+\begin{enumerate}
+  \item Storage elements
+  \item Sites
+  \item VOs
+  \item Middleware
+\end{enumerate}
+3 benchmarking categories
+\begin{enumerate}
+  \item micro-benchmarks
+  \item micro-kernels
+  \item application kernels
+\end{enumerate}
+Benchmarking
+
+HPL
+\cite{gridbench}
+
+CE performance
+free processors
+MFLOPS
+MIPS (instructions per second)
+free RAM
+
+SE performance
+IOPS
+free space
+
 \section{Range of cases examined}
+% TODO perigrafi tou GCP sensors kai tou WMFLOPS
+Gcp sensors kai WMFLOPS
+\cite{gcpsensor}
+
+% TODO perigrafi tou GridBench
+gridbench metrics
+\begin{enumerate}
+  \item whetstone
+  \item mpptest
+  \item HPL
+\end{enumerate}
+\cite{gridbench} 
