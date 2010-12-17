@@ -2,6 +2,7 @@
 laboratory
 
 \section{Approach Adopted}
+
 \section{Design Methods}
 
 \subsection{Information Infrastructure}
@@ -68,6 +69,8 @@ IOPS
 free space
 
 \section{Range of cases examined}
+\subsection{Metrics}
+% here there will be an enumeration of metrics, gmond, etc
 % TODO perigrafi tou GCP sensors kai tou WMFLOPS
 Gcp sensors kai WMFLOPS
 \cite{gcpsensor}
@@ -80,3 +83,15 @@ gridbench metrics
   \item HPL
 \end{enumerate}
 \cite{gridbench} 
+
+% TODO ganglia to MDS
+\subsection{Publish to Information System (MDS/BDII)}
+\begin{enumerate}
+  \item Python ganglia client script:
+  http://globus.org/toolkit/docs/2.4/mds/gangliaprovider.html
+  \item Perl gaglia-IP tool:
+  http://www.star.bnl.gov/public/comp/Grid/Monitoring/SimpleGangliaIP.html
+  http://www.star.bnl.gov/public/comp/Grid/Monitoring/ganglia_ip
+  \item Ganglia and MDS4:
+  http://www.gac-grid.de/project-products/grid-support/OtherServices.html
+\end{enumerate}

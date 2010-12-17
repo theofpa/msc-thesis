@@ -103,6 +103,7 @@ ntpdate chronos.duth.gr
 
    
 # ganglia
+# & configure ganglia as a system service
 # gmetad
 yum install rrdtool perl-rrdtool rrdtool-devel apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
 GANGLIA_ACK_SYSCONFDIR=1 ./configure --with-gmetad
@@ -121,30 +122,9 @@ oslab1841a(config)#ip nat inside source static tcp 10.0.0.28 80 195.251.70.54 80
 
 # which glue services does the information base provides?
 [root@osweb ~]# ldapsearch -h dgc-grid-44.brunel.ac.uk -p 2170 -x -b "mds-vo-name=uki-lt2-brunel,o=grid" '(&(objectclass=glueservice)(GlueServiceType=*))' GlueServiceType |grep "^GlueServiceType" |sort|uniq
-GlueServiceType: bdii_site
-GlueServiceType: org.edg.gatekeeper
-GlueServiceType: org.glite.rgma.Browser
-GlueServiceType: org.glite.rgma.Consumer
-GlueServiceType: org.glite.rgma.OnDemandProducer
-GlueServiceType: org.glite.rgma.PrimaryProducer
-GlueServiceType: org.glite.rgma.SecondaryProducer
-GlueServiceType: org.glite.RTEPublisher
-GlueServiceType: SRM
-GlueServiceType: srm_v1
-[root@osweb ~]# ldapsearch -h dgc-grid-42.brunel.ac.uk -p 2170 -x -b "mds-vo-name=uki-lt2-brunel,o=grid" '(&(objectclass=glueservice)(GlueServiceType=*))' GlueServiceType |grep "^GlueServiceType" |sort|uniq
-GlueServiceType: bdii_site
-GlueServiceType: org.edg.gatekeeper
-GlueServiceType: org.glite.ce.CREAM
-GlueServiceType: org.glite.ce.Monitor
-GlueServiceType: org.glite.rgma.Browser
-GlueServiceType: org.glite.rgma.Consumer
-GlueServiceType: org.glite.rgma.OnDemandProducer
-GlueServiceType: org.glite.rgma.PrimaryProducer
-GlueServiceType: org.glite.rgma.SecondaryProducer
-GlueServiceType: org.glite.RTEPublisher
-GlueServiceType: SRM
-[root@osweb ~]# ldapsearch -h gridmonbox.cs.tcd.ie  -p 2170 -x -b "o=grid" '(&(objectclass=glueservice)(GlueServiceType=*))' GlueServiceType |grep "^GlueServiceType" |sort|uniq
-GlueServiceType: bdii_site
-GlueServiceType: gridice
-GlueServiceType: SRM
 
+
+# large ganglia installations:
+http://gridmon.fzk.de/gridka-overview/
+https://ganglia.hellasgrid.gr/
+http://ganglia.sara.nl/
