@@ -3,7 +3,23 @@ laboratory
 
 \section{Approach Adopted}
 
+na perigrapsw to implementation of performance analysis of distributes systems
+in GMA \cite{balatonuse}
+
+
 \section{Design Methods}
+\subsection{Recommendations and standards}
+\subsubsection{Grid Monitoring Architecture}
+\nomenclature{GMA}{Grid Monitoring Architecture}
+%% TODO producer-consumer plot
+\subsubsection{R-GMA}
+%% TODO R-GMA literature
+\nomenclature{R-GMA}{Relational Grid Monitoring Architecture}
+\subsubsection{XML schema}
+\subsubsection{GLUE}
+gained wide acceptance given its adoption by Globus MDS3
+\nomenclature{GLUE}{Grid Laboratory Uniform Environment}
+
 
 \subsection{Information Infrastructure}
 % TODO to MDS me dika mou logia
@@ -38,8 +54,12 @@ X.500 provides a framework that could, in principle,
 be used to organize the information that is of interest to us.
 \cite{mds1}
 
-
 \section{Data-acquisition Systems}
+plugins that take metrics (SAM) and send results to nagios:
+https://twiki.cern.ch/twiki/bin/view/LCG/SAMProbesMetrics
+
+http://nationalgridservice.blogspot.com/2010/10/nagios-myegee-and-myegi.html
+
 4 layers to performance investigation:
 \begin{enumerate}
   \item Storage elements
@@ -67,6 +87,8 @@ free RAM
 SE performance
 IOPS
 free space
+\subsection{Ganglia}
+\subsection{pnp4nagios}
 
 \section{Range of cases examined}
 \subsection{Metrics}
@@ -91,7 +113,23 @@ gridbench metrics
   http://globus.org/toolkit/docs/2.4/mds/gangliaprovider.html
   \item Perl gaglia-IP tool:
   http://www.star.bnl.gov/public/comp/Grid/Monitoring/SimpleGangliaIP.html
-  http://www.star.bnl.gov/public/comp/Grid/Monitoring/ganglia_ip
+  http://www.star.bnl.gov/public/comp/Grid/Monitoring/ganglia\_ip
   \item Ganglia and MDS4:
   http://www.gac-grid.de/project-products/grid-support/OtherServices.html
 \end{enumerate}
+
+Glue schema
+
+GlueCluster
+GlueClusterTop
+GlueGeneralTop
+GlueHost
+GlueHostArchitecture
+GlueHostMainMemory
+GlueHostNetworkAdapter
+GlueHostOperatingSystem
+GlueHostProcessor
+GlueHostProcessorLoad
+GlueHostSMPLoad
+GlueSubCluster
+GlueTop
