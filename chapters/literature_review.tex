@@ -1,34 +1,41 @@
-
+\section{Grid Computing}
 Grid computing \cite{li2005grid} is the most recent decade's technology
 innovation in high performance computing. A large number of scientistcs working
 on the operations of this huge co-operative project of EU. Monitoring \&
 information architecture \cite{fisher2002datagrid} has been standardized in the
-initial state of that project, to succeed in today scale of 150.000 cores. Use
-of grid computing nowadays takes place in academic and research environments,
-but applications in industry-based needs such as promising Power Grid control
-\cite{Taylor2006} are emerging.
-
-\section{Grid Monitoring}
-Standards are being published about the operational models that the grid
-computing initiative will use. Last decade the EGEE I, II \& III was adopted by
-european universities to fund and establish a collaborative community of
-researchers under a central point, the CERN oriented research project in
-Particle Physics. After EGEE, the European Grid Initiative were formed to lead
-to the explode of that community into regional initiatives. Performance
-and availability monitoring tools and views also follow that format, phasing out
-commonly used SAM \cite{egee3dsa122} and having the adoption of Nagios as the
-monitoring of regional performance tool.
+initial state of that project, to succeed in today scale of 150.000 cores in
+production. Use of grid computing nowadays takes place in academic and research
+environments. Also, applications in industry-based needs such as promising
+Power Grid control \cite{Taylor2006} are emerging.
 
 \section{Resource Brokers}
 Resource Brokers \cite{Kertesz06ataxonomy} where developed to manage the
-workload on Computer elements and Resource elements. Globus which is 
-non-service based RB was replaced by gLite RB which is service based. A Workload
+workload on Computer elements and Resource elements. Globus is a
+non-service based RB, and gLite RB which is service based. A Workload
 Management System (WMS) exists in gLite to do the distribution and management of
 the Computing and Storage oriented tasks.
 
-% TODO here may reside the image of taxonomy of resource brokers based on the IS
+%copy-paste
+Several resource brokers use the information system of the underlying
+middleware. In this case the relevant information from the brokers’ view is the
+data store and query. The two main subcategories are the directory-based and
+service-based implementations. These properties tell us how the brokers access
+resource data and what kind of information they can use for resource mapping –
+since this is determined by the information system of the middleware.
+\begin{figure}
+\begin{center}
+\input {extra/rb_is}
+\caption{Grid Resource Brokers grouped by Information
+Systems\cite{Kertesz06ataxonomy}}
+\end{center}
+\end{figure}
 
 \subsection{Globus}
+anafora sto Globus, sto Globus Toolkit, kai se MDS, klp 
+ki edw \cite{von1998usage,945188,zhang2004performance}
+
+apo edw ta perissotera: http://www.globus.org/toolkit/mds/
+
 \subsection{gLite}
 
 % TODO to gLite monitoring me dika mou logia
@@ -57,7 +64,13 @@ considered for possible use by their applications.
 
 
 
-\section{Architecture}
+\section{Information Services}
+\begin{figure}[htb]
+\centering
+ \includegraphics[width=4in]{images/gma.pdf}
+\caption{Grid Monitoring Architecture}
+\label{figure:gma}
+\end{figure}
 A Grid Monitoring Architecture \cite{tierney2002grid} was proposed in early
 2000's. Information systems were developed to create repositories of information
 needed to be stored for monitoring and statistical reporting reasons. Such an
@@ -84,11 +97,26 @@ problem, such as MDS2 (GIIS \& GRIS), GMA and R-GMA
 \end{figure}
 
 \subsection{MDS}
+% copy-paste apo to site tou globus:
+The Monitoring and Discovery System (MDS) is the information services component
+of the Globus Toolkit and provides information about the available resources on
+the Grid and their status.
 \subsubsection{History}
+\begin{enumerate}
+  \item{GT2} LDAP GLUE schema implementation
+  \item{GT2} Ganglia to LDAP GLUE information provider
+  \item{GT3} XML mapping of the GLUE schema
+  \item{GT4} WSRF, Aggregator Framework
+\end{enumerate}
 
 \subsection{XML based schemata}
-\subsubsection{GRAM}
-\subsubsection{Crux}
+\begin{enumerate}
+  \item{GRAM}
+  \item{Crux}
+\end{enumerate}
+
+\subsection{Web Services Resource Framework}
+Ganglia using WSRF \cite{gangliaWSRF}
 
 \subsection{Glue}
 Open Grid Forum, GLUE Working Group \& GLUE specification v. 2.0
@@ -104,17 +132,13 @@ Schema developed by DataTAGfor EU/USA interoperability
 
 \begin{figure}[htb]
 \centering
- \includegraphics[width=6in]{images/glue2}
+ \includegraphics[width=6in]{images/glue2.pdf}
 \caption{LDAP DIT}
 \label{figure:gluedit}
 \end{figure}
 
 \subsection{BDII}
 
-
-
-
-\section{monitoring framework}
 
 \subsection{ATP}
 Aggregated Topology Provider (ATP) : ATP is a repository of grid topology
@@ -138,7 +162,19 @@ MRS, topology data from ATP and profile definition from MDDB. It supports
 multiple algorithms for computation of Grid Resources.
 
 
-\section{Tools}
+
+\section{Performance Monitoring}
+Standards are being published about the operational models that the grid
+computing initiative will use. Last decade the EGEE I, II \& III was adopted by
+european universities to fund and establish a collaborative community of
+researchers under a central point, the CERN oriented research project in
+Particle Physics. After EGEE, the European Grid Initiative were formed to lead
+to the explode of that community into regional initiatives. Performance
+and availability monitoring tools and views also follow that format, phasing out
+commonly used SAM \cite{egee3dsa122} and having the adoption of Nagios as the
+monitoring of regional performance tool.
+
+
 A taxonomy effort has been made \cite{gerndt2004performance} to present the
 differencies of performance monitoring systems of the grid, and later a more
 general \cite{zanikolas2007importance} taxonomy paper was published to give a
@@ -148,7 +184,9 @@ the performance metrics of ROCs in high level reports
 meet the milestone of EGI to have a regional monitoring tool (Nagios) to report
 the reliability of the joined sites and report the values for SLA reasons.
 
-\section{Sam to Nagios}
+\subsection{Ganglia}
+
+\section{European Grid Infrastructure}
 Latest EGI directive to form regional operation tools pushed the use of Nagios
 \cite{imamagic2007grid} as the main tools of availability \& performance (an so
 reliability) monitoring of the grid. Each NGI/ROC (regional level) has its own
@@ -163,8 +201,13 @@ an integration of SAM views to a Nagios customized interface, to offer the last
 good known SAM interface to the old users. Nagios also integrates with GGUS, a
 ticketing system that european grid initiative uses.
 
+% copy-paste apo to egee3dsa122
+By the end of the project the monitoring infrastructure (regional Nagios servers and the corresponding regional MyEGEE portals [R52], [R53]) will complete the transition process to a fully distributed infrastructure.
+The Nagios-based system will totally replace the Service Availability Monitoring (SAM)
+infrastructure. At the time of writing two monitoring environments are operated: a production one and a test one.
 
-\section{NGS}
+
+\subsection{NGS}
 Brunel Univesity takes part in regional and european initiatives. 4 different
 Computer Elements exist, and 3 Storage Elements, consisting the UKI-LT2-Brunel
 site. LT2 stands for London Grid, a co-operation with other London Universities.
