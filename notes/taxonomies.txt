@@ -18,3 +18,10 @@ Terragrid
 OSG
 Testbed:
 Crossgrid-Gilda
+
+
+GcpSensor Design:
+-Performance metrics (WMFLOPS)
+-Acquisition of WMFLOPS values (PAPI)
+-Data distribution (MDS-LDAP)
+-Algorithms (Whetstone)

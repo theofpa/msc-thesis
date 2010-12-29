@@ -56,6 +56,7 @@ be used to organize the information that is of interest to us.
 
 \section{Data-acquisition Systems}
 plugins that take metrics (SAM) and send results to nagios:
+
 https://twiki.cern.ch/twiki/bin/view/LCG/SAMProbesMetrics
 
 http://nationalgridservice.blogspot.com/2010/10/nagios-myegee-and-myegi.html
@@ -93,18 +94,23 @@ free space
 \section{Range of cases examined}
 \subsection{Metrics}
 % here there will be an enumeration of metrics, gmond, etc
-% TODO perigrafi tou GCP sensors kai tou WMFLOPS
-Gcp sensors kai WMFLOPS
-\cite{gcpsensor}
 
-% TODO perigrafi tou GridBench
-gridbench metrics
-\begin{enumerate}
-  \item whetstone
-  \item mpptest
-  \item HPL
-\end{enumerate}
-\cite{gridbench} 
+Grid performance can be measured using benchmark tools in different levels of
+the grid architecture, using the micro-benchmarks at the Worker Node level, the
+Site (CE) level and the Grid VO level. Various benchmarks exist in these
+levels, using different libraries and algorithms, such as  This project focuses
+on mathematically compute of the performance of a grid based on the metrics that are taken at the Worker Node level.
+
+Different metrics and benchmarks exist, such as the measurement of
+the performance of CPUs in {\bf MIPS using EPWhetstone} and the evaluation of
+the performance of a CPU in {\bf FLOP/s and MB/s using BlasBench}. GridBench
+\cite{gridbench} provides a framework to collect those metrics using its own
+description language, {\bf GBDL}.
+
+GcpSensor \cite{gcpsensor} introduce a new performance metric called WMFLOPS. It
+uses PAPI \cite{papi} (Performance API) to access the hardware performance
+counters. For data distribution it uses MDS information system which provides
+dynamic metrics for CPU load average, one for 1, for 5 and for 15 minutes load.
 
 % TODO ganglia to MDS
 \subsection{Publish to Information System (MDS/BDII)}
@@ -112,9 +118,12 @@ gridbench metrics
   \item Python ganglia client script:
   http://globus.org/toolkit/docs/2.4/mds/gangliaprovider.html
   \item Perl gaglia-IP tool:
+
   http://www.star.bnl.gov/public/comp/Grid/Monitoring/SimpleGangliaIP.html
+
   http://www.star.bnl.gov/public/comp/Grid/Monitoring/ganglia\_ip
   \item Ganglia and MDS4:
+
   http://www.gac-grid.de/project-products/grid-support/OtherServices.html
 \end{enumerate}
 
