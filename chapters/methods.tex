@@ -89,6 +89,11 @@ SE performance
 IOPS
 free space
 \subsection{Ganglia}
+
+{\bf CPU load} is taken using the pseudo /proc/loadavg file which in turn is
+filled by Linux kernel's CALC\_LOAD macro. It represents the number of processes
+that are waiting on the run queue, for three intervals of $1$, $5$ and $15$ minutes.
+
 \subsection{pnp4nagios}
 
 \section{Range of cases examined}
@@ -99,7 +104,8 @@ Grid performance can be measured using benchmark tools in different levels of
 the grid architecture, using the micro-benchmarks at the Worker Node level, the
 Site (CE) level and the Grid VO level. Various benchmarks exist in these
 levels, using different libraries and algorithms, such as  This project focuses
-on mathematically compute of the performance of a grid based on the metrics that are taken at the Worker Node level.
+on mathematically compute of the performance of a grid based on the metrics that
+are taken at the Worker Node level.
 
 Different metrics and benchmarks exist, such as the measurement of
 the performance of CPUs in {\bf MIPS using EPWhetstone} and the evaluation of
@@ -113,18 +119,18 @@ counters. For data distribution it uses MDS information system which provides
 dynamic metrics for CPU load average, one for 1, for 5 and for 15 minutes load.
 
 % TODO ganglia to MDS
-\subsection{Publish to Information System (MDS/BDII)}
+\subsection{Publish to Information System}
+
+\subsubsection{LDAP based - MDS/BDII}
 \begin{enumerate}
   \item Python ganglia client script:
   http://globus.org/toolkit/docs/2.4/mds/gangliaprovider.html
   \item Perl gaglia-IP tool:
-
+  
   http://www.star.bnl.gov/public/comp/Grid/Monitoring/SimpleGangliaIP.html
-
+  
   http://www.star.bnl.gov/public/comp/Grid/Monitoring/ganglia\_ip
-  \item Ganglia and MDS4:
 
-  http://www.gac-grid.de/project-products/grid-support/OtherServices.html
 \end{enumerate}
 
 Glue schema
@@ -142,3 +148,23 @@ GlueHostProcessorLoad
 GlueHostSMPLoad
 GlueSubCluster
 GlueTop
+
+Perl:
+\begin{lstlisting}
+$[root@mon ~]# ./ganglia_ip -h mon -p 8649 -o mds
+\end{lstlisting}
+
+Python:
+\begin{lstlisting}
+$[root@mon ~]# /opt/ganglia/bin/ganglia --format=MDS
+\end{lstlisting}
+
+
+\subsubsection{Web Service based - WSRF}
+using WSRF (GT4, information services, information providers)
+http://index.training.cagrid.org:8080/wsrf/services/DefaultIndexService?wsdl
+
+Ganglia and MDS4:
+  
+  http://www.gac-grid.de/project-products/grid-support/OtherServices.html
+  
