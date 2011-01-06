@@ -118,7 +118,9 @@ make
 make install
 iptables -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 8649 -j ACCEPT
 oslab1841a(config)#ip nat inside source static tcp 10.0.0.28 80 195.251.70.54 80 extendable       
-
+#notes
+-configure with multicast or unicast. jitter problem environments may use unicast, as long
+ as amazon ec2 environments that are not support multicast.
 
 # which glue services does the information base provides?
 [root@osweb ~]# ldapsearch -h dgc-grid-44.brunel.ac.uk -p 2170 -x -b "mds-vo-name=uki-lt2-brunel,o=grid" '(&(objectclass=glueservice)(GlueServiceType=*))' GlueServiceType |grep "^GlueServiceType" |sort|uniq
@@ -128,3 +130,44 @@ oslab1841a(config)#ip nat inside source static tcp 10.0.0.28 80 195.251.70.54 80
 http://gridmon.fzk.de/gridka-overview/
 https://ganglia.hellasgrid.gr/
 http://ganglia.sara.nl/
+
+
+  
+Ganglia and MDS4 (configure ganglia with globus)
+http://www.gac-grid.de/project-products/grid-support/OtherServices.html
+http://www.mail-archive.com/gt-user@lists.globus.org/msg00750.html
+http://www.globus.org/toolkit/docs/development/4.1.3/info/providers/ganglia/ganglia-reference.html
+http://www.mail-archive.com/gt-user@globus.org/msg00755.html
+
+
+# installation of globus, wsrf, ganglia:
+-download binary 4.0.7 and extract to /opt/globus
+-install postgresql, create user & db
+-configure globus to connect to postgresql
+-create init script for wsrf container
+-create ganglia resource provider for wsrf and connect to gmond
+-call wsrf to get ganglia metrics
+
+# installation of bdii
+-install glite-ui which installs bdii
+-ldapsearch bdii
+-test perl & python scripts to export mds from gmond
+-configure connection to 
+
+# query WSRF for ganglia data:
+[root@osweb ~]# grid-proxy-init -verify -debug
+[root@osweb ~]# wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//*[local-name()='Host']"
+
+XPath query language examples for WSRF:
+http://www.fdi.ucm.es/profesor/rubensm/CRTyG/Servicios%20de%20Informacion%20en%20el%20Grid.pdf
+
+# Data flow diagrams
+http://www.ibm.com/developerworks/wikis/display/WikiPtype/ganglia
+
+# Information flow
+http://www.globus.org/toolkit/docs/4.0/info/aggregator/user-index.html
+
+# Availability monitoring
+-MyEGI, monitor visualization environment
+-django data models
+-MRS database, ATP based schema
