@@ -131,14 +131,11 @@ http://gridmon.fzk.de/gridka-overview/
 https://ganglia.hellasgrid.gr/
 http://ganglia.sara.nl/
 
-
-  
 Ganglia and MDS4 (configure ganglia with globus)
 http://www.gac-grid.de/project-products/grid-support/OtherServices.html
 http://www.mail-archive.com/gt-user@lists.globus.org/msg00750.html
 http://www.globus.org/toolkit/docs/development/4.1.3/info/providers/ganglia/ganglia-reference.html
 http://www.mail-archive.com/gt-user@globus.org/msg00755.html
-
 
 # installation of globus, wsrf, ganglia:
 -download binary 4.0.7 and extract to /opt/globus

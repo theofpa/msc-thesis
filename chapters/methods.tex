@@ -57,7 +57,7 @@ be used to organize the information that is of interest to us.
 \section{Data-acquisition Systems}
 plugins that take metrics (SAM) and send results to nagios:
 
-https://twiki.cern.ch/twiki/bin/view/LCG/SAMProbesMetrics
+https://tomtools.cern.ch/confluence/display/SAMDOC/Grid+probes
 
 http://nationalgridservice.blogspot.com/2010/10/nagios-myegee-and-myegi.html
 
@@ -88,13 +88,37 @@ free RAM
 SE performance
 IOPS
 free space
+
+EGI accounting portal: CPU usage metrics aggregated for accounting.
+
 \subsection{Ganglia}
 
 {\bf CPU load} is taken using the pseudo /proc/loadavg file which in turn is
 filled by Linux kernel's CALC\_LOAD macro. It represents the number of processes
 that are waiting on the run queue, for three intervals of $1$, $5$ and $15$ minutes.
 
+\begin{figure}[htb]
+\centering
+ \includegraphics[width=6in]{images/ganglia_data_flow.pdf}
+\caption{Ganglia Data Flow}
+\label{figure:ganglia_dataflow}
+\end{figure}
+
+\subsection{Nagios}
+msg-to-handler msg-nagios-bridge
+nagios2metric
+
+\subsection{Ganglia to Nagios}
+
 \subsection{pnp4nagios}
+
+Bulk Mode with NPCD
+NPCD:
+spool directory to process bulk data
+create graphs using RRDTOOL
+
+% TODO image to describe pnp-npcd flow apo dw:
+% http://docs.pnp4nagios.org/pnp-0.6/doc_complete
 
 \section{Range of cases examined}
 \subsection{Metrics}
@@ -163,4 +187,6 @@ $[root@mon ~]# /opt/ganglia/bin/ganglia --format=MDS
 \subsubsection{Web Service based - WSRF}
 using WSRF (GT4, information services, information providers)
 \url{http://index.training.cagrid.org:8080/wsrf/services/DefaultIndexService?wsdl}
-
+Ganglia Resource Provider
+MDS Index Service
+GLUE CE 
