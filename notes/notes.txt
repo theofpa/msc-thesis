@@ -135,10 +135,17 @@ Ganglia and MDS4 (configure ganglia with globus)
 http://www.gac-grid.de/project-products/grid-support/OtherServices.html
 http://www.mail-archive.com/gt-user@lists.globus.org/msg00750.html
 http://www.globus.org/toolkit/docs/development/4.1.3/info/providers/ganglia/ganglia-reference.html
+http://www.globus.org/toolkit/docs/4.2/4.2.1/info/providers/ganglia/
 http://www.mail-archive.com/gt-user@globus.org/msg00755.html
 
 # installation of globus, wsrf, ganglia:
 -download binary 4.0.7 and extract to /opt/globus
+wget http://www-unix.globus.org/ftppub/gt4/4.0/4.0.7/installers/bin/gt4.0.7-x86_rhas_4-installer.tar.gz
+export $JAVA_HOME=/usr/java/default
+export $PATH=$JAVA_HOME/bin:$PATH
+./configure
+make
+make install
 -install postgresql, create user & db
 -configure globus to connect to postgresql
 -create init script for wsrf container
@@ -154,6 +161,7 @@ http://www.mail-archive.com/gt-user@globus.org/msg00755.html
 # query WSRF for ganglia data:
 [root@osweb ~]# grid-proxy-init -verify -debug
 [root@osweb ~]# wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//*[local-name()='Host']"
+[root@osweb ~]# /opt/globus/bin/wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//glue:Host[glue:ProcessorLoad[@glue:Last15Min>20]]"  |grep Load
 
 XPath query language examples for WSRF:
 http://www.fdi.ucm.es/profesor/rubensm/CRTyG/Servicios%20de%20Informacion%20en%20el%20Grid.pdf
@@ -168,3 +176,7 @@ http://www.globus.org/toolkit/docs/4.0/info/aggregator/user-index.html
 -MyEGI, monitor visualization environment
 -django data models
 -MRS database, ATP based schema
+
+
+D-grid top MDS:
+https://mds.lrz-muenchen.de:8443/wsrf/services/DefaultIndexService

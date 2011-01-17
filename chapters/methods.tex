@@ -19,6 +19,12 @@ in GMA \cite{balatonuse}
 \subsubsection{GLUE}
 gained wide acceptance given its adoption by Globus MDS3
 \nomenclature{GLUE}{Grid Laboratory Uniform Environment}
+\begin{figure}[htb]
+\centering
+ \includegraphics[width=5in]{images/gluece_ext.pdf}
+\caption{GLUE schema 2.0 extention for Host and SMP Load}
+\label{figure:gluece_ext}
+\end{figure}
 
 
 \subsection{Information Infrastructure}
@@ -91,12 +97,28 @@ free space
 
 EGI accounting portal: CPU usage metrics aggregated for accounting.
 
-\subsection{Ganglia}
+\subsection{Metrics}
 
 {\bf CPU load} is taken using the pseudo /proc/loadavg file which in turn is
-filled by Linux kernel's CALC\_LOAD macro. It represents the number of processes
-that are waiting on the run queue, for three intervals of $1$, $5$ and $15$ minutes.
+filled by Linux kernel's CALC\_LOAD macro. This function takes 3 parameters.
+The load-average bucket, a $y$ constant that is calculated using formula
+\[
+y=\frac{2^{11}}{2^{((5log_2(e))/60x)}}
+\]
+for values $x=1$, $x=5$ and $x=15$ (where x represent the minutes and y the
+exponent constant), and the number of how many processes are in the queue, in
+running or uninterruptible state.
 
+\begin{figure}[htb]
+\centering
+ \includegraphics[width=3in]{images/calc_load.pdf}
+\caption{Load Average calculation}
+\label{figure:calc_load}
+\end{figure}
+
+
+\subsection{Ganglia}
+enw to ganglia to kanei etsi
 \begin{figure}[htb]
 \centering
  \includegraphics[width=6in]{images/ganglia_data_flow.pdf}
@@ -109,6 +131,12 @@ msg-to-handler msg-nagios-bridge
 nagios2metric
 
 \subsection{Ganglia to Nagios}
+\begin{figure}[htb]
+\centering
+ \includegraphics[width=2in]{images/nagios_check_ganglia.pdf}
+\caption{Nagios configuration and check ganglia values}
+\label{figure:nagios_ganglia}
+\end{figure}
 
 \subsection{pnp4nagios}
 
@@ -117,8 +145,12 @@ NPCD:
 spool directory to process bulk data
 create graphs using RRDTOOL
 
-% TODO image to describe pnp-npcd flow apo dw:
-% http://docs.pnp4nagios.org/pnp-0.6/doc_complete
+\begin{figure}[htb]
+\centering
+ \includegraphics[width=3in]{images/npcd_pnp4nagios.pdf}
+\caption{PNP 4 Nagios data flow}
+\label{figure:pnp4nagios}
+\end{figure}
 
 \section{Range of cases examined}
 \subsection{Metrics}
@@ -186,7 +218,31 @@ $[root@mon ~]# /opt/ganglia/bin/ganglia --format=MDS
 
 \subsubsection{Web Service based - WSRF}
 using WSRF (GT4, information services, information providers)
-\url{http://index.training.cagrid.org:8080/wsrf/services/DefaultIndexService?wsdl}
 Ganglia Resource Provider
 MDS Index Service
 GLUE CE 
+
+my note: WSRF is GLUE 2.0 schema CE compatible
+/opt/globus/etc/globus_wsrf_mds_usefulrp/ganglia_to_glue.xslt
+
+<glue:ProcessorLoad>
+
+<xsl:attribute name="glue:Last1Min">
+  <xsl:call-template name="emitProperNumeric">
+    <xsl:with-param name="numeric" select="floor(100 * METRIC[@NAME='load_one']/@VAL)"/>
+  </xsl:call-template>
+</xsl:attribute>
+
+<xsl:attribute name="glue:Last5Min">
+  <xsl:call-template name="emitProperNumeric">
+    <xsl:with-param name="numeric" select="floor(100 * METRIC[@NAME='load_five']/@VAL)"/>
+  </xsl:call-template>
+</xsl:attribute>
+
+<xsl:attribute name="glue:Last15Min">
+  <xsl:call-template name="emitProperNumeric">
+    <xsl:with-param name="numeric" select="floor(100 * METRIC[@NAME='load_fifteen']/@VAL)"/>
+  </xsl:call-template>
+</xsl:attribute>
+
+</glue:ProcessorLoad>
