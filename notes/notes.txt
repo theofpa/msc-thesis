@@ -180,3 +180,10 @@ http://www.globus.org/toolkit/docs/4.0/info/aggregator/user-index.html
 
 D-grid top MDS:
 https://mds.lrz-muenchen.de:8443/wsrf/services/DefaultIndexService
+http://webmds.lrz.de:8080/webmds/webmds?info=c3info
+http://webmds.lrz.de:8080/webmds/webmds?info=indexinfo&xsl=servicegroupxsl
+http://c3grid.rrz.uni-koeln.de:8080/webmds/webmds?info=indexinfo&xsl=servicegroupxsl
+
+webmds:
+-install tomcat and deploy webmds application from globus home
+-configure global options to allow user specified queries using XPath
