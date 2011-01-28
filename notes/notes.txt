@@ -142,7 +142,8 @@ http://www.mail-archive.com/gt-user@globus.org/msg00755.html
 -download binary 4.0.7 and extract to /opt/globus
 wget http://www-unix.globus.org/ftppub/gt4/4.0/4.0.7/installers/bin/gt4.0.7-x86_rhas_4-installer.tar.gz
 export $JAVA_HOME=/usr/java/default
-export $PATH=$JAVA_HOME/bin:$PATH
+[root@osweb ~]# export JAVA_HOME=/etc/alternatives/java_sdk
+export PATH=$JAVA_HOME/bin:$PATH
 ./configure
 make
 make install

@@ -15,13 +15,13 @@ non-service based RB, and gLite RB which is service based. A Workload
 Management System (WMS) exists in gLite to do the distribution and management of
 the Computing and Storage oriented tasks.
 
-%copy-paste
-Several resource brokers use the information system of the underlying
-middleware. In this case the relevant information from the brokers' view is the
-data store and query. The two main subcategories are the directory-based and
-service-based implementations. These properties tell us how the brokers access
-resource data and what kind of information they can use for resource mapping -
-since this is determined by the information system of the middleware.
+Based on the middleware that resource brokers rely on, they use the
+equivalent information system. From resource broker's point of view, the
+relevant information is the data store and query. There are two main categories
+of information systems in middlewares. The Directory-based and the
+Service-based. They are used for resource mapping by the brokers when they
+access the resource data.
+
 \begin{figure}
 \begin{center}
 \input {extra/rb_is}
@@ -31,37 +31,28 @@ Systems\cite{Kertesz06ataxonomy}}
 \end{figure}
 
 \subsection{Globus}
-anafora sto Globus, sto Globus Toolkit, kai se MDS, klp 
-ki edw \cite{von1998usage,945188,zhang2004performance}
 
-apo edw ta perissotera: http://www.globus.org/toolkit/mds/
+Globus Toolkit is an open source toolkit used to build grids. It provides
+standards such as OGSA, OGSI, WSRF and GSI, and the implementations to OGF
+protocols such as MDS and GRAM.
+
+\nomenclature{OGF}{Open Grid Forum}
+\nomenclature{OGSA}{Open Grid Services Architecture}
+\nomenclature{OGSI}{Open Grid Services Infrastructure}
+\nomenclature{WSRF}{Web Services Resource Framework}
+\nomenclature{MDS}{Monitoring and Discovery Service}
+\nomenclature{GRAM}{Grid Resource Allocation \& Management Protocol}
+
+Monitoring and Discovery Service (MDS) is part of Globus Toolkit. It provides
+the information for the availability and status of grid resources.
 
 \subsection{gLite}
 
-% TODO to gLite monitoring me dika mou logia
-The ability to monitor resource related parameters is currently considered a
-necessary functionality in any network. In such a heterogeneous and complex
-system as the Grid, this necessity becomes fundamental. A monitoring system
-implies the existence of a central repository of operational information (in
-WLCG/EGEE, the GOCDB). The monitoring system should be able to collect data from
-the resources in the system, in order to analyze the usage, behavior and
-performance of the Grid, detect and notify fault conditions, contract violations
-and user-defined events.
-The GOC web page contains a whole section
-concerning monitoring information for WLCG/EGEE. Several different monitoring
-tools are in use, including general-purpose monitoring tools and Grid specific
-systems.
-Also important are the web pages publishing the results of functional tests
-applied periodically using the Service Availability Monitoring (SAM) to the all
-the sites registered within WLCG/EGEE. The results of these tests show if a site
-is responding correctly to standard Grid operations; otherwise, an investigation
-on the cause of the unexpected results is undertaken. Some VOs may even decide
-to automatically exclude from their BDII the sites that are not passing the
-functional tests successfully, so that they do not appear in the IS and are not
-considered for possible use by their applications.
-%%
-% https://edms.cern.ch/file/722398/1.3/gLite-3-UserGuide.html#SECTION00073000000000000000
-
+% copy apo wikipedia:
+The Information System that is used in gLite 3.1 inherits its main concepts from
+the Globus Monitoring and Discovery Service (MDS).[5] However, the GRIS and GIIS
+in MDS has been replaced by the Berkeley Database Information Index which is
+essentially an OpenLDAP server that is updated by an external process.
 
 
 \section{Information Services}
@@ -97,26 +88,46 @@ problem, such as MDS2 (GIIS \& GRIS), GMA and R-GMA
 %\end{figure}
 
 \subsection{MDS}
-% copy-paste apo to site tou globus:
-The Monitoring and Discovery System (MDS) is the information services component
-of the Globus Toolkit and provides information about the available resources on
-the Grid and their status.
-\subsubsection{History}
+Monitoring and Discovery Services is about collecting, distributing, indexing
+and archiving information of the status of resources, services and
+configurations. The collected information is used to detect new services and
+resources, or to monitor the state of a system.
+
+Globus Toolkit was using LDAP-based implementation for its information system
+since its early versions, back in 1998 \cite{von1998usage}. MDS2 in Globus
+Toolkit fully implemented referral with a combined GRIS and GIIS, using
+mds-vo-name=local to refer to the GRIS and all other strings to refer to a
+GIIS. It was widely accepted as a standard implementation of a grid information
+system \cite{945188}, with good scalability and performance
+\cite{zhang2004performance}.
+
+\nomenclature{GIIS}{Grid Index Information Service}
+\nomenclature{GRIS}{Grid Resource Information Service}
+
+MDS4 includes WSRF implementations of the Index Service, a
+Trigger Service, WebMDS (formerly known as the Web Service Data Browser) and the
+underyling framework, the Aggregator Framework.
+
+Web Services Resource Framework introduced an Aggregator Framework:
+
 \begin{enumerate}
-  \item{GT2} LDAP GLUE schema implementation
-  \item{GT2} Ganglia to LDAP GLUE information provider
-  \item{GT3} XML mapping of the GLUE schema
-  \item{GT4} WSRF, Aggregator Framework
+  \item MDS-Index, which provides a collection of services monitoring
+  information and an interface to query such information.
+  \item MDS-Trigger, which provides a mechanism to take action on collected
+  information.
+  \item MDS-Archive, is planned for future release of MDS, to provide access to
+  archived data of monitoring information.
 \end{enumerate}
 
-\subsection{XML based schemata}
-\begin{enumerate}
-  \item{GRAM}
-  \item{Crux}
-\end{enumerate}
+External software components that are used to collect information (such as
+Ganglia)\cite{gangliaWSRF} are called Information Providers.
 
-\subsection{Web Services Resource Framework}
-Ganglia using WSRF \cite{gangliaWSRF}
+\begin{figure}[htb]
+\centering
+ \includegraphics[width=4in]{images/wsrf.pdf}
+\caption{Web Service Resource Framework}
+\label{figure:wsrf}
+\end{figure}
 
 \subsection{Glue}
 Open Grid Forum, GLUE Working Group \& GLUE specification v. 2.0
@@ -131,30 +142,29 @@ Schema developed by DataTAGfor EU/USA interoperability
 
 
 \subsection{BDII}
+glite uses bdii..
 
-
-\subsection{ATP}
-Aggregated Topology Provider (ATP) : ATP is a repository of grid topology
-containing information about projects (WLCG), grid infrastructures (EGEE, OSG,
-NDGF), Sites, Services, VOs and their groupings, site / service downtimes and
-its history. It synchronizes topology information from OSG IM, GOCDB and BDII.
-
-\subsection{MDDB}
-Metric Description Database (MDDB) : Project-level component that contains
-meta-data about metrics and how those metrics can be combined to calculate
-different availabilities.
-
-\subsection{MRS}
-Metric Result Store (MRS) : A Repository of metric results containing Metric
-results for service end-points for the grid infrastructure.
-
-\subsection{ACE}
-Availability Computation Engine (ACE) : The Availability Computation Engine
-(ACE) module computes availability of Grid Resources using Test Results form
-MRS, topology data from ATP and profile definition from MDDB. It supports
-multiple algorithms for computation of Grid Resources.
-
-
+% TODO to gLite monitoring me dika mou logia
+The ability to monitor resource related parameters is currently considered a
+necessary functionality in any network. In such a heterogeneous and complex
+system as the Grid, this necessity becomes fundamental. A monitoring system
+implies the existence of a central repository of operational information (in
+WLCG/EGEE, the GOCDB). The monitoring system should be able to collect data from
+the resources in the system, in order to analyze the usage, behavior and
+performance of the Grid, detect and notify fault conditions, contract violations
+and user-defined events.
+The GOC web page contains a whole section
+concerning monitoring information for WLCG/EGEE. Several different monitoring
+tools are in use, including general-purpose monitoring tools and Grid specific
+systems.
+Also important are the web pages publishing the results of functional tests
+applied periodically using the Service Availability Monitoring (SAM) to the all
+the sites registered within WLCG/EGEE. The results of these tests show if a site
+is responding correctly to standard Grid operations; otherwise, an investigation
+on the cause of the unexpected results is undertaken. Some VOs may even decide
+to automatically exclude from their BDII the sites that are not passing the
+functional tests successfully, so that they do not appear in the IS and are not
+considered for possible use by their applications.
 
 \section{Performance Monitoring}
 Standards are being published about the operational models that the grid
