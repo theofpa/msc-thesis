@@ -188,3 +188,6 @@ http://c3grid.rrz.uni-koeln.de:8080/webmds/webmds?info=indexinfo&xsl=servicegrou
 webmds:
 -install tomcat and deploy webmds application from globus home
 -configure global options to allow user specified queries using XPath
+
+ganglia on BDII using GIP:
+http://gkswiki.fzk.de/index.php5/Administration_of_the_site_BDII
