@@ -1,24 +1,70 @@
-% TODO na valw to gmond sto LTSP
-laboratory
-
 \section{Approach Adopted}
 
-na perigrapsw to implementation of performance analysis of distributes systems
-in GMA \cite{balatonuse}
+edw
 
+to keimeno
+
+pou tha leei
+
+panw katw
+
+ti ginetai
+
+s'auto to kefalaio
+
+DHLADH THA ESTIAZEI STO WS 'H LDAP
+
+\newpage
+
+\subsection{implementation of performance analysis of
+distributes systems in GMA}
+na perigrapsw to paper: \cite{balatonuse}
+requirements
+
+very large volume of data
+
+measurement data must be accurate and consistent
+
+problems
+
+time synchronisation
+
+time measurments must be accurate
+
+time measurements must be consistent.
+
+implementation
+
+consumer registers interest
+
+trace events generation
+
+producers query IS for consumer
+
+producers subscribe to consumers
+
+consumer get events
+
+\newpage
 
 \section{Design Methods}
 \subsection{Recommendations and standards}
 \subsubsection{Grid Monitoring Architecture}
 \nomenclature{GMA}{Grid Monitoring Architecture}
 %% TODO producer-consumer plot
+\newpage
+
 \subsubsection{R-GMA}
 %% TODO R-GMA literature
+\newpage
+
 \nomenclature{R-GMA}{Relational Grid Monitoring Architecture}
 \subsubsection{XML schema}
 \subsubsection{GLUE}
 gained wide acceptance given its adoption by Globus MDS3
 \nomenclature{GLUE}{Grid Laboratory Uniform Environment}
+\newpage
+
 \begin{figure}[htb]
 \centering
  \includegraphics[width=5in]{images/gluece_ext.pdf}
@@ -26,6 +72,7 @@ gained wide acceptance given its adoption by Globus MDS3
 \label{figure:gluece_ext}
 \end{figure}
 
+\newpage
 
 \subsection{Information Infrastructure}
 % TODO to MDS me dika mou logia
@@ -59,6 +106,7 @@ data about entities, such as people, corporations, and computers.
 X.500 provides a framework that could, in principle,
 be used to organize the information that is of interest to us.
 \cite{mds1}
+\newpage
 
 \section{Data-acquisition Systems}
 plugins that take metrics (SAM) and send results to nagios:
@@ -96,6 +144,7 @@ IOPS
 free space
 
 EGI accounting portal: CPU usage metrics aggregated for accounting.
+\newpage
 
 \subsection{Metrics}
 
@@ -116,27 +165,36 @@ running or uninterruptible state.
 \label{figure:calc_load}
 \end{figure}
 
+\newpage
 
 \subsection{Ganglia}
 enw to ganglia to kanei etsi
+\newpage
+
 \begin{figure}[htb]
 \centering
  \includegraphics[width=6in]{images/ganglia_data_flow.pdf}
 \caption{Ganglia Data Flow}
 \label{figure:ganglia_dataflow}
 \end{figure}
+\newpage
 
 \subsection{Nagios}
 msg-to-handler msg-nagios-bridge
+\newpage
+
 nagios2metric
+\newpage
 
 \subsection{Ganglia to Nagios}
+check\_ganglia
 \begin{figure}[htb]
 \centering
  \includegraphics[width=2in]{images/nagios_check_ganglia.pdf}
 \caption{Nagios configuration and check ganglia values}
 \label{figure:nagios_ganglia}
 \end{figure}
+\newpage
 
 \subsection{pnp4nagios}
 
@@ -151,9 +209,9 @@ create graphs using RRDTOOL
 \caption{PNP 4 Nagios data flow}
 \label{figure:pnp4nagios}
 \end{figure}
+\newpage
 
-\section{Range of cases examined}
-\subsection{Metrics}
+\section{Range of cases examined - Metrics}
 % here there will be an enumeration of metrics, gmond, etc
 
 Grid performance can be measured using benchmark tools in different levels of
@@ -173,11 +231,12 @@ GcpSensor \cite{gcpsensor} introduce a new performance metric called WMFLOPS. It
 uses PAPI \cite{papi} (Performance API) to access the hardware performance
 counters. For data distribution it uses MDS information system which provides
 dynamic metrics for CPU load average, one for 1, for 5 and for 15 minutes load.
+\newpage
 
 % TODO ganglia to MDS
-\subsection{Publish to Information System}
+\section{Publish to Information System}
 
-\subsubsection{LDAP based - MDS/BDII}
+\subsection{LDAP based - MDS/BDII}
 \begin{enumerate}
   \item Python ganglia client script:
   http://globus.org/toolkit/docs/2.4/mds/gangliaprovider.html
@@ -189,6 +248,7 @@ dynamic metrics for CPU load average, one for 1, for 5 and for 15 minutes load.
 
 \end{enumerate}
 
+\newpage
 Glue schema
 
 GlueCluster
@@ -215,8 +275,10 @@ Python:
 $[root@mon ~]# /opt/ganglia/bin/ganglia --format=MDS
 \end{lstlisting}
 
+\newpage
 
-\subsubsection{Web Service based - WSRF}
+\subsection{Web Service based - WSRF}
+\subsubsection{container}
 using WSRF (GT4, information services, information providers)
 Ganglia Resource Provider
 MDS Index Service
@@ -224,6 +286,19 @@ GLUE CE
 
 OASIS standard
 
+container
+\newpage
+\subsection{information provider}
+wssd
+
+kai
+
+rp xml
+
+\newpage
+\subsubsection{XPath}
+example queries
+\subsubsection{XSLT}
 my note: WSRF is GLUE 2.0 schema CE compatible
 \begin{verbatim}
 /opt/globus/etc/globus_wsrf_mds_usefulrp/ganglia_to_glue.xslt
@@ -232,21 +307,28 @@ my note: WSRF is GLUE 2.0 schema CE compatible
 
 <xsl:attribute name="glue:Last1Min">
   <xsl:call-template name="emitProperNumeric">
-    <xsl:with-param name="numeric" select="floor(100 * METRIC[@NAME='load_one']/@VAL)"/>
+    <xsl:with-param name="numeric" 
+    select="floor(100 * METRIC[@NAME='load_one']/@VAL)"/>
   </xsl:call-template>
 </xsl:attribute>
 
 <xsl:attribute name="glue:Last5Min">
   <xsl:call-template name="emitProperNumeric">
-    <xsl:with-param name="numeric" select="floor(100 * METRIC[@NAME='load_five']/@VAL)"/>
+    <xsl:with-param name="numeric" 
+    select="floor(100 * METRIC[@NAME='load_five']/@VAL)"/>
   </xsl:call-template>
 </xsl:attribute>
 
 <xsl:attribute name="glue:Last15Min">
   <xsl:call-template name="emitProperNumeric">
-    <xsl:with-param name="numeric" select="floor(100 * METRIC[@NAME='load_fifteen']/@VAL)"/>
+    <xsl:with-param name="numeric" 
+    select="floor(100 * METRIC[@NAME='load_fifteen']/@VAL)"/>
   </xsl:call-template>
 </xsl:attribute>
 
 </glue:ProcessorLoad>
 \end{verbatim}
+\newpage
+
+\subsubsection{WebMDS}
+webmds

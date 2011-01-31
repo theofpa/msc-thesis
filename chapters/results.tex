@@ -1,4 +1,39 @@
 \section{Tables and Plots}
+\subsection{Unix stuff}
+example processes/load monitoring
+
+top/uname
+
+cat /proc/loadavg
+
+code from linux kernel about CALC\_LOAD
+
+\newpage
+
+\subsection{Gmond}
+
+\subsubsection{Installation and configuration}
+\newpage
+
+\subsubsection{Transport and sample}
+code from gmond client
+
+example output 
+
+port and xml staff
+
+multicast examples
+\newpage
+
+\subsubsection{Gmetad}
+\newpage
+
+XDR
+
+gstat -al1
+
+\newpage
+
 \subsection{Visualization}
 Drill down and levels of visualization
 \begin{enumerate}
@@ -8,22 +43,75 @@ Drill down and levels of visualization
   \item grid
 \end{enumerate}
 
-WEBMDS
+ganglia gui
+
+rrdtool
+\newpage
 
 \section{Methods of Presentation}
 
-/opt/glite/etc/gip/provider/glite-info-provider-service-xxx
 
+\subsection{WSRF}
+\begin{verbatim}
+/opt/globus/bin/wsrf-query \
+-s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService \
+"//*[local-name()='Host']"
+\end{verbatim}
+
+
+\begin{lstlisting}{language=XML}
+ <ns1:GLUECE xmlns:ns1="http://mds.globus.org/glue/ce/1.1">
+  <ns1:Cluster ns1:Name="OSLAB" ns1:UniqueID="OSLAB">
+   <ns1:SubCluster ns1:Name="main" ns1:UniqueID="main">
+    <ns1:Host ns1:Name="gr03.oslab.teipir.gr" 
+    ns1:UniqueID="gr03.oslab.teipir.gr" 
+    xmlns:ns1="http://mds.globus.org/glue/ce/1.1">
+     <ns1:Processor ns1:CacheL1="0" ns1:CacheL1D="0" 
+     ns1:CacheL1I="0" ns1:CacheL2="0" ns1:ClockSpeed="2392" 
+     ns1:InstructionSet="x86"/>
+     <ns1:MainMemory ns1:RAMAvailable="299" ns1:RAMSize="1010" 
+     ns1:VirtualAvailable="2403" ns1:VirtualSize="3132"/>
+     <ns1:OperatingSystem ns1:Name="Linux"
+     ns1:Release="2.6.18-194.26.1.el5"/>
+     <ns1:Architecture ns1:SMPSize="2"/>
+     <ns1:FileSystem ns1:AvailableSpace="201850" 
+     ns1:Name="entire-system" ns1:ReadOnly="false"
+     ns1:Root="/" ns1:Size="214584"/>
+     <ns1:NetworkAdapter ns1:IPAddress="10.0.0.33" 
+     ns1:InboundIP="true" ns1:MTU="0" 
+     ns1:Name="gr03.oslab.teipir.gr" ns1:OutboundIP="true"/>
+     <ns1:ProcessorLoad ns1:Last15Min="45" ns1:Last1Min="337"
+     ns1:Last5Min="126"/>
+    </ns1:Host>
+   </ns1:SubCluster>
+  </ns1:Cluster>
+ </ns1:GLUECE>
+\end{lstlisting}
+
+\subsubsection{XSLT}
+\newpage
+
+\subsubsection{WebMDS and XPath}
+query examples
+
+interface and forms description
+\newpage
+
+raw XML output from WebMDS
+\newpage
+
+\subsection{BDI}
+/opt/glite/etc/gip/provider/glite-info-provider-service-xxx
 create a wrapper to present ganglia url and status to the BDII
 
-\subsection{MDS BDII}
 Ganglia official python client:
 \begin{verbatim}
 [root@mon ~]# /opt/ganglia/bin/ganglia --format=MDS | grep -A 30 host=gr03
 \end{verbatim}
 
 \begin{lstlisting}
-dn: host=gr03.oslab.teipir.gr, scl=sub2, cl=datatag-CNAF, mds-vo-name=local, o=grid
+dn: host=gr03.oslab.teipir.gr, scl=sub2, cl=datatag-CNAF, \
+ mds-vo-name=local, o=grid
 objectclass: GlueHost
 GlueHostName: gr03.oslab.teipir.gr
 GlueHostUniqueID: RDLAB-TEIPIR-gr03.oslab.teipir.gr
@@ -60,7 +148,8 @@ Perl script to export MDS format:
 [root@mon ~]# ./ganglia_ip -h mon -p 8649 -o mds | grep -A 22 host=gr03
 \end{verbatim}
 \begin{lstlisting}
-dn: host=gr03.oslab.teipir.gr, cl=RDLAB, mds-vo-name=local, o=grid
+dn: host=gr03.oslab.teipir.gr, cl=RDLAB, \
+ mds-vo-name=local, o=grid
 objectclass: GlueHost
 GlueHostName: gr03.oslab.teipir.gr
 GlueHostUniqueID: RDLAB-TEIPIR-gr03.oslab.teipir.gr
@@ -84,32 +173,19 @@ GlueHostMainMemoryRAMSize: 1035104
 GlueHostMainMemoryRAMAvailable: 306280
 \end{lstlisting}
 
-\subsection{WSRF}
-\begin{verbatim}
-/opt/globus/bin/wsrf-query \
--s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService \
-"//*[local-name()='Host']"
-\end{verbatim}
-
-
-\begin{lstlisting}{language=XML}
- <ns1:GLUECE xmlns:ns1="http://mds.globus.org/glue/ce/1.1">
-  <ns1:Cluster ns1:Name="OSLAB" ns1:UniqueID="OSLAB">
-   <ns1:SubCluster ns1:Name="main" ns1:UniqueID="main">
-    <ns1:Host ns1:Name="gr03.oslab.teipir.gr" ns1:UniqueID="gr03.oslab.teipir.gr" xmlns:ns1="http://mds.globus.org/glue/ce/1.1">
-     <ns1:Processor ns1:CacheL1="0" ns1:CacheL1D="0" ns1:CacheL1I="0" ns1:CacheL2="0" ns1:ClockSpeed="2392" ns1:InstructionSet="x86"/>
-     <ns1:MainMemory ns1:RAMAvailable="299" ns1:RAMSize="1010" ns1:VirtualAvailable="2403" ns1:VirtualSize="3132"/>
-     <ns1:OperatingSystem ns1:Name="Linux" ns1:Release="2.6.18-194.26.1.el5"/>
-     <ns1:Architecture ns1:SMPSize="2"/>
-     <ns1:FileSystem ns1:AvailableSpace="201850" ns1:Name="entire-system" ns1:ReadOnly="false" ns1:Root="/" ns1:Size="214584"/>
-     <ns1:NetworkAdapter ns1:IPAddress="10.0.0.33" ns1:InboundIP="true" ns1:MTU="0" ns1:Name="gr03.oslab.teipir.gr" ns1:OutboundIP="true"/>
-     <ns1:ProcessorLoad ns1:Last15Min="45" ns1:Last1Min="337" ns1:Last5Min="126"/>
-    </ns1:Host>
-   </ns1:SubCluster>
-  </ns1:Cluster>
- </ns1:GLUECE>
-\end{lstlisting}
-
-
 \section{Description of Information}
 
+\subsection{DOM}
+php code example
+
+WSRF -> DOM example
+
+\newpage
+
+screenshot of output (green/yellow/red) colored
+
+\newpage
+
+pages from \url{http://people.brunel.ac.uk/~dc09ttp}
+
+\newpage

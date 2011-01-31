@@ -8,6 +8,14 @@ production. Use of grid computing nowadays takes place in academic and research
 environments. Also, applications in industry-based needs such as promising
 Power Grid control \cite{Taylor2006} are emerging.
 
+%TODO extra about grid/cloud
+
+Cloud
+
+stuff
+
+here
+
 \section{Resource Brokers}
 Resource Brokers \cite{Kertesz06ataxonomy} where developed to manage the
 workload on Computer elements and Resource elements. Globus is a
@@ -47,6 +55,15 @@ protocols such as MDS and GRAM.
 Monitoring and Discovery Service (MDS) is part of Globus Toolkit. It provides
 the information for the availability and status of grid resources.
 
+%% TODO more about globus
+extra
+
+extra
+
+read all about it
+
+
+
 \subsection{gLite}
 
 gLite is a middleware which was created to be used in the operation of the
@@ -57,8 +74,12 @@ Computer Element, Storage Element, Workload Management System and Information Se
 The information service in version 3.1 of gLite is similar to MDS of Globus
 middleware, except that the GRIS and GIIS are provided by BDII (see Section
 \nameref{subsec:bdii}) which is an LDAP based service.
+\newpage
 
 \nomenclature{BDII}{Berkeley Database Information Index}
+
+
+%% TODO more about glite
 
 \section{Information Services}
 \begin{figure}[htb]
@@ -118,7 +139,7 @@ Ganglia)\cite{gangliaWSRF} are called Information Providers.
 
 \begin{figure}[htb]
 \centering
- \includegraphics[width=4in]{images/wsrf.pdf}
+ \includegraphics[width=5in]{images/wsrf.pdf}
 \caption{Web Service Resource Framework}
 \label{figure:wsrf}
 \end{figure}
@@ -150,6 +171,14 @@ Information about the status of a service and its parameters is pushed on BDII
 using external processes. An information provider is also used (such as in WSRF)
 to describe the service attributes using the GLUE schema.
 
+%% TODO make a graph about BDII
+\begin{figure}[htb]
+\centering
+ \includegraphics[width=5in]{images/bdii.png}
+\caption{Berkeley Database Information Index}
+\label{figure:bdii}
+\end{figure}
+
 \section{Performance Monitoring}
 %TODO those two paragraphs should be replaced or removed
 Standards are being published about the operational models that the grid
@@ -173,6 +202,7 @@ meet the milestone of EGI to have a regional monitoring tool (Nagios) to report
 the reliability of the joined sites and report the values for SLA reasons.
 
 \subsection{Ganglia}
+\newpage
 
 \section{European Grid Infrastructure}
 Latest EGI directive to form regional operation tools pushed the use of Nagios
@@ -193,6 +223,7 @@ ticketing system that european grid initiative uses.
 By the end of the project the monitoring infrastructure (regional Nagios servers and the corresponding regional MyEGEE portals [R52], [R53]) will complete the transition process to a fully distributed infrastructure.
 The Nagios-based system will totally replace the Service Availability Monitoring (SAM)
 infrastructure. At the time of writing two monitoring environments are operated: a production one and a test one.
+\newpage
 
 
 \subsection{NGS}
