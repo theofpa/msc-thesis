@@ -100,7 +100,7 @@ interface and forms description
 raw XML output from WebMDS
 \newpage
 
-\subsection{BDI}
+\subsection{BDII}
 /opt/glite/etc/gip/provider/glite-info-provider-service-xxx
 create a wrapper to present ganglia url and status to the BDII
 
@@ -171,6 +171,21 @@ GlueHostNetworkAdapterIPAddress: 10.0.0.33
 objectclass: GlueHostMainMemory
 GlueHostMainMemoryRAMSize: 1035104
 GlueHostMainMemoryRAMAvailable: 306280
+\end{lstlisting}
+
+\begin{lstlisting}
+
+[root@osweb ~]# ldapsearch -H ldap://osweb.teipir.gr:2170 -x \
+-b GlueHostName=ainex.local,Mds-Vo-name=local,o=grid \
+GlueHostProcessorLoadLast1Min GlueHostProcessorLoadLast5Min \
+GlueHostProcessorLoadLast15Min
+
+# ainex.local, local, grid
+dn: GlueHostName=ainex.local,Mds-Vo-name=local,o=grid
+GlueHostProcessorLoadLast1Min: 27
+GlueHostProcessorLoadLast15Min: 22
+GlueHostProcessorLoadLast5Min: 20
+
 \end{lstlisting}
 
 \section{Description of Information}

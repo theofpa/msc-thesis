@@ -275,6 +275,13 @@ Python:
 $[root@mon ~]# /opt/ganglia/bin/ganglia --format=MDS
 \end{lstlisting}
 
+\begin{lstlisting}
+
+[root@osweb ~]# cat /opt/glite/etc/gip/provider/glite-info-provider-service-ganglia-wrapper
+#!/bin/bash
+/opt/bin/ganglia_ip -h 195.251.70.54 -p 8649 -o mds
+\end{lstlisting}
+
 \newpage
 
 \subsection{Web Service based - WSRF}
