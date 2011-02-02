@@ -1,114 +1,46 @@
 \section{Context}
 
 %what the subject is;
-Performance monitoring of a grid is a key part in grid computing. Based on the
-reports of grid performance, decisions on capacity planning are being made.
-Customizable visualization of performance status in different levels helps
-scientists and managers focus on the exact point of the infrastructure where a
-bottleneck on service exists.
+Performance monitoring of a grid is a key part in grid computing. Based on the reports of grid performance, decisions on capacity planning are being made. Visualization of performance status in different levels helps scientists and managers focus on the exact point of the infrastructure where a bottleneck on service exists.
 %why you are investigating it;
-Current interfaces delivers performance graphs without following the standard
-topology schema that is presented by the grid information system.
+Current interfaces delivers performance graphs without following the standard topology schema that is presented by the grid information system.
 
 %which aspects you will consider, and why;
-ATP standard and GLUE schema are examined to understand the gathering process of
-metrics. Ganglia's hierarchical delegation to create managable monitoring
-domains is an important aspect. MyEGI which is based in Django python
-framework, access easily the unified metrics database. 
+WSRF aggregation framework and GLUE schema are examined to understand the gathering process of metrics. Ganglia's hierarchical delegation to create managable monitoring domains is an important aspect. MyEGI which is based in Django python framework, access easily the unified metrics database. 
 %which aspects you will not consider, and why;
-Performance in the aspect of how many jobs are served by each site is not
-examined in this project.
+Performance in the aspect of how many jobs are served by each site is not examined in this project.
 %what you hope to find out;
-Whether it is possible to integrate Ganglia performance graphs in MyEGI
-and Nagios interfaces, using the standard Information System of ATP.
+Whether it is possible to integrate Ganglia performance graphs in MyEGI and Nagios interfaces, using the standard Information System of ATP.
 
 %what your starting point(s) will be
-Build a lab to gather performance data and start working on the development of
-the integration parts.
+Build a lab to gather performance data and start working on the development of the integration parts.
 %what assumptions you are making
-It is assumed that the environment is a grid site, that already have the
-components needed to work together. Ganglia daemons on each node, presented by
-the GLUE schema on site BDII, Nagios/MyEGI monitoring frameworks.
+It is assumed that the environment is a grid site, that already have the components needed to work together. Ganglia daemons on each node, presented by the GLUE schema on site BDII, Nagios/MyEGI monitoring frameworks.
 %how you will present the subject.
-A web interface is available to present the work of the integration of Ganglia
-into Nagios/MyEGI.
+A web interface is available to present the work of the integration of Ganglia into Nagios/MyEGI.
 
 
 \section{Aims \& Objectives}
 %the aim and objectives of the work presented in the report
 
-Different role users are going to use a portal to get information about the
-performance status of the grid, to export the appropriate report for their job.
-This project aims to develop these particular pieces of code to support the 
-aggregation of the metrics from nagios, to allow the web based customization of
-the visualization of the reports. These metrics are needed to report the
-availability and reliability of NGIs and particular sites of the grid.
+Different role users are going to use a portal to get information about the performance status of the grid, to export the appropriate report for their job. This project aims to develop these particular pieces of code to support the aggregation of the metrics from nagios, to allow the web based customization of the visualization of the reports. These metrics are needed to report the availability and reliability of NGIs and particular sites of the grid.
 
-The procedures that are going to be used in order to achieve the above aims
-should include at the beggining some opening and exploration of the environment
-where the interface is going to be placed. The usage of grid computing in
-the world should be well known, so a visibility of the importance and the
-possible uses of the software will be recognised. The appropriate
-access to the infrastructure should be gained, on different platforms and levels.
-Brunel University site and GridPP/NGS VO at the beggining, as long as the UKI
-ROC operations may be a good point of collaboration with researchers to reach
-the bests possible requirements and data to analyse. The middleware used in
-both these VOs should be examined so with the knowlege of running projects and
-global usage of them may target to export better specifications. Existing
-operations on the grid should also be discovered. The european initiative
-milestones on the operations of the regional level should be considered as a
-route, and registration to news about the upcoming research projects that
-are going to use the grid should also be take place.
+The procedures that are going to be used in order to achieve the above aims should include at the beggining some opening and exploration of the environment where the interface is going to be placed. The usage of grid computing in the world should be well known, so a visibility of the importance and the possible uses of the software will be recognised. The appropriate access to the infrastructure should be gained, on different platforms and levels. Brunel University site and GridPP/NGS VO at the beggining, as long as the UKI ROC operations may be a good point of collaboration with researchers to reach the bests possible requirements and data to analyse. The middleware used in both these VOs should be examined so with the knowlege of running projects and global usage of them may target to export better specifications. Existing operations on the grid should also be discovered. The european initiative milestones on the operations of the regional level should be considered as a route, and registration to news about the upcoming research projects that are going to use the grid should also be take place.
 
+After that wide-opening to get the whole picture, a targeted and focused view should follow. Existing monitoring tools must be used to check the problems and search for requirements. The experience of SAM, Gridview, Gridmap, Gstat, GridICE, etc should be taken in order to merge their functionality as possible as it is. Information systems that already reside over the infrastructure, must also be learned. Standards and specifications should be examined, on how the message bus works and delivers the data in an hierarhical manner. A contact with the CERN team working on MyEGEE and Indiana University's MyOSG team should be established, to collaborate on the core of MyOSG source. Changes submission to subversion system as long as ticket closure of the development project tool will help to get to know the core of MyEGEE and Nagios. It is possible to create and upstream a nagios customized web interface, to create different views of nagios resources scheme to grid topology oriented architecture. Nagios, NRPE and Ganglia installations should be deployed across the CE\&SE nodes of Brunel's sites to have a working production environment to work on. Attention should be taken on the potential performance impact of these sensors deployment. UKI MyEGEE validation/testing portal will be used as a pre-production environment to check changes. PNP should be fixed in GridPP Nagios to be evaluated. Statistical access log analysis of existing tools may have results on trends of users/admins prefered views.
 
-After that wide-opening to get the whole picture, a targeted and focused
-view should follow. Existing monitoring tools must be used to check the problems
-and search for requirements. The experience of SAM, Gridview, Gridmap, Gstat,
-GridICE, etc should be taken in order to merge their functionality as possible
-as it is. Information systems that already reside over the infrastructure, must
-also be learned. Standards and specifications should be examined, on how the
-message bus works and delivers the data in an hierarhical manner. A contact
-with the CERN team working on MyEGEE and Indiana University's MyOSG team should
-be established, to collaborate on the core of MyOSG source. Changes submission
-to subversion system as long as ticket closure of the development project tool
-will help to get to know the core of MyEGEE and Nagios. It is possible to create
-and upstream a nagios customized web interface, to create different views of
-nagios resources scheme to grid topology oriented architecture. Nagios, NRPE and
-Ganglia installations should be deployed across the CE\&SE nodes of Brunel's
-sites to have a working production environment to work on. Attention should be
-taken on the potential performance impact of these sensors deployment. UKI
-MyEGEE validation/testing portal will be used as a pre-production environment
-to check changes. PNP should be fixed in GridPP Nagios to be evaluated.
-Statistical access log analysis of existing tools may have results on trends of
-users/admins prefered views.
-
-Various tools are going to be used to track changes and collaborate. Monitoring
-articles in GridPP wiki \& CERN twiki should be made. Snippets upstream \&
-status changes must be a regular operation in SVN/JIRA/Trac in CERN interfaces.
-Ongoing task through the disseration project is the reading of papers and
-methodical updates of Mendeley citation management tool to have the bibliography
-organized. Possible changes suggestions to MSc on DCS cource notes about grid
-monitoring may by made, as long as the EGI roadmap updates. Finally with the
-appropriate supervision and follow-up of meetings and presentations, a paper publishing
-might take place.
-
-
+Various tools are going to be used to track changes and collaborate. Monitoring articles in GridPP wiki \& CERN twiki should be made. Snippets upstream \& status changes must be a regular operation in SVN/JIRA/Trac in CERN interfaces. Ongoing task through the disseration project is the reading of papers and methodical updates of Mendeley citation management tool to have the bibliography organized. Possible changes suggestions to MSc on DCS cource notes about grid monitoring may by made, as long as the EGI roadmap updates. Finally with the appropriate supervision and follow-up of meetings and presentations, a paper publishing might take place.
 
 \section{Organization}
 
 \subsection[Tools]{Tools}
-This project was developed in \LaTeX using Eclipse and TeXlipse plugin. Its
-releases may be found in Google Code, where Mercurial was used for source
-control. Citation management through Mendeley software. Papers obtained
-by becoming member of IEEE, ACM and USENIX. Operating Systems Laboratory of
-Technological Education Institute of Piraeus was used to build a testbed of grid
-site and tools to study existing monitoring tools.
+This project was developed in \LaTeX using Vi editor. Its releases may be found in Google Code, where Mercurial was used for source control. Citation management through Mendeley software. Papers obtained by becoming member of IEEE, ACM and USENIX. Operating Systems Laboratory of Technological Education Institute of Piraeus was used to build a testbed of grid site and tools to study existing monitoring tools.
 
 %the initial time plan for the project work
 \subsection[Time plan]{Time-plan (Gantt Chart)}
 
 \begin{table}[ht]
-\begin{tabular}{ | l | l | l | l | r |}    
+\begin{tabular}{ | l | l | l | l | r |}
 \hline
 Task & Start date & End date & Duration in days \\ \hline
   Preliminary & 09/29/10 & 10/24/10 & 20 \\ \hline 

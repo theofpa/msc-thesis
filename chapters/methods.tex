@@ -16,8 +16,7 @@ DHLADH THA ESTIAZEI STO WS 'H LDAP
 
 \newpage
 
-\subsection{implementation of performance analysis of
-distributes systems in GMA}
+\subsection{implementation of performance analysis of distributes systems in GMA}
 na perigrapsw to paper: \cite{balatonuse}
 requirements
 
@@ -56,9 +55,11 @@ consumer get events
 
 \subsubsection{R-GMA}
 %% TODO R-GMA literature
-\newpage
-
+The rgma client is no longer configured in SL5
 \nomenclature{R-GMA}{Relational Grid Monitoring Architecture}
+
+
+\newpage
 \subsubsection{XML schema}
 \subsubsection{GLUE}
 gained wide acceptance given its adoption by Globus MDS3
@@ -168,14 +169,16 @@ running or uninterruptible state.
 \newpage
 
 \subsection{Ganglia}
-enw to ganglia to kanei etsi
-\newpage
+
+The metrics about load in one, five and fifteen minutes are taken from Gmond daemon through the proc filesystem as seen in Figure \ref{figure:calc_load}. These values are multicasted using a UDP message on the network, only if the value has been changed from the previous one taken. There is also a time thresohold that after that time the value is been sent again, even if it haven't changed, so new hosts on the network may gather the data needed for their Gmond. Each host of a cluster have the information about the metrics of itself and each other node, so it stores the whole cluster state. Using loopback interface, every Gmond sends its metrics to itself.
+
+If a TCP connection on the Gmond listening port 8649 is made, Gmond writes a full cluster state of metrics in XML including its DTD. There is a typical access list in the configuration called trusted hosts, and of course every node that is in the cluster that a specific node is configured to be part of, is allowed to connect to get the XML.
 
 \begin{figure}[htb]
 \centering
  \includegraphics[width=6in]{images/ganglia_data_flow.eps}
-\caption{Ganglia Data Flow}
-\label{figure:ganglia_dataflow}
+\caption{Ganglia Network Communications}
+\label{figure:ganglia_network}
 \end{figure}
 \newpage
 
@@ -214,56 +217,49 @@ create graphs using RRDTOOL
 \section{Range of cases examined - Metrics}
 % here there will be an enumeration of metrics, gmond, etc
 
-Grid performance can be measured using benchmark tools in different levels of
-the grid architecture, using the micro-benchmarks at the Worker Node level, the
-Site (CE) level and the Grid VO level. Various benchmarks exist in these
-levels, using different libraries and algorithms, such as  This project focuses
-on mathematically compute of the performance of a grid based on the metrics that
-are taken at the Worker Node level.
+Grid performance can be measured using benchmark tools in different levels of the grid architecture, using the micro-benchmarks at the Worker Node level, the Site (CE) level and the Grid VO level. Various benchmarks exist in these levels, using different libraries and algorithms, such as This project focuses on mathematically compute of the performance of a grid based on the metrics that are taken at the Worker Node level.
 
-Different metrics and benchmarks exist, such as the measurement of
-the performance of CPUs in {\bf MIPS using EPWhetstone} and the evaluation of
-the performance of a CPU in {\bf FLOP/s and MB/s using BlasBench}. GridBench
-\cite{gridbench} provides a framework to collect those metrics using its own
-description language, {\bf GBDL}.
+Different metrics and benchmarks exist, such as the measurement of the performance of CPUs in {\bf MIPS using EPWhetstone} and the evaluation of the performance of a CPU in {\bf FLOP/s and MB/s using BlasBench}. GridBench \cite{gridbench} provides a framework to collect those metrics using its own description language, {\bf GBDL}.
 
-GcpSensor \cite{gcpsensor} introduce a new performance metric called WMFLOPS. It
-uses PAPI \cite{papi} (Performance API) to access the hardware performance
-counters. For data distribution it uses MDS information system which provides
-dynamic metrics for CPU load average, one for 1, for 5 and for 15 minutes load.
+GcpSensor \cite{gcpsensor} introduce a new performance metric called WMFLOPS. It uses PAPI \cite{papi} (Performance API) to access the hardware performance counters. For data distribution it uses MDS information system which provides dynamic metrics for CPU load average, one for 1, for 5 and for 15 minutes load.
 \newpage
 
 % TODO ganglia to MDS
 \section{Publish to Information System}
+\cite{goelagent}
 
 \subsection{LDAP based - MDS/BDII}
+To integrate Ganglia with MDS in early versions of Globus, there schema of OpenLDAP should be extended using the Glue-CE definitions from the DataTAG web site (MDS version 2.4). A Ganglia Information Provider was the native ganglia client on python, given by the ganglia development team itshelf.
 \begin{enumerate}
-  \item Python ganglia client script:
-  http://globus.org/toolkit/docs/2.4/mds/gangliaprovider.html
-  \item Perl gaglia-IP tool:
-  
-  http://www.star.bnl.gov/public/comp/Grid/Monitoring/SimpleGangliaIP.html
-  
-  http://www.star.bnl.gov/public/comp/Grid/Monitoring/ganglia\_ip
+  \item Python ganglia client script: \url{http://globus.org/toolkit/docs/2.4/mds/gangliaprovider.html}
+  \item Perl gaglia-IP tool: \url{http://www.star.bnl.gov/public/comp/Grid/Monitoring/SimpleGangliaIP.html} and \url{http://www.star.bnl.gov/public/comp/Grid/Monitoring/ganglia\_ip}
 
 \end{enumerate}
 
 \newpage
-Glue schema
 
-GlueCluster
-GlueClusterTop
-GlueGeneralTop
-GlueHost
-GlueHostArchitecture
-GlueHostMainMemory
-GlueHostNetworkAdapter
-GlueHostOperatingSystem
-GlueHostProcessor
-GlueHostProcessorLoad
-GlueHostSMPLoad
-GlueSubCluster
-GlueTop
+\begin{table}[ht]
+\begin{tabular}{ | l | l | r |}
+\hline
+{\bf Common Name} & {\bf Attribute} & {\bf Objectclass} \\ \hline
+Hostname & GlueHostName & GlueHost \\ \hline
+Unique ID assigned to the host & GlueHostUniqueID & GlueHost  \\ \hline
+Processor Load, 1 Min Average  & GlueHostProcessorLoadLast1Min & GlueHostProcessorLoad \\ \hline
+Processor Load, 5 Min Average  & GlueHostProcessorLoadLast5Min & GlueHostProcessorLoad \\ \hline
+Processor Load, 15 Min Average  & GlueHostProcessorLoadLast15Min & GlueHostProcessorLoad \\ \hline
+SMP Load, 1 Min Average  & GlueHostSMPLoadLast1Min & GlueHostSMPLoad \\ \hline
+SMP Load, 5 Min Average  & GlueHostSMPLoadLast5Min & GlueHostSMPLoad \\ \hline
+SMP Load, 15 Min Average  & GlueHostSMPLoadLast15Min & GlueHostSMPLoad \\ \hline
+Number of CPUs  & GlueHostArchitectureSMPSize & GlueHostArchitecture \\ \hline
+Processor Clock Speed (MHz)  & GlueHostProcessorClockSpeed & GlueHostProcessor \\ \hline
+Network Interface name  & GlueHostNetworkAdapterName & GlueHostNetworkAdapter \\ \hline
+Network Adapter IP address  & GlueHostNetworkAdapterIPAddress & GlueHostNetworkAdapter \\ \hline
+The amount of RAM  & GlueHostMainMemoryRAMSize & GlueHostMainMemory \\ \hline
+Free RAM (in KBytes)  & GlueHostMainMemoryRAMAvailable & GlueHostMainMemory \\ \hline
+\end{tabular}
+\caption{GLUE schema for Host Processor Information Provider}
+\label{tab:tasks}
+\end{table}
 
 Perl:
 \begin{lstlisting}
@@ -294,6 +290,12 @@ GLUE CE
 OASIS standard
 
 container
+\begin{figure}[htb]
+\centering
+ \includegraphics[width=5in]{images/wsrf.eps}
+\caption{Web Service Resource Framework}
+\label{figure:wsrf}
+\end{figure}
 \newpage
 \subsection{information provider}
 wssd
