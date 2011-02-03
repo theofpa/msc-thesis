@@ -1,6 +1,13 @@
 \section{Methods Adopted}
 
-\subsection{Peformance Metrics}
+In complex distributed systems such as grids, performance bottlenecks may be located using monitoring data. From the processor usage on a single node of a computing element to the total usage of processed jobs in a large cluster, performance data help to focus on the problem that impacts the overall performance.
+
+In order to succeed in grid monitoring, some requirements should be considered. A very large amount of data should be delivered real-time, from many heterogeneous sources on different networks or even countries. These data must be accurate and consistent. There should be synchronized timestamps on the generation of each metric, to the measurement value that should be comparable between different architectures. The time synchronization of the hosts of each cluster may be done using network time protocol, so all metrics are taken on the time that they actually report. Metrics should have error bounds to preserve accuracy, and the consistency issue is solved using coordination of that activity, so the impact of a metric to other sensors is controlled.
+
+The flow of the monitoring process initialization is described from the GMA standard. The application-consumer queries the directory service in order to declare its interest to get metrics for a specific host/cluster. The sensors of the elements that is equivalent to the specific query generates the metrics that will be given to the consumer from the producer, which in turn queries the directory service to find the consumer. The producer is the one that initializes the connection to the consumer in order to deliver the measurements, even if the consumer had asked the directory service for this.
+
+
+\subsection{Performance Metrics}
 
 CALC\_LOAD - load average
 
@@ -21,8 +28,8 @@ extra
 Discussion about performance results based on
 load average.
 
-some unix internals, processes, scheduler
-not a percentage counter of cpu usage
+some UNIX internals, processes, scheduler
+not a percentage counter of CPU usage
 
 \newpage
 
@@ -33,7 +40,7 @@ a grid based on the queue of jobs have been submitted.
 
 \section{Specific Interpretations}
 
-\subsection{Scalling}
+\subsection{Scaling}
 \subsubsection{LDAP}
 
 there is a paper about how information systems perform in large scale

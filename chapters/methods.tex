@@ -16,35 +16,6 @@ DHLADH THA ESTIAZEI STO WS 'H LDAP
 
 \newpage
 
-\subsection{implementation of performance analysis of distributes systems in GMA}
-na perigrapsw to paper: \cite{balatonuse}
-requirements
-
-very large volume of data
-
-measurement data must be accurate and consistent
-
-problems
-
-time synchronisation
-
-time measurments must be accurate
-
-time measurements must be consistent.
-
-implementation
-
-consumer registers interest
-
-trace events generation
-
-producers query IS for consumer
-
-producers subscribe to consumers
-
-consumer get events
-
-\newpage
 
 \section{Design Methods}
 \subsection{Recommendations and standards}
@@ -60,9 +31,18 @@ The rgma client is no longer configured in SL5
 
 
 \newpage
-\subsubsection{XML schema}
-\subsubsection{GLUE}
+\subsubsection{GLUE Schema}
 gained wide acceptance given its adoption by Globus MDS3
+
+
+GLUE schema came to provide the interoperability needed between US and European Physics Grid Projects. As a standard, a common schema was introduced to describe and monitor the grid resources. Major components include:
+\begin{enumerate}
+\item Computing Element (CE)
+\item Storage Element (SE)
+\item Network Element (NE)
+\end{enumerate}
+
+The implementation of Glue schema may be using LDAP, XML or SQL. The MDS implementation of the Glue schema in this project includes the core Information Provider and the Ganglia Interface for the cluster information.
 \nomenclature{GLUE}{Grid Laboratory Uniform Environment}
 \newpage
 
@@ -306,7 +286,30 @@ rp xml
 
 \newpage
 \subsubsection{XPath}
-example queries
+
+XPath is used to parse an XML document and get a part of it using an address scheme. For XPath, the XML document is a tree consisting of nodes, and its purpose as a language is to get the nodes that are addressed using the XPath query from that document.
+
+Its syntax is compact, non-XML and much like the filesystem addressing, so it facilitates the use of XPath within URIs.
+
+Example queries used in this project are:
+
+The following is used in the PHP code that queries the WebMDS for all nodes of the XML of the WSRF containing nodes with name $Host$:
+\begin{verbatim}
+//*[local-name()='Host']
+\end{verbatim}
+
+Another example is a more complex query that asks the WSRF for all nodes with name $Host$ that contains a sub-node named $ProcessorLoad$ and its $Last15Min$ attribute has value larger than 20:
+\begin{verbatim}
+//glue:Host[glue:ProcessorLoad[@glue:Last15Min>20]]
+\end{verbatim}
+
+Finally the following example may return only the $ProcessorLoad$ node of the $Host$ that has the attribute Name set to $xenia.oslab.teipir.gr$:
+\begin{verbatim}
+//glue:Host[@glue:Name='xenia.oslab.teipir.gr']/glue:ProcessorLoad
+\end{verbatim}
+
+\newpage
+
 \subsubsection{XSLT}
 my note: WSRF is GLUE 2.0 schema CE compatible
 \begin{verbatim}
