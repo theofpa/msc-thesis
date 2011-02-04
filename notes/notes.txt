@@ -98,32 +98,9 @@ ntpdate chronos.duth.gr
 # skaei
 [root@osweb hosts]# /opt/glite/yaim/bin/yaim -s /root/yaim/site-info.def -c -n NAGIOS
 
-#rgma
-   INFO: YAIM has detected the OS is SL5. The rgma client is no longer configured in SL5.
 
    
-# ganglia
-# & configure ganglia as a system service
-# gmetad
-yum install rrdtool perl-rrdtool rrdtool-devel apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
-GANGLIA_ACK_SYSCONFDIR=1 ./configure --with-gmetad
-make
-make install
-mkdir -p /var/lib/ganglia/rrds
-chown -R nobody /var/lib/ganglia
-# gmond
-yum install apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
-GANGLIA_ACK_SYSCONFDIR=1 ./configure
-make
-make install
-iptables -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 8649 -j ACCEPT
-oslab1841a(config)#ip nat inside source static tcp 10.0.0.28 80 195.251.70.54 80 extendable       
-#notes
--configure with multicast or unicast. jitter problem environments may use unicast, as long
- as amazon ec2 environments that are not support multicast.
 
-# which glue services does the information base provides?
-[root@osweb ~]# ldapsearch -h dgc-grid-44.brunel.ac.uk -p 2170 -x -b "mds-vo-name=uki-lt2-brunel,o=grid" '(&(objectclass=glueservice)(GlueServiceType=*))' GlueServiceType |grep "^GlueServiceType" |sort|uniq
 
 
 # large ganglia installations:
@@ -138,31 +115,6 @@ http://www.globus.org/toolkit/docs/development/4.1.3/info/providers/ganglia/gang
 http://www.globus.org/toolkit/docs/4.2/4.2.1/info/providers/ganglia/
 http://www.mail-archive.com/gt-user@globus.org/msg00755.html
 
-# installation of globus, wsrf, ganglia:
--download binary 4.0.7 and extract to /opt/globus
-wget http://www-unix.globus.org/ftppub/gt4/4.0/4.0.7/installers/bin/gt4.0.7-x86_rhas_4-installer.tar.gz
-export $JAVA_HOME=/usr/java/default
-[root@osweb ~]# export JAVA_HOME=/etc/alternatives/java_sdk
-export PATH=$JAVA_HOME/bin:$PATH
-./configure
-make
-make install
--install postgresql, create user & db
--configure globus to connect to postgresql
--create init script for wsrf container
--create ganglia resource provider for wsrf and connect to gmond
--call wsrf to get ganglia metrics
-
-# installation of bdii
--install glite-ui which installs bdii
--ldapsearch bdii
--test perl & python scripts to export mds from gmond
--configure connection to 
-
-# query WSRF for ganglia data:
-[root@osweb ~]# grid-proxy-init -verify -debug
-[root@osweb ~]# wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//*[local-name()='Host']"
-[root@osweb ~]# /opt/globus/bin/wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//glue:Host[glue:ProcessorLoad[@glue:Last15Min>20]]"  |grep Load
 
 XPath query language examples for WSRF:
 http://www.fdi.ucm.es/profesor/rubensm/CRTyG/Servicios%20de%20Informacion%20en%20el%20Grid.pdf
@@ -173,40 +125,12 @@ http://www.ibm.com/developerworks/wikis/display/WikiPtype/ganglia
 # Information flow
 http://www.globus.org/toolkit/docs/4.0/info/aggregator/user-index.html
 
-# Availability monitoring
--MyEGI, monitor visualization environment
--django data models
--MRS database, ATP based schema
-
-
 D-grid top MDS:
 https://mds.lrz-muenchen.de:8443/wsrf/services/DefaultIndexService
 http://webmds.lrz.de:8080/webmds/webmds?info=c3info
 http://webmds.lrz.de:8080/webmds/webmds?info=indexinfo&xsl=servicegroupxsl
 http://c3grid.rrz.uni-koeln.de:8080/webmds/webmds?info=indexinfo&xsl=servicegroupxsl
 
-webmds:
--install tomcat and deploy webmds application from globus home
--configure global options to allow user specified queries using XPath
-
 ganglia on BDII using GIP:
 http://gkswiki.fzk.de/index.php5/Administration_of_the_site_BDII
-
-# configure BDII
-site-info.def:
-# BDII
-CE_HOST="osweb.teipir.gr"
-SITE_BDII_HOST="osweb.teipir.gr"
-SITE_EMAIL="theofpa@teipir.gr"
-SITE_LAT=37.979166
-SITE_LONG=23.674719
-SITE_DESC="TEI of Piraeus"
-SITE_LOC="Athens, Greece"
-SITE_WEB="http://oslab.teipir.gr"
-SITE_SECURITY_EMAIL=$SITE_EMAIL
-SITE_SUPPORT_EMAIL=$SITE_EMAIL
-SITE_OTHER_GRID="EGEE"
-BDII_REGIONS="oslab.teipir.gr"
-
-[root@osweb ~]# /opt/glite/yaim/bin/yaim -c -s site-info.def -n BDII_site
 

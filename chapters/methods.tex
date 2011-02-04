@@ -57,37 +57,17 @@ The implementation of Glue schema may be using LDAP, XML or SQL. The MDS impleme
 
 \subsection{Information Infrastructure}
 % TODO to MDS me dika mou logia
-``Performance''.  The applications of interest to us frequently 
-operate on  a  large scale  (e.g.,  hundreds  of  proces- 
-sors) and have demanding performance requirements. 
-Hence, an information infrastructure must permit rapid 
-access to frequently used configuration information. It 
-is not acceptable to contact  a  server  for every  item: 
-caching is required.
-``Scalability and cost''. The infrastructure must scale to large
-numbers of components and permit concurrent access
-by many entities. At the same time, its organization
-must permit easy discovery of information. The human
-and resource costs (CPU cycles, disk space, network
-bandwidth) of creating and maintaining information
-must also be low, both at individual sites and in total.
-``Uniformity''. Our goal is to simplify the development of
-tools and applications that use data to guide configuration
-decisions. We require a uniform data model
-as well as an application programming interface (MI)
-for common operations on the data represented via that
-model. One aspect of this uniformity is a standard representation
-for data about common resources, such as
-processors and networks.
-``The X.500 standard'' defines a directory service
-that can be used to provide extensible distributed directory
-services within a wide area environment. A directory service
-is a service that provides read-optimized access to general
-data about entities, such as people, corporations, and computers.
-X.500 provides a framework that could, in principle,
-be used to organize the information that is of interest to us.
-\cite{mds1}
-\newpage
+To design the Information Infrastructure for distributed computing applications some requirements have been considered such as performance, scalability, cost and uniformity.
+
+Because grid computing applications usually operate in large scale installations, there are performance requirements for the information infrastructure. It should allow rapid access to configuration information that is frequently used, using {\bf caching to query periodically each host or index server for the metrics}.
+
+The number of components in a grid infrastructure scales up to hundreds of thousands of nodes, and these components should be available for queries by many different tools. That information should be discoverable using information indexes.
+
+Deployments, maintenance and operations in a large installation of many systems has operational costs for human resources. The information system should automaticaly discover and serve the availability paths for applications and grid resources/servives.
+
+Because of the large number of different heterogeneous networks of nodes and clusters, there is a need of uniformity. Uniformity helps to simplify the developers to build applications that give better configuration decisions. APIs for common operations and data models for the representation of that information. Resources are devided in groups of computing, storage, network elements, etc.
+
+The solution proposed by GLUE standard and X.500 (Directory Service) is the key feature to scale, and get uniformity. It may be used to provide extensible distributed directory services. It is optimised for reads, its binary-tree like hierarchy and usually backend data structure provides a framework that well organize the information that need to be delivered by an Information Infrastructure.\cite{mds1}
 
 \section{Data-acquisition Systems}
 plugins that take metrics (SAM) and send results to nagios:
@@ -160,6 +140,29 @@ If a TCP connection on the Gmond listening port 8649 is made, Gmond writes a ful
 \caption{Ganglia Network Communications}
 \label{figure:ganglia_network}
 \end{figure}
+
+\begin{verbatim}
+# ganglia
+# & configure ganglia as a system service
+# gmetad
+yum install rrdtool perl-rrdtool rrdtool-devel apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
+GANGLIA_ACK_SYSCONFDIR=1 ./configure --with-gmetad
+make
+make install
+mkdir -p /var/lib/ganglia/rrds
+chown -R nobody /var/lib/ganglia
+# gmond
+yum install apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
+GANGLIA_ACK_SYSCONFDIR=1 ./configure
+make
+make install
+iptables -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 8649 -j ACCEPT
+oslab1841a(config)#ip nat inside source static tcp 10.0.0.28 80 195.251.70.54 80 extendable       
+#notes
+-configure with multicast or unicast. jitter problem environments may use unicast, as long
+ as amazon ec2 environments that are not support multicast.
+\end{verbatim}
+
 \newpage
 
 \subsection{Nagios}
@@ -213,9 +216,37 @@ To integrate Ganglia with MDS in early versions of Globus, there schema of OpenL
 \begin{enumerate}
   \item Python ganglia client script: \url{http://globus.org/toolkit/docs/2.4/mds/gangliaprovider.html}
   \item Perl gaglia-IP tool: \url{http://www.star.bnl.gov/public/comp/Grid/Monitoring/SimpleGangliaIP.html} and \url{http://www.star.bnl.gov/public/comp/Grid/Monitoring/ganglia\_ip}
-
 \end{enumerate}
 
+\begin{verbatim}
+# which glue services does the information base provides?
+[root@osweb ~]# ldapsearch -h dgc-grid-44.brunel.ac.uk -p 2170 -x -b "mds-vo-name=uki-lt2-brunel,o=grid" '(&(objectclass=glueservice)(GlueServiceType=*))' GlueServiceType |grep "^GlueServiceType" |sort|uniq
+
+# installation of bdii
+-install glite-ui which installs bdii
+-ldapsearch bdii
+-test perl & python scripts to export mds from gmond
+-configure connection to 
+
+[root@osweb ~]# /opt/glite/yaim/bin/yaim -c -s site-info.def -n BDII_site
+
+# configure BDII
+site-info.def:
+# BDII
+CE_HOST="osweb.teipir.gr"
+SITE_BDII_HOST="osweb.teipir.gr"
+SITE_EMAIL="theofpa@teipir.gr"
+SITE_LAT=37.979166
+SITE_LONG=23.674719
+SITE_DESC="TEI of Piraeus"
+SITE_LOC="Athens, Greece"
+SITE_WEB="http://oslab.teipir.gr"
+SITE_SECURITY_EMAIL=$SITE_EMAIL
+SITE_SUPPORT_EMAIL=$SITE_EMAIL
+SITE_OTHER_GRID="EGEE"
+BDII_REGIONS="oslab.teipir.gr"
+
+\end{verbatim}
 \newpage
 
 \begin{table}[ht]
@@ -280,9 +311,39 @@ container
 \subsection{information provider}
 wssd
 
-kai
+and
 
 rp xml
+
+and
+
+hierarchy.xml maybe in an "aggregation" section
+
+and
+
+deserialization of MDS query in gmond to WSRF
+ 
+\begin{verbatim}
+# installation of globus, wsrf, ganglia:
+-download binary 4.0.7 and extract to /opt/globus
+wget http://www-unix.globus.org/ftppub/gt4/4.0/4.0.7/installers/bin/gt4.0.7-x86_rhas_4-installer.tar.gz
+export $JAVA_HOME=/usr/java/default
+[root@osweb ~]# export JAVA_HOME=/etc/alternatives/java_sdk
+export PATH=$JAVA_HOME/bin:$PATH
+./configure
+make
+make install
+-install postgresql, create user & db
+-configure globus to connect to postgresql
+-create init script for wsrf container
+-create ganglia resource provider for wsrf and connect to gmond
+-call wsrf to get ganglia metrics
+
+# query WSRF for ganglia data:
+[root@osweb ~]# grid-proxy-init -verify -debug
+[root@osweb ~]# wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//*[local-name()='Host']"
+[root@osweb ~]# /opt/globus/bin/wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//glue:Host[glue:ProcessorLoad[@glue:Last15Min>20]]"  |grep Load
+\end{verbatim}
 
 \newpage
 \subsubsection{XPath}
@@ -343,4 +404,6 @@ my note: WSRF is GLUE 2.0 schema CE compatible
 \newpage
 
 \subsubsection{WebMDS}
-webmds
+webmds:
+-install tomcat and deploy webmds application from globus home
+-configure global options to allow user specified queries using XPath
