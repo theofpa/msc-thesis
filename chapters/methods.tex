@@ -107,7 +107,7 @@ free space
 EGI accounting portal: CPU usage metrics aggregated for accounting.
 \newpage
 
-\subsection{Metrics}
+\subsection{Metrics}\label{subsec:metrics}
 
 {\bf CPU load} is taken using the pseudo /proc/loadavg file which in turn is
 filled by Linux kernel's CALC\_LOAD macro. This function takes 3 parameters.
@@ -176,7 +176,7 @@ nagios2metric
 check\_ganglia
 \begin{figure}[htb]
 \centering
- \includegraphics[width=2in]{images/nagios_check_ganglia.eps}
+ \includegraphics[width=4in]{images/nagios_check_ganglia.eps}
 \caption{Nagios configuration and check ganglia values}
 \label{figure:nagios_ganglia}
 \end{figure}
@@ -269,7 +269,7 @@ The amount of RAM  & GlueHostMainMemoryRAMSize & GlueHostMainMemory \\ \hline
 Free RAM (in KBytes)  & GlueHostMainMemoryRAMAvailable & GlueHostMainMemory \\ \hline
 \end{tabular}
 \caption{GLUE schema for Host Processor Information Provider}
-\label{tab:tasks}
+\label{tab:glue}
 \end{table}
 
 Perl:
@@ -375,7 +375,8 @@ Finally the following example may return only the $ProcessorLoad$ node of the $H
 my note: WSRF is GLUE 2.0 schema CE compatible
 \begin{verbatim}
 /opt/globus/etc/globus_wsrf_mds_usefulrp/ganglia_to_glue.xslt
-
+\end{verbatim}
+\begin{lstlisting}
 <glue:ProcessorLoad>
 
 <xsl:attribute name="glue:Last1Min">
@@ -400,10 +401,17 @@ my note: WSRF is GLUE 2.0 schema CE compatible
 </xsl:attribute>
 
 </glue:ProcessorLoad>
-\end{verbatim}
+\end{lstlisting}
 \newpage
 
 \subsubsection{WebMDS}
-webmds:
--install tomcat and deploy webmds application from globus home
--configure global options to allow user specified queries using XPath
+WebMDS is a web interface to query WSRF resource property information. It consists of forms and views of raw XML or organized in tables of results. This user friendly frontend comes as a part of Globus Toolkit version 4 and it can deployed in any application server. Behind this application reside the data that the WSRF aggregation framework provides through the Index Service.
+
+\begin{figure}[htb]
+\centering
+ \includegraphics[width=4in]{images/webmds.eps}
+\caption{WebMDS application}
+\label{figure:webmds}
+\end{figure}
+
+For this project an Apache Tomcat server was installed in the box that globus toolkit was running, and the {\bf webmds application} from the GT4 home was deployed. In webmds configuration file, the globa option to allow user specified queries using XPath was enabled.

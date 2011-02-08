@@ -1,12 +1,49 @@
 \section{Tables and Plots}
 \subsection{Unix stuff}
-example processes/load monitoring
 
-top/uname
+As described in subsection \nameref{subsec:metrics} in the previous chapter, linux provides through the {\bf proc pseudo-filesystem} a simple file interface to the metrics taken from the scheduler of processes that are queued in the processor. The three metrics about cpu load on 1, 5 and 15 minutes average is displayed as follows:
 
-cat /proc/loadavg
+\begin{verbatim}
+[root@gr03 ~]# cat /proc/loadavg 
+2.29 0.73 0.32 1/230 3584
+\end{verbatim}
 
-code from Linux kernel about CALC\_LOAD
+which may also be displayed using the {\bf uptime command}:
+
+\begin{verbatim}
+[root@gr03 ~]# uptime
+ 00:01:20 up  1:41,  3 users,  load average: 2.29, 0.73, 0.32
+\end{verbatim}
+
+Looking in the Linux kernel source, there is the CALC\_LOAD macro command which takes the options that have been discused and returns the result of the metric. The definition of the macro can be seen in file {\bf /usr/src/kernels/`uname -r`/include/linux/sched.h}:
+
+\begin{lstlisting}[caption=Linux kernel CALC\_LOAD macro]
+extern unsigned long avenrun[];         /* Load averages */
+extern void get_avenrun(unsigned long *loads, 
+                        unsigned long offset, int shift);
+
+#define FSHIFT    11          /* nr of bits of precision */
+#define FIXED_1   (1<<FSHIFT) /* 1.0 as fixed-point */
+#define LOAD_FREQ (5*HZ+1)    /* 5 sec intervals */
+#define EXP_1     1884        /* 1/exp(5sec/1min) as fixed-point */
+#define EXP_5     2014        /* 1/exp(5sec/5min) */
+#define EXP_15    2037        /* 1/exp(5sec/15min) */
+
+#define CALC_LOAD(load,exp,n) \
+        load *= exp; \
+        load += n*(FIXED_1-exp); \
+        load >>= FSHIFT;
+
+extern unsigned long total_forks;
+extern int nr_threads;
+DECLARE_PER_CPU(unsigned long, process_counts);
+extern int nr_processes(void);
+extern unsigned long nr_running(void);
+extern unsigned long nr_uninterruptible(void);
+extern unsigned long nr_iowait(void);
+extern unsigned long nr_iowait_cpu(int cpu);
+extern unsigned long this_cpu_load(void);
+\end{lstlisting}
 
 \newpage
 
