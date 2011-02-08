@@ -47,28 +47,98 @@ extern unsigned long this_cpu_load(void);
 
 \newpage
 
-\subsection{Gmond}
+\subsection{Ganglia}
 
 \subsubsection{Installation and configuration}
+
+\begin{lstlisting}[language=bash,caption=Gmetad installation]
+# yum install rrdtool perl-rrdtool rrdtool-devel apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
+# GANGLIA_ACK_SYSCONFDIR=1 ./configure --with-gmetad
+# make
+# make install
+# mkdir -p /var/lib/ganglia/rrds
+# chown -R nobody /var/lib/ganglia
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash,caption=Gmond installation]
+# yum install apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
+# GANGLIA_ACK_SYSCONFDIR=1 ./configure
+# make
+# make install
+# iptables -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 8649 -j ACCEPT
+\end{lstlisting}
+
+configure with multicast or unicast. jitter problem environments may use unicast, as long as amazon ec2 environments that are not support multicast.
 \newpage
 
 \subsubsection{Transport and sample}
+Gmond code uses the ganglia libmetrics library which in case of Linux operating system parses the $/proc/loadavg$ pseudo-file to get linux kernel calculated system load average.
+
+\begin{lstlisting}[language=C,caption=libmetrics code to get load average]
+timely_file proc_loadavg = { {0,0} , 5., "/proc/loadavg" };
+/* ... */
+g_val_t
+load_one_func ( void )
+{
+   g_val_t val;
+   val.f = strtod( update_file(&proc_loadavg), (char **)NULL);
+   return val;
+}
+\end{lstlisting}
 code from gmond client
 
 example output 
 
+When gmond starts, it listens on port 8649/TCP by default, to accept TCP connections and throw XML report for the whole cluster. It also binds to the multicast address on port 8649/UDP to get other hosts messages for metrics changes, and also multicast its own metrics.
+\begin{lstlisting}[language=bash,caption=Gmond networking]
+[root@gr01 ~]# lsof -i 4 -a -p `pidof gmond`
+COMMAND   PID   USER   FD   TYPE DEVICE SIZE NODE NAME
+gmond   11900 nobody    4u  IPv4  33699       UDP 239.2.11.71:8649 
+gmond   11900 nobody    5u  IPv4  33701       TCP *:8649 (LISTEN)
+gmond   11900 nobody    6u  IPv4  33703       UDP gr01.oslab.teipir.gr:39991->239.2.11.71:8649 
+\end{lstlisting}
 port and XML staff
 
+\begin{lstlisting}[language=XML,caption=Gmond XML cluster report]
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<GANGLIA_XML VERSION="3.1.7" SOURCE="gmond">
+	<CLUSTER NAME="RDLAB" LOCALTIME="1297198943" OWNER="TEIPIR" LATLONG="unspecified" URL="unspecified">
+		<HOST NAME="gr02.oslab.teipir.gr" IP="10.0.0.32" REPORTED="1297198934" TN="8" TMAX="20" DMAX="0" LOCATION="unspecified" GMOND_STARTED="1296569542">
+			<METRIC NAME="load_one" VAL="0.01" TYPE="float" UNITS=" " TN="50" TMAX="70" DMAX="0" SLOPE="both">
+			<EXTRA_DATA>
+			<EXTRA_ELEMENT NAME="GROUP" VAL="load"/>
+			<EXTRA_ELEMENT NAME="DESC" VAL="One minute load average"/>
+			<EXTRA_ELEMENT NAME="TITLE" VAL="One Minute Load Average"/>
+			</EXTRA_DATA>
+			</METRIC>
+			...
+		</HOST>
+		...
+	</CLUSTER>
+</GANGLIA_XML>
+\end{lstlisting}
 multicast examples
 \newpage
 
 \subsubsection{Gmetad}
 \newpage
 
-XDR
+XDR output
+
+\begin{lstlisting}[language=bash,caption=XDR sample]
+[root@gr01 ~]# tcpdump -A -i eth2 dst host 239.2.11.71
+22:38:26.062266 IP gr01.oslab.teipir.gr.39991 > 239.2.11.71.8649: UDP, length 56
+E..T..@..........G.7!..@.X........gr01.oslab.teipir.gr....load_one........%.2f..
+\end{lstlisting}
 
 gstat -al1
 
+\begin{lstlisting}[language=bash,caption=Gstat output]
+[root@gr01 ~]# gstat -al1
+gr03.oslab.teipir.gr     2 (    0/   87) [  0.00,  0.00,  0.00] [   0.0,   0.0,   0.0,  99.9,   0.1] OFF
+gr01.oslab.teipir.gr     1 (    0/   75) [  0.00,  0.00,  0.00] [   0.0,   0.0,   0.0,  99.9,   0.0] OFF
+gr02.oslab.teipir.gr     1 (    0/   99) [  0.00,  0.00,  0.00] [   0.0,   0.0,   0.1,  99.9,   0.0] OFF
+\end{lstlisting}
 \newpage
 
 \subsection{Visualization}
@@ -96,7 +166,7 @@ rrdtool
 \end{verbatim}
 
 
-\begin{lstlisting}{language=XML}
+\begin{lstlisting}[language=XML,caption=WSRF query output]
  <ns1:GLUECE xmlns:ns1="http://mds.globus.org/glue/ce/1.1">
   <ns1:Cluster ns1:Name="OSLAB" ns1:UniqueID="OSLAB">
    <ns1:SubCluster ns1:Name="main" ns1:UniqueID="main">
@@ -133,7 +203,24 @@ query examples
 
 interface and forms description
 \newpage
-
+XPath query:
+\begin{verbatim}
+//glue:Host[@glue:Name='ltsp.oslab.teipir.gr']
+\end{verbatim}
+Result:
+\begin{lstlisting}[language=XML,caption=WebMDS results from XPath query]
+<WebmdsResults>
+	<ns1:Host ns1:Name="ltsp.oslab.teipir.gr" ns1:UniqueID="ltsp.oslab.teipir.gr">
+		<ns1:Processor ns1:CacheL1="0" ns1:CacheL1D="0" ns1:CacheL1I="0" ns1:CacheL2="0" ns1:ClockSpeed="1600" ns1:InstructionSet="x86_64"/>
+		<ns1:MainMemory ns1:RAMAvailable="17806" ns1:RAMSize="20121" ns1:VirtualAvailable="22137" ns1:VirtualSize="24508"/>
+		<ns1:OperatingSystem ns1:Name="Linux" ns1:Release="2.6.32-24-server"/>
+		<ns1:Architecture ns1:SMPSize="8"/>
+		<ns1:FileSystem ns1:AvailableSpace="34243" ns1:Name="entire-system" ns1:ReadOnly="false" ns1:Root="/" ns1:Size="251687"/>
+		<ns1:NetworkAdapter ns1:IPAddress="192.168.0.101" ns1:InboundIP="true" ns1:MTU="0" ns1:Name="ltsp.oslab.teipir.gr" ns1:OutboundIP="true"/>
+		<ns1:ProcessorLoad ns1:Last15Min="9" ns1:Last1Min="1" ns1:Last5Min="9"/>
+	</ns1:Host>
+</WebmdsResults>
+\end{lstlisting}
 raw XML output from WebMDS
 \newpage
 
@@ -142,11 +229,9 @@ raw XML output from WebMDS
 create a wrapper to present ganglia url and status to the BDII
 
 Ganglia official python client:
-\begin{verbatim}
+\begin{lstlisting}[language=bash,caption=Python Ganglia client MDS export]
 [root@mon ~]# /opt/ganglia/bin/ganglia --format=MDS | grep -A 30 host=gr03
-\end{verbatim}
 
-\begin{lstlisting}
 dn: host=gr03.oslab.teipir.gr, scl=sub2, cl=datatag-CNAF, \
  mds-vo-name=local, o=grid
 objectclass: GlueHost
@@ -181,10 +266,9 @@ GlueHostStorageDeviceType: disk
 \end{lstlisting}
 
 Perl script to export MDS format:
-\begin{verbatim}
+\begin{lstlisting}[language=bash,caption=Perl Ganglia Information Provider for MDS]
 [root@mon ~]# ./ganglia_ip -h mon -p 8649 -o mds | grep -A 22 host=gr03
-\end{verbatim}
-\begin{lstlisting}
+
 dn: host=gr03.oslab.teipir.gr, cl=RDLAB, \
  mds-vo-name=local, o=grid
 objectclass: GlueHost
@@ -210,9 +294,9 @@ GlueHostMainMemoryRAMSize: 1035104
 GlueHostMainMemoryRAMAvailable: 306280
 \end{lstlisting}
 
-\begin{lstlisting}
+\begin{lstlisting}[language=bash,caption=BDII LDAP search for Glue CE ProcessorLoad attributes]
 
-[root@osweb ~]# ldapsearch -H ldap://osweb.teipir.gr:2170 -x \
+# ldapsearch -H ldap://osweb.teipir.gr:2170 -x \
 -b GlueHostName=ainex.local,Mds-Vo-name=local,o=grid \
 GlueHostProcessorLoadLast1Min GlueHostProcessorLoadLast5Min \
 GlueHostProcessorLoadLast15Min
@@ -228,11 +312,55 @@ GlueHostProcessorLoadLast5Min: 20
 \section{Description of Information}
 
 \subsection{DOM}
-php code example
 
-WSRF -> DOM example
+\begin{lstlisting}[language=PHP,caption=PHP DOM call to WebMDS]
+$url="http://osweb.teipir.gr:8080/webmds/webmds?info=indexinfo&xsl=&xmlSource.indexinfo.param.xpathQuery=%2F%2F*[local-name%28%29%3D%27Host%27]";
+$file  = file_get_contents($url);
+$dom = DOMDocument::loadXML($file);
+$host = $dom->getElementsByTagName('Host');
+$procload = $host->item($k)->getElementsByTagName('ProcessorLoad');
+echo $procload->item($i)->getAttribute('Last1Min');
+\end{lstlisting}
 
+\subsection{LDAP}
+
+\begin{lstlisting}[language=PHP,caption=PHP LDAP call to BDII]
+$ds=ldap_connect("osweb.teipir.gr","2170");
+if ($ds)
+{
+    $r=ldap_bind($ds);
+    $sr=ldap_search($ds, "mds-vo-name=local,o=grid", "(&(objectClass=GlueHostProcessorLoad))");
+    if ($sr)
+    {
+         $info = ldap_get_entries($ds, $sr) or die("could not fetch entries");
+         echo ($info[0][gluehostprocessorloadlast1min][0])/100;
+    }
+ldap_close($ds);
+}
+\end{lstlisting}
 \newpage
+\subsection{Nagios}
+\begin{table}[ht]
+\small\addtolength{\tabcolsep}{-3pt}
+\begin{tabular}{ | l | l | l | l | l |}
+\hline
+ Host & Service & Status & Last Check & Status Information \\ \hline
+ gr129 & load\_fifteen & \colorbox{green}{OK} & 02-08-2011 20:17:23 & CHECKGANGLIA OK: load\_fifteen is 0.17 \\
+\hline
+  & load\_five & \colorbox{green}{OK} & 02-08-2011 20:18:12 & CHECKGANGLIA OK: load\_five is 0.27 \\
+\hline
+  & load\_one & \colorbox{green}{OK} & 02-08-2011 20:17:43 & CHECKGANGLIA OK: load\_one is 0.02 \\
+\hline
+ gr130 & load\_fifteen & \colorbox{green}{OK} & 02-08-2011 20:14:23 & CHECKGANGLIA OK: load\_fifteen is 1.77 \\
+\hline
+  & load\_five & \colorbox{yellow}{WARNING} & 02-08-2011 20:14:15 & CHECKGANGLIA OK: load\_five is 4.75 \\
+\hline
+ & load\_one & \colorbox{red}{CRITICAL} & 02-08-2011 20:14:43 & CHECKGANGLIA OK: load\_one is 11.60 \\
+\hline
+\end{tabular}
+\caption{Example Nagios service status details for ganglia check}
+\label{tab:nagios_service_detail}
+\end{table}
 
 screenshot of output (green/yellow/red) colored
 

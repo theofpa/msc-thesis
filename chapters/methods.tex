@@ -141,27 +141,6 @@ If a TCP connection on the Gmond listening port 8649 is made, Gmond writes a ful
 \label{figure:ganglia_network}
 \end{figure}
 
-\begin{verbatim}
-# ganglia
-# & configure ganglia as a system service
-# gmetad
-yum install rrdtool perl-rrdtool rrdtool-devel apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
-GANGLIA_ACK_SYSCONFDIR=1 ./configure --with-gmetad
-make
-make install
-mkdir -p /var/lib/ganglia/rrds
-chown -R nobody /var/lib/ganglia
-# gmond
-yum install apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
-GANGLIA_ACK_SYSCONFDIR=1 ./configure
-make
-make install
-iptables -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 8649 -j ACCEPT
-oslab1841a(config)#ip nat inside source static tcp 10.0.0.28 80 195.251.70.54 80 extendable       
-#notes
--configure with multicast or unicast. jitter problem environments may use unicast, as long
- as amazon ec2 environments that are not support multicast.
-\end{verbatim}
 
 \newpage
 
@@ -250,6 +229,7 @@ BDII_REGIONS="oslab.teipir.gr"
 \newpage
 
 \begin{table}[ht]
+\small\addtolength{\tabcolsep}{-3pt}
 \begin{tabular}{ | l | l | r |}
 \hline
 {\bf Common Name} & {\bf Attribute} & {\bf Objectclass} \\ \hline
@@ -374,9 +354,10 @@ Finally the following example may return only the $ProcessorLoad$ node of the $H
 \subsubsection{XSLT}
 my note: WSRF is GLUE 2.0 schema CE compatible
 \begin{verbatim}
-/opt/globus/etc/globus_wsrf_mds_usefulrp/ganglia_to_glue.xslt
+file /opt/globus/etc/globus_wsrf_mds_usefulrp/ganglia_to_glue.xslt
 \end{verbatim}
-\begin{lstlisting}
+
+\begin{lstlisting}[language=XML,caption=WSRF XSLT for Ganglia Information Provider]
 <glue:ProcessorLoad>
 
 <xsl:attribute name="glue:Last1Min">

@@ -29,7 +29,7 @@ clean_aux:
 	rm -f *.aux 
 
 clean:
-	rm -f *.aux *.bbl *.blg *.log *~ \#*\# *.toc *.dvi *.idx *.lof *.nlo *.out *.ps *.lot
+	rm -f *.aux *.bbl *.blg *.log *~ \#*\# *.toc *.dvi *.idx *.lof *.nlo *.out *.ps *.lot *.lol
 
 clobber:	clean
 	rm -f *.ps *.pdf
