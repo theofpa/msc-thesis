@@ -45,7 +45,6 @@ extern unsigned long nr_iowait_cpu(int cpu);
 extern unsigned long this_cpu_load(void);
 \end{lstlisting}
 
-\newpage
 
 \subsection{Ganglia}
 
@@ -69,7 +68,6 @@ extern unsigned long this_cpu_load(void);
 \end{lstlisting}
 
 configure with multicast or unicast. jitter problem environments may use unicast, as long as amazon ec2 environments that are not support multicast.
-\newpage
 
 \subsubsection{Transport and sample}
 Gmond code uses the ganglia libmetrics library which in case of Linux operating system parses the $/proc/loadavg$ pseudo-file to get linux kernel calculated system load average.
@@ -118,10 +116,8 @@ port and XML staff
 </GANGLIA_XML>
 \end{lstlisting}
 multicast examples
-\newpage
 
 \subsubsection{Gmetad}
-\newpage
 
 XDR output
 
@@ -139,7 +135,6 @@ gr03.oslab.teipir.gr     2 (    0/   87) [  0.00,  0.00,  0.00] [   0.0,   0.0, 
 gr01.oslab.teipir.gr     1 (    0/   75) [  0.00,  0.00,  0.00] [   0.0,   0.0,   0.0,  99.9,   0.0] OFF
 gr02.oslab.teipir.gr     1 (    0/   99) [  0.00,  0.00,  0.00] [   0.0,   0.0,   0.1,  99.9,   0.0] OFF
 \end{lstlisting}
-\newpage
 
 \subsection{Visualization}
 Drill down and levels of visualization
@@ -153,7 +148,6 @@ Drill down and levels of visualization
 ganglia GUI
 
 rrdtool
-\newpage
 
 \section{Methods of Presentation}
 
@@ -196,13 +190,11 @@ rrdtool
 \end{lstlisting}
 
 \subsubsection{XSLT}
-\newpage
 
 \subsubsection{WebMDS and XPath}
 query examples
 
 interface and forms description
-\newpage
 XPath query:
 \begin{verbatim}
 //glue:Host[@glue:Name='ltsp.oslab.teipir.gr']
@@ -222,7 +214,6 @@ Result:
 </WebmdsResults>
 \end{lstlisting}
 raw XML output from WebMDS
-\newpage
 
 \subsection{BDII}
 /opt/glite/etc/gip/provider/glite-info-provider-service-xxx
@@ -338,7 +329,6 @@ if ($ds)
 ldap_close($ds);
 }
 \end{lstlisting}
-\newpage
 \subsection{Nagios}
 \begin{table}[ht]
 \small\addtolength{\tabcolsep}{-3pt}
@@ -364,8 +354,6 @@ ldap_close($ds);
 
 screenshot of output (green/yellow/red) colored
 
-\newpage
 
 pages from \url{http://people.brunel.ac.uk/~dc09ttp}
 
-\newpage

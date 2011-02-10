@@ -14,37 +14,54 @@ s'auto to kefalaio
 
 DHLADH THA ESTIAZEI STO WS 'H LDAP
 
-\newpage
 
 
 \section{Design Methods}
-\subsection{Recommendations and standards}
-\subsubsection{Grid Monitoring Architecture}
+
+\subsection{Grid Monitoring Architecture}
+
+By definition \cite{Taylor2006} Grid Monitoring Architecture consists of three components, as shown in Figure \ref{figure:gma}:
 \nomenclature{GMA}{Grid Monitoring Architecture}
-%% TODO producer-consumer plot
-\newpage
 
-\subsubsection{R-GMA}
-%% TODO R-GMA literature
-The rgma client is no longer configured in SL5
-\nomenclature{R-GMA}{Relational Grid Monitoring Architecture}
+\begin{enumerate}
+\item {\bf Directory Service} which supports the publish and discovery of the information
+\item {\bf Producer component}: which is responsible for the availability of the performance data that takes from the event source and
+\item {\bf Consumer component}: the one that requests the performance data and receives the metrics from the producer.
+\end{enumerate}
+
+\begin{figure}[htb]
+\centering
+ \includegraphics[width=4in]{images/gma.eps}
+\caption{Grid Monitoring Architecture}
+\label{figure:gma}
+\end{figure}
+
+In GMA, all metrics that are transmitted by the producer are handled as events with a timestamp, so performance data should be accurate. These events are transmitted to the consumer directly, and not through the directory service (whose role is just to advertise producers to consumers and vice versa). The GMA recommends that the structure of the data should be following a schema definition. 
+
+Grid Monitoring Architecture supports two models to handle the communication between producers and consumers:
+
+\begin{itemize}
+\item {\bf Streaming publish/subscribe model}
+\item {\bf Query/Response model}
+\end{itemize}
+
+The directory service is used by both producers to discover consumers and consumers to discover producers. The information of the availability of each producer/consumer is published to the directory service, and each component may initiate a connection to another type of component that has discovered in the directory service. Even though the role of the directory service is so centric in the discovery of components between each other, the performance data messages are transfered between the producer/consumer directly and not via the Directory Service.
 
 
-\newpage
-\subsubsection{GLUE Schema}
+
+\subsection{GLUE Schema}
 gained wide acceptance given its adoption by Globus MDS3
 
 
 GLUE schema came to provide the interoperability needed between US and European Physics Grid Projects. As a standard, a common schema was introduced to describe and monitor the grid resources. Major components include:
-\begin{enumerate}
+\begin{itemize}
 \item Computing Element (CE)
 \item Storage Element (SE)
 \item Network Element (NE)
-\end{enumerate}
+\end{itemize}
 
 The implementation of Glue schema may be using LDAP, XML or SQL. The MDS implementation of the Glue schema in this project includes the core Information Provider and the Ganglia Interface for the cluster information.
 \nomenclature{GLUE}{Grid Laboratory Uniform Environment}
-\newpage
 
 \begin{figure}[htb]
 \centering
@@ -53,10 +70,8 @@ The implementation of Glue schema may be using LDAP, XML or SQL. The MDS impleme
 \label{figure:gluece_ext}
 \end{figure}
 
-\newpage
 
 \subsection{Information Infrastructure}
-% TODO to MDS me dika mou logia
 To design the Information Infrastructure for distributed computing applications some requirements have been considered such as performance, scalability, cost and uniformity.
 
 Because grid computing applications usually operate in large scale installations, there are performance requirements for the information infrastructure. It should allow rapid access to configuration information that is frequently used, using {\bf caching to query periodically each host or index server for the metrics}.
@@ -105,7 +120,6 @@ IOPS
 free space
 
 EGI accounting portal: CPU usage metrics aggregated for accounting.
-\newpage
 
 \subsection{Metrics}\label{subsec:metrics}
 
@@ -126,7 +140,6 @@ running or uninterruptible state.
 \label{figure:calc_load}
 \end{figure}
 
-\newpage
 
 \subsection{Ganglia}
 
@@ -142,24 +155,42 @@ If a TCP connection on the Gmond listening port 8649 is made, Gmond writes a ful
 \end{figure}
 
 
-\newpage
 
 \subsection{Nagios}
 msg-to-handler msg-nagios-bridge
-\newpage
 
 nagios2metric
-\newpage
 
 \subsection{Ganglia to Nagios}
-check\_ganglia
+
+\begin{lstlisting}[language=bash,caption=Ganglia to Nagios script]
+#!/bin/bash
+if [ ! $1 ]
+then
+        echo "Please HOST argument"
+        echo "ex. ganglia_to_nagios 10.0.0.1"
+        exit
+fi
+/usr/src/redhat/SOURCES/ganglia-python-3.3.0/ganglia.py --host $1 --live | while read host
+do
+        echo ";$host.oslab.teipir.gr
+define host{
+        use     gmond-host
+        host_name       $host.oslab.teipir.gr
+        alias           $host
+        address         $host.oslab.teipir.gr
+        hostgroups      worker-nodes
+}
+"
+done > /etc/nagios/teipir/hosts.cfg
+\end{lstlisting}
+
 \begin{figure}[htb]
 \centering
  \includegraphics[width=4in]{images/nagios_check_ganglia.eps}
 \caption{Nagios configuration and check ganglia values}
 \label{figure:nagios_ganglia}
 \end{figure}
-\newpage
 
 \subsection{pnp4nagios}
 
@@ -174,21 +205,9 @@ create graphs using RRDTOOL
 \caption{PNP 4 Nagios data flow}
 \label{figure:pnp4nagios}
 \end{figure}
-\newpage
 
-\section{Range of cases examined - Metrics}
-% here there will be an enumeration of metrics, gmond, etc
-
-Grid performance can be measured using benchmark tools in different levels of the grid architecture, using the micro-benchmarks at the Worker Node level, the Site (CE) level and the Grid VO level. Various benchmarks exist in these levels, using different libraries and algorithms, such as This project focuses on mathematically compute of the performance of a grid based on the metrics that are taken at the Worker Node level.
-
-Different metrics and benchmarks exist, such as the measurement of the performance of CPUs in {\bf MIPS using EPWhetstone} and the evaluation of the performance of a CPU in {\bf FLOP/s and MB/s using BlasBench}. GridBench \cite{gridbench} provides a framework to collect those metrics using its own description language, {\bf GBDL}.
-
-GcpSensor \cite{gcpsensor} introduce a new performance metric called WMFLOPS. It uses PAPI \cite{papi} (Performance API) to access the hardware performance counters. For data distribution it uses MDS information system which provides dynamic metrics for CPU load average, one for 1, for 5 and for 15 minutes load.
-\newpage
-
-% TODO ganglia to MDS
-\section{Publish to Information System}
-\cite{goelagent}
+\section{Range of cases examined}
+Publish to Information System \cite{goelagent}
 
 \subsection{LDAP based - MDS/BDII}
 To integrate Ganglia with MDS in early versions of Globus, there schema of OpenLDAP should be extended using the Glue-CE definitions from the DataTAG web site (MDS version 2.4). A Ganglia Information Provider was the native ganglia client on python, given by the ganglia development team itshelf.
@@ -226,7 +245,6 @@ SITE_OTHER_GRID="EGEE"
 BDII_REGIONS="oslab.teipir.gr"
 
 \end{verbatim}
-\newpage
 
 \begin{table}[ht]
 \small\addtolength{\tabcolsep}{-3pt}
@@ -269,7 +287,6 @@ $[root@mon ~]# /opt/ganglia/bin/ganglia --format=MDS
 /opt/bin/ganglia_ip -h 195.251.70.54 -p 8649 -o mds
 \end{lstlisting}
 
-\newpage
 
 \subsection{Web Service based - WSRF}
 \subsubsection{container}
@@ -287,7 +304,7 @@ container
 \caption{Web Service Resource Framework}
 \label{figure:wsrf}
 \end{figure}
-\newpage
+
 \subsection{information provider}
 wssd
 
@@ -325,7 +342,6 @@ make install
 [root@osweb ~]# /opt/globus/bin/wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//glue:Host[glue:ProcessorLoad[@glue:Last15Min>20]]"  |grep Load
 \end{verbatim}
 
-\newpage
 \subsubsection{XPath}
 
 XPath is used to parse an XML document and get a part of it using an address scheme. For XPath, the XML document is a tree consisting of nodes, and its purpose as a language is to get the nodes that are addressed using the XPath query from that document.
@@ -349,7 +365,6 @@ Finally the following example may return only the $ProcessorLoad$ node of the $H
 //glue:Host[@glue:Name='xenia.oslab.teipir.gr']/glue:ProcessorLoad
 \end{verbatim}
 
-\newpage
 
 \subsubsection{XSLT}
 my note: WSRF is GLUE 2.0 schema CE compatible
@@ -383,7 +398,6 @@ file /opt/globus/etc/globus_wsrf_mds_usefulrp/ganglia_to_glue.xslt
 
 </glue:ProcessorLoad>
 \end{lstlisting}
-\newpage
 
 \subsubsection{WebMDS}
 WebMDS is a web interface to query WSRF resource property information. It consists of forms and views of raw XML or organized in tables of results. This user friendly frontend comes as a part of Globus Toolkit version 4 and it can deployed in any application server. Behind this application reside the data that the WSRF aggregation framework provides through the Index Service.
