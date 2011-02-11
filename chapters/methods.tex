@@ -1,20 +1,16 @@
 \section{Approach Adopted}
 
-edw
+Grid performance monitoring in this project is examed using {\bf GMA}, an architecture that established to provide the standards for a distributed monitoring system. The technologies that will be discussed here are about the Information Infrastructure that provides the metrics to the users/applications.
 
-to keimeno
+The metrics are generated using {\bf Linux kernel}'s load average functions. {\bf Ganglia} is used to take that metrics and synchronize all cluster nodes with the relevant information, over the {\bf multicast channel}.
 
-pou tha leei
+Nagios is configured using a {\bf custom script} that takes the information for the cluster nodes, and periodically queries the {\bf Gmond} to get the metrics for the discovered nodes. The results are stored in its repository and using RRDTool and pnp4nagios, graph reports are generated on demand.
 
-panw katw
+To pass the information, two different information systems are examined, {\bf BDII and WSRF}. Both are used in modern grid implementations and are described in {\bf MDS specification}. BDII queries event source (Gmond) using Perl/Python LDAP libraries. The results taken, fill the directory schema which has been extended using {\bf Glue schema} specification for Proccessor Load in Computing Element structure.
 
-ti ginetai
+{\bf MDS4} introduces the use of {\bf WSRF} in grid information system. A {\bf Ganglia Information Provider} using {\bf XSLT} takes the XML output from Gmond and aggregates the metrics using WSRF {\bf Aggregation Framework}. In front of it, a Tomcat instance serves the {\bf WebMDS} frontend to allow {\bf XPath} queries to the results that has been aggregated.
 
-s'auto to kefalaio
-
-DHLADH THA ESTIAZEI STO WS 'H LDAP
-
-
+Finally, two sample small applications has been developed to provide a homogeneous interface that display the same information using the two different information systems.
 
 \section{Design Methods}
 
@@ -47,13 +43,11 @@ Grid Monitoring Architecture supports two models to handle the communication bet
 
 The directory service is used by both producers to discover consumers and consumers to discover producers. The information of the availability of each producer/consumer is published to the directory service, and each component may initiate a connection to another type of component that has discovered in the directory service. Even though the role of the directory service is so centric in the discovery of components between each other, the performance data messages are transfered between the producer/consumer directly and not via the Directory Service.
 
-
-
 \subsection{GLUE Schema}
 gained wide acceptance given its adoption by Globus MDS3
 
-
 GLUE schema came to provide the interoperability needed between US and European Physics Grid Projects. As a standard, a common schema was introduced to describe and monitor the grid resources. Major components include:
+
 \begin{itemize}
 \item Computing Element (CE)
 \item Storage Element (SE)
@@ -61,6 +55,7 @@ GLUE schema came to provide the interoperability needed between US and European 
 \end{itemize}
 
 The implementation of Glue schema may be using LDAP, XML or SQL. The MDS implementation of the Glue schema in this project includes the core Information Provider and the Ganglia Interface for the cluster information.
+
 \nomenclature{GLUE}{Grid Laboratory Uniform Environment}
 
 \begin{figure}[htb]
@@ -72,6 +67,7 @@ The implementation of Glue schema may be using LDAP, XML or SQL. The MDS impleme
 
 
 \subsection{Information Infrastructure}
+
 To design the Information Infrastructure for distributed computing applications some requirements have been considered such as performance, scalability, cost and uniformity.
 
 Because grid computing applications usually operate in large scale installations, there are performance requirements for the information infrastructure. It should allow rapid access to configuration information that is frequently used, using {\bf caching to query periodically each host or index server for the metrics}.
@@ -85,41 +81,6 @@ Because of the large number of different heterogeneous networks of nodes and clu
 The solution proposed by GLUE standard and X.500 (Directory Service) is the key feature to scale, and get uniformity. It may be used to provide extensible distributed directory services. It is optimised for reads, its binary-tree like hierarchy and usually backend data structure provides a framework that well organize the information that need to be delivered by an Information Infrastructure.\cite{mds1}
 
 \section{Data-acquisition Systems}
-plugins that take metrics (SAM) and send results to nagios:
-
-https://tomtools.cern.ch/confluence/display/SAMDOC/Grid+probes
-
-http://nationalgridservice.blogspot.com/2010/10/nagios-myegee-and-myegi.html
-
-4 layers to performance investigation:
-\begin{enumerate}
-  \item Storage elements
-  \item Sites
-  \item VOs
-  \item Middleware
-\end{enumerate}
-3 benchmarking categories
-\begin{enumerate}
-  \item micro-benchmarks
-  \item micro-kernels
-  \item application kernels
-\end{enumerate}
-Benchmarking
-
-HPL
-\cite{gridbench}
-
-CE performance
-free processors
-MFLOPS
-MIPS (instructions per second)
-free RAM
-
-SE performance
-IOPS
-free space
-
-EGI accounting portal: CPU usage metrics aggregated for accounting.
 
 \subsection{Metrics}\label{subsec:metrics}
 
@@ -157,9 +118,14 @@ If a TCP connection on the Gmond listening port 8649 is made, Gmond writes a ful
 
 
 \subsection{Nagios}
-msg-to-handler msg-nagios-bridge
 
-nagios2metric
+Nagios is the core monitoring tool that is used for grid computing monitoring as Multi Level Monitoring architecture proposes, to meet the needs of EGEE/EGI. Following SAM and Gridview, Nagios instances have been deployed in many levels of grid infrastructure, enhansing the functionality of scheduling and execution of site tests. The message bus that uses is MSG, which offers an integration between Nagios and the other monitoring tools of grid.
+
+CERN provides MSG-Nagios-bridge, a mechanism to transfer test results between different levels of Nagios deployment (regional, project, site). MSG-Nagios-bridge both submit tests to other Nagios installations and consume results from them. 
+
+A Regional Metric Store is also used by nagios. It is a database that provides a backend to Nagios current and historical metrics, and connected with the frontend and the message bridge. The adaptor that provides such functionality called NDOUtils, and may have a MySQL/PorstgreSQL or Oracle backend.
+
+In the front-end, users are allowed to discover the nodes and services provided in the monitoring levels by regions, projects and sites, using cgi scripts that are part of the Nagioc core distribution. Access control between levels of Nagios instances and between users and Nagios installations, is performed using the standard methods of grid, which is GOCDB as described in ATP. User authentication is done by user certificates.
 
 \subsection{Ganglia to Nagios}
 
@@ -207,10 +173,13 @@ create graphs using RRDTOOL
 \end{figure}
 
 \section{Range of cases examined}
+
 Publish to Information System \cite{goelagent}
 
 \subsection{LDAP based - MDS/BDII}
+
 To integrate Ganglia with MDS in early versions of Globus, there schema of OpenLDAP should be extended using the Glue-CE definitions from the DataTAG web site (MDS version 2.4). A Ganglia Information Provider was the native ganglia client on python, given by the ganglia development team itshelf.
+
 \begin{enumerate}
   \item Python ganglia client script: \url{http://globus.org/toolkit/docs/2.4/mds/gangliaprovider.html}
   \item Perl gaglia-IP tool: \url{http://www.star.bnl.gov/public/comp/Grid/Monitoring/SimpleGangliaIP.html} and \url{http://www.star.bnl.gov/public/comp/Grid/Monitoring/ganglia\_ip}
@@ -287,8 +256,8 @@ $[root@mon ~]# /opt/ganglia/bin/ganglia --format=MDS
 /opt/bin/ganglia_ip -h 195.251.70.54 -p 8649 -o mds
 \end{lstlisting}
 
-
 \subsection{Web Service based - WSRF}
+
 \subsubsection{container}
 using WSRF (GT4, information services, information providers)
 Ganglia Resource Provider
@@ -306,6 +275,7 @@ container
 \end{figure}
 
 \subsection{information provider}
+
 wssd
 
 and
@@ -367,7 +337,9 @@ Finally the following example may return only the $ProcessorLoad$ node of the $H
 
 
 \subsubsection{XSLT}
+
 my note: WSRF is GLUE 2.0 schema CE compatible
+
 \begin{verbatim}
 file /opt/globus/etc/globus_wsrf_mds_usefulrp/ganglia_to_glue.xslt
 \end{verbatim}
@@ -400,6 +372,7 @@ file /opt/globus/etc/globus_wsrf_mds_usefulrp/ganglia_to_glue.xslt
 \end{lstlisting}
 
 \subsubsection{WebMDS}
+
 WebMDS is a web interface to query WSRF resource property information. It consists of forms and views of raw XML or organized in tables of results. This user friendly frontend comes as a part of Globus Toolkit version 4 and it can deployed in any application server. Behind this application reside the data that the WSRF aggregation framework provides through the Index Service.
 
 \begin{figure}[htb]
