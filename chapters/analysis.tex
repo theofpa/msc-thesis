@@ -4,7 +4,7 @@ In complex distributed systems such as grids, performance bottlenecks may be loc
 
 In order to succeed in grid monitoring, some requirements should be considered. A very large amount of data should be delivered real-time, from many heterogeneous sources on different networks or even countries. These data must be accurate and consistent. There should be synchronized timestamps on the generation of each metric, to the measurement value that should be comparable between different architectures. The time synchronization of the hosts of each cluster may be done using network time protocol, so all metrics are taken on the time that they actually report. Metrics should have error bounds to preserve accuracy, and the consistency issue is solved using coordination of that activity, so the impact of a metric to other sensors is controlled.
 
-The flow of the monitoring process initialization is described from the GMA standard. The application-consumer queries the directory service in order to declare its interest to get metrics for a specific host/cluster. The sensors of the elements that is equivalent to the specific query generates the metrics that will be given to the consumer from the producer, which in turn queries the directory service to find the consumer. The producer is the one that initializes the connection to the consumer in order to deliver the measurements, even if the consumer had asked the directory service for this.
+The flow of the monitoring process initialization is described from the GMA standard. The application-consumer queries the directory service in order to declare its interest to get metrics for a specific host/cluster. The sensors of the elements that is equivalent to the specific query generates the metrics that will be given to the consumer from the producer, which in turn queries the directory service to find the consumer. The producer is the one that initializes the connection to the consumer in order to deliver the measurements, even if the consumer had asked the directory service for this. \cite{balatonuse}
 
 
 \subsection{Performance Metrics}
@@ -47,6 +47,12 @@ Availability monitoring
 
 there is a paper about how information systems perform in large scale
 
+LDAP as the core technology of MDS2 has been investigated \cite{zhang2004performance} and proved that scales and performs good when the data are kept in cache. The performance of the information system when it is accessed by a large number of cocurrent users have degrades dramatically when data caching is not used.
 
 \subsubsection{WSRF}
+
+performance analysis of WSRF here \cite{schopf2006monitoring}
+
+and MDS4 vs MDS2
+
 \section{Enveloping Interpretations}
