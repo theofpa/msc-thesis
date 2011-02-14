@@ -329,6 +329,28 @@ if ($ds)
 ldap_close($ds);
 }
 \end{lstlisting}
+
+
+
+\begin{table}[ht]
+\small\addtolength{\tabcolsep}{-3pt}
+\begin{tabular}{ | l | l | l | l | l |}
+\hline
+ Hostname & 1min & 5min & 15min \\ \hline
+ ltsp.oslab.teipir.gr & \colorbox{green}{0.01} & \colorbox{green}{0.09} & \colorbox{green}{0.09} \\ \hline
+ xenia.oslab.teipir.gr & \colorbox{green}{0.00} & \colorbox{green}{0.06} & \colorbox{green}{0.06} \\ \hline
+ gr201.oslab.teipir.gr & \colorbox{green}{0.52} & \colorbox{green}{0.59} & \colorbox{green}{0.42} \\ \hline
+ gr130.oslab.teipir.gr & \colorbox{green}{0.00} & \colorbox{green}{0.06} & \colorbox{green}{0.16} \\ \hline
+ gr131.oslab.teipir.gr & \colorbox{yellow}{1.22} & \colorbox{green}{0.79} & \colorbox{green}{0.40} \\ \hline
+ gr212.oslab.teipir.gr & \colorbox{green}{0.06} & \colorbox{green}{0.09} & \colorbox{green}{0.09} \\ \hline
+ gr180.oslab.teipir.gr & \colorbox{red}{2.06} & \colorbox{yellow}{1.49} & \colorbox{green}{0.59} \\ \hline
+ gr181.oslab.teipir.gr & \colorbox{green}{0.71} & \colorbox{green}{0.57} & \colorbox{green}{0.32} \\ \hline
+\end{tabular}
+\caption{Sample output from both calls with DOM or LDAP}
+\label{tab:html_output}
+\end{table}
+
+
 \subsection{Nagios}
 \begin{table}[ht]
 \small\addtolength{\tabcolsep}{-3pt}
