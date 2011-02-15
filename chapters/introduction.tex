@@ -6,11 +6,11 @@ Performance monitoring of a grid is a key part in grid computing. Based on the r
 Current interfaces delivers performance graphs without following the standard topology schema that is presented by the grid information system.
 
 %which aspects you will consider, and why;
-WSRF aggregation framework and GLUE schema are examined to understand the gathering process of metrics. Ganglia's hierarchical delegation to create manageable monitoring domains is an important aspect. MyEGI which is based in Django python framework, access easily the unified metrics database. 
+WSRF aggregation framework and GLUE schema are examined to understand the gathering process of metrics. BDII LDAP also examined as the carrier of the information data. Ganglia's hierarchical delegation to create manageable monitoring domains is an important aspect. Performance metrics are taken using Linux kernel's load average.
 %which aspects you will not consider, and why;
 Performance in the aspect of how many jobs are served by each site is not examined in this project.
 %what you hope to find out;
-Whether it is possible to integrate Ganglia performance graphs in MyEGI and Nagios interfaces, using the standard Information System of ATP.
+Which of the two information services better transfer the metrics for the multi level monitoring architecture.
 
 %what your starting point(s) will be
 Build a lab to gather performance data and start working on the development of the integration parts.
@@ -21,6 +21,7 @@ A web interface is available to present the work of the integration of Ganglia i
 
 
 \section{Aims \& Objectives}
+%TODO rewrite aims & objectives
 %the aim and objectives of the work presented in the report
 
 Different role users are going to use a portal to get information about the performance status of the grid, to export the appropriate report for their job. This project aims to develop these particular pieces of code to support the aggregation of the metrics from Nagios, to allow the web based customization of the visualization of the reports. These metrics are needed to report the availability and reliability of NGIs and particular sites of the grid.

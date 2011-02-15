@@ -108,6 +108,7 @@ Grid performance can be also measured using benchmark tools in different levels 
 Different metrics and benchmarks exist, such as the measurement of the performance of CPUs in {\bf MIPS using EPWhetstone} and the evaluation of the performance of a CPU in {\bf FLOP/s and MB/s using BlasBench}. GridBench \cite{gridbench} provides a framework to collect those metrics using its own description language, {\bf GBDL}.
 
 GcpSensor \cite{gcpsensor} introduce a new performance metric called WMFLOPS. It uses PAPI \cite{papi} (Performance API) to access the hardware performance counters. For data distribution it uses MDS information system which provides dynamic metrics for CPU load average, one for 1, for 5 and for 15 minutes load.
+%TODO add some review of linux kernel and load average
 
 \subsection{Ganglia}
 
@@ -129,6 +130,9 @@ All the data that are gathered of the multicast channel are written to a hash ta
 \caption{Ganglia Data Flow}
 \label{figure:ganglia}
 \end{figure}
+
+\subsection{Nagios}
+%TODO some literature review of nagios
 
 \section{European Grid Infrastructure}
 Latest EGI directive to form regional operation tools pushed the use of Nagios \cite{imamagic2007grid} as the main tools of availability \& performance (an so reliability) monitoring of the grid. Each NGI/ROC (regional level) has its own interface, and hierarchically there is a Super Nagios interface to report the top level view of general system availability. Nagios offers extensions such as NRPE to remotely invoke check commands in inaccessible/private installations. Another important add-on to Nagios is the NdoUtils, which offers an SQL store of history data to the monitoring interface. Nagios Configuration Generator was introduced to help the automatically generation of the configuration based on the information system of nodes and services.
