@@ -134,3 +134,17 @@ http://c3grid.rrz.uni-koeln.de:8080/webmds/webmds?info=indexinfo&xsl=servicegrou
 ganglia on BDII using GIP:
 http://gkswiki.fzk.de/index.php5/Administration_of_the_site_BDII
 
+# installation of globus, wsrf, ganglia:
+-download binary 4.0.7 and extract to /opt/globus
+wget http://www-unix.globus.org/ftppub/gt4/4.0/4.0.7/installers/bin/gt4.0.7-x86_rhas_4-installer.tar.gz
+export $JAVA_HOME=/usr/java/default
+[root@osweb ~]# export JAVA_HOME=/etc/alternatives/java_sdk
+export PATH=$JAVA_HOME/bin:$PATH
+./configure
+make
+make install
+-install postgresql, create user & db
+-configure globus to connect to postgresql
+-create init script for wsrf container
+-create ganglia resource provider for wsrf and connect to gmond
+-call wsrf to get ganglia metrics

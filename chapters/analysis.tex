@@ -19,6 +19,35 @@ extra
 
 \subsubsection{WSRF}
 
+The XML that Ganglia Resource Provider took from Gmond process through TCP, using XSLT technology is transformed on WSRF to another XML document, that is following the Glue-CE schema. In directory globus\_wsrf\_mds\_usefulrp of globus configuration root, there is the file ganglia\_to\_glue.xslt where we can focus on the transformation rules. A snippet of interest for the case of ProcessorLoad class is seen in Listing \ref{xslt}.
+
+\begin{lstlisting}[language=XML,caption=WSRF XSLT for Ganglia Information Provider,label=xslt]
+<glue:ProcessorLoad>
+
+<xsl:attribute name="glue:Last1Min">
+  <xsl:call-template name="emitProperNumeric">
+    <xsl:with-param name="numeric" 
+    select="floor(100 * METRIC[@NAME='load_one']/@VAL)"/>
+  </xsl:call-template>
+</xsl:attribute>
+
+<xsl:attribute name="glue:Last5Min">
+  <xsl:call-template name="emitProperNumeric">
+    <xsl:with-param name="numeric" 
+    select="floor(100 * METRIC[@NAME='load_five']/@VAL)"/>
+  </xsl:call-template>
+</xsl:attribute>
+
+<xsl:attribute name="glue:Last15Min">
+  <xsl:call-template name="emitProperNumeric">
+    <xsl:with-param name="numeric" 
+    select="floor(100 * METRIC[@NAME='load_fifteen']/@VAL)"/>
+  </xsl:call-template>
+</xsl:attribute>
+
+</glue:ProcessorLoad>
+\end{lstlisting}
+
 
 \section{Interpretation of Results}
 
@@ -50,6 +79,7 @@ there is a paper about how information systems perform in large scale
 LDAP as the core technology of MDS2 has been investigated \cite{zhang2004performance} and proved that scales and performs good when the data are kept in cache. The performance of the information system when it is accessed by a large number of cocurrent users have degrades dramatically when data caching is not used.
 
 \subsubsection{WSRF}
+deserialization of MDS query in gmond to WSRF
 
 performance analysis of WSRF here \cite{schopf2006monitoring}
 

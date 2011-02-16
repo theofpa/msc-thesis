@@ -17,7 +17,8 @@ which may also be displayed using the {\bf uptime command}:
 
 Looking in the Linux kernel source, there is the CALC\_LOAD macro command which takes the options that have been discused and returns the result of the metric. The definition of the macro can be seen in file {\bf /usr/src/kernels/`uname -r`/include/linux/sched.h}:
 
-\begin{lstlisting}[caption=Linux kernel CALC\_LOAD macro]
+
+\begin{lstlisting}[language=C,caption=Linux kernel CALC\_LOAD macro]
 extern unsigned long avenrun[];         /* Load averages */
 extern void get_avenrun(unsigned long *loads, 
                         unsigned long offset, int shift);
@@ -44,7 +45,6 @@ extern unsigned long nr_iowait(void);
 extern unsigned long nr_iowait_cpu(int cpu);
 extern unsigned long this_cpu_load(void);
 \end{lstlisting}
-
 
 \subsection{Ganglia}
 

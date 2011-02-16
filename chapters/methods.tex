@@ -115,8 +115,6 @@ If a TCP connection on the Gmond listening port 8649 is made, Gmond writes a ful
 \label{figure:ganglia_network}
 \end{figure}
 
-
-
 \subsection{Nagios}
 
 Nagios is the core monitoring tool that is used for grid computing monitoring as Multi Level Monitoring architecture proposes, to meet the needs of EGEE/EGI. Following SAM and Gridview, Nagios instances have been deployed in many levels of grid infrastructure, enhansing the functionality of scheduling and execution of site tests. The message bus that uses is MSG, which offers an integration between Nagios and the other monitoring tools of grid.
@@ -127,8 +125,16 @@ A Regional Metric Store is also used by nagios. It is a database that provides a
 
 In the front-end, users are allowed to discover the nodes and services provided in the monitoring levels by regions, projects and sites, using cgi scripts that are part of the Nagioc core distribution. Access control between levels of Nagios instances and between users and Nagios installations, is performed using the standard methods of grid, which is GOCDB as described in ATP. User authentication is done by user certificates.
 
+\begin{figure}[htb]
+\centering
+ \includegraphics[width=4in]{images/nagios_check_ganglia.eps}
+\caption{Nagios configuration and check ganglia values}
+\label{figure:nagios_ganglia}
+\end{figure}
 
-\begin{lstlisting}[language=bash,caption=Ganglia to Nagios script]
+To integrate Ganglia with Nagios as shown in Figure \ref{figure:nagios_ganglia}, a custom script has been created. This script queries the Gmond source for the current state of nodes of the cluster. The returned result is being transformed to a Nagios configuration file to configure the host check of the cluster nodes. The nagios service checks for these hosts are preconfigured to match what is needed. Script source may be found in Listing \ref{nagios_script}.
+
+\begin{lstlisting}[language=bash,caption=Ganglia to Nagios script,label=nagios_script]
 #!/bin/bash
 if [ ! $1 ]
 then
@@ -150,18 +156,7 @@ define host{
 done > /etc/nagios/teipir/hosts.cfg
 \end{lstlisting}
 
-\begin{figure}[htb]
-\centering
- \includegraphics[width=4in]{images/nagios_check_ganglia.eps}
-\caption{Nagios configuration and check ganglia values}
-\label{figure:nagios_ganglia}
-\end{figure}
-
-%TODO some text for NPCD and pnp4nagios
-Bulk Mode with NPCD
-NPCD:
-spool directory to process bulk data
-create graphs using RRDTOOL
+When a nagios check command is executed, results are stored in a file, and Performance Data are calculated by a perl script. To scale this process, the Buld Mode method is used to move the file to a spool directory which happened immediately with no important performance impact to the system. The NPCD (Nagios Performance C Daemon) is a daemon that is running on the Nagios host and its role is to monitor a spool directory for new files and pass the names of the files to process\_perfdata.pl. The script in turn, processes the performance data, and this operation is fully Nagios independent so it may be scaled-out more easily. Results are finally delivered to RRDTool, and graphs are being generated. This process is presented in Figure \ref{figure:pnp4nagios}
 
 \begin{figure}[htb]
 \centering
@@ -172,46 +167,53 @@ create graphs using RRDTOOL
 
 \section{Range of cases examined}
 
-Publish to Information System \cite{goelagent}
+To deliver Ganglia metrics, two different information systems were evaluated:
+\begin{itemize}
+  \item {\bf BDII}, which is used by gLite and is based on {\bf LDAP} and
+  \item {\bf WSRF}, the framework that Globus uses to aggregate and deliver information using {\bf Web Services}.
+\end{itemize}
 
-\subsection{LDAP based - MDS/BDII}
+both information services are following the MDS specification and are using the Glue Schema.
 
-To integrate Ganglia with MDS in early versions of Globus, there schema of OpenLDAP should be extended using the Glue-CE definitions from the DataTAG web site (MDS version 2.4). A Ganglia Information Provider was the native ganglia client on python, given by the ganglia development team itshelf.
+\subsection{LDAP based}
 
-\begin{enumerate}
-  \item Python ganglia client script: \url{http://globus.org/toolkit/docs/2.4/mds/gangliaprovider.html}
-  \item Perl gaglia-IP tool: \url{http://www.star.bnl.gov/public/comp/Grid/Monitoring/SimpleGangliaIP.html} and \url{http://www.star.bnl.gov/public/comp/Grid/Monitoring/ganglia\_ip}
-\end{enumerate}
+To evaluate the LDAP based information service, a system had to have installed the gLite so it have the BDII service running. To do this, a Scientific Linux installation were used, and CERN repositories were added. The installation of gLite-UI automatically installs BDII, so using {\bf yum command} the needed packages where installed. An ldapsearch returned the top elements of the BDII as shown below:
 
 \begin{verbatim}
-# which glue services does the information base provides?
-[root@osweb ~]# ldapsearch -h dgc-grid-44.brunel.ac.uk -p 2170 -x -b "mds-vo-name=uki-lt2-brunel,o=grid" '(&(objectclass=glueservice)(GlueServiceType=*))' GlueServiceType |grep "^GlueServiceType" |sort|uniq
-
-# installation of bdii
--install glite-ui which installs bdii
--ldapsearch bdii
--test perl & python scripts to export mds from gmond
--configure connection to 
-
-[root@osweb ~]# /opt/glite/yaim/bin/yaim -c -s site-info.def -n BDII_site
-
-# configure BDII
-site-info.def:
-# BDII
-CE_HOST="osweb.teipir.gr"
-SITE_BDII_HOST="osweb.teipir.gr"
-SITE_EMAIL="theofpa@teipir.gr"
-SITE_LAT=37.979166
-SITE_LONG=23.674719
-SITE_DESC="TEI of Piraeus"
-SITE_LOC="Athens, Greece"
-SITE_WEB="http://oslab.teipir.gr"
-SITE_SECURITY_EMAIL=$SITE_EMAIL
-SITE_SUPPORT_EMAIL=$SITE_EMAIL
-SITE_OTHER_GRID="EGEE"
-BDII_REGIONS="oslab.teipir.gr"
-
+[root@osweb ~]# ldapsearch -x -h osweb.teipir.gr -p 2170 -b ""\
+                -s base "(objectClass=*)" namingContexts
+...
+namingContexts: o=grid
+namingContexts: o=glue
+namingContexts: o=infosys
 \end{verbatim}
+
+To test the connection to the Gmond service over TCP, and the transformation to MDS, two different ways where used. The official ganglia python client, and a perl script that is doing the same transformation:
+
+\begin{lstlisting}
+# /usr/bin/ganglia --host mon.oslab.teipir.gr --format=MDS
+dn: mds-vo-name=local, o=grid
+objectclass: GlueTop
+objectclass: GlueGeneralTop
+GlueSchemaVersionMajor: 1
+GlueSchemaVersionMinor: 1
+...
+\end{lstlisting}
+
+\begin{lstlisting}
+# /root/ganglia_ip -h mon.oslab.teipir.gr -p 8649 -o mds
+dn: GlueHostName=gr02.oslab.teipir.gr, mds-vo-name=local, o=grid
+objectclass: GlueHost
+GlueHostName: gr02.oslab.teipir.gr
+GlueHostUniqueID: RDLAB-TEIPIR-gr02.oslab.teipir.gr
+objectclass: GlueHostProcessorLoad
+GlueHostProcessorLoadLast1Min: 1
+GlueHostProcessorLoadLast5Min: 1
+GlueHostProcessorLoadLast15Min: 0
+...
+\end{lstlisting}
+
+As we can see, the LDIF exported by these tools, follow the schema defined by the Glue specification, whose attributes and objectclasses extended by Glue-CE ProcessorLoad as shown in Table \ref{tab:glue}.
 
 \begin{table}[ht]
 \small\addtolength{\tabcolsep}{-3pt}
@@ -237,34 +239,49 @@ Free RAM (in KBytes)  & GlueHostMainMemoryRAMAvailable & GlueHostMainMemory \\ \
 \label{tab:glue}
 \end{table}
 
-Perl:
-\begin{lstlisting}
-$[root@mon ~]# ./ganglia_ip -h mon -p 8649 -o mds
-\end{lstlisting}
+Finally, BDII configured using {\bf yaim} with site-info definitions as shown below:
 
-Python:
-\begin{lstlisting}
-$[root@mon ~]# /opt/ganglia/bin/ganglia --format=MDS
-\end{lstlisting}
+\begin{verbatim}
+# /opt/glite/yaim/bin/yaim -c -s site-info.def -n BDII_site
+...
+# cat site-info.def
+CE_HOST="osweb.teipir.gr"
+SITE_BDII_HOST="osweb.teipir.gr"
+SITE_EMAIL="theofpa@teipir.gr"
+SITE_LAT=37.979166
+SITE_LONG=23.674719
+SITE_DESC="TEI of Piraeus"
+SITE_LOC="Athens, Greece"
+SITE_WEB="http://oslab.teipir.gr"
+SITE_SECURITY_EMAIL=$SITE_EMAIL
+SITE_SUPPORT_EMAIL=$SITE_EMAIL
+SITE_OTHER_GRID="EGEE"
+BDII_REGIONS="oslab.teipir.gr"
+\end{verbatim}
 
-\begin{lstlisting}
+To integrate Ganglia with MDS in early versions of Globus and BDII of gLite, the schema of OpenLDAP should be extended using the Glue-CE definitions from the DataTAG web site (MDS version 2.4). The Ganglia Information Provider that used is a ganglia client on perl, and not the python client given by the ganglia development team itshelf.
 
-[root@osweb ~]# cat /opt/glite/etc/gip/provider/glite-info-provider-service-ganglia-wrapper
+gLite have a dedicated directory for information providers, where the wrappers of each provider reside. To use the information provider with BDII, there has been created a one-line wrapper to call the perl script as shown below:
+
+\begin{verbatim}
+[root@osweb ~]# ps -ef | grep bdi[i]
+edguser  24951     1  0 19:47 ?        00:00:01 /usr/sbin/slapd -f \
+                                                /opt/bdii/etc/bdii-slapd.conf -h \
+                                                ldap://osweb.teipir.gr:2170 -u edguser
+edguser  24990     1  0 19:47 ?        00:00:01 /usr/bin/python \
+                                                /opt/bdii/bin/bdii-update -c \
+                                                /opt/bdii/etc/bdii.conf -d
+[root@osweb ~]# grep PROVIDER /opt/bdii/etc/bdii.conf
+BDII_PROVIDER_DIR=/opt/glite/etc/gip/provider
+[root@osweb ~]# cat /opt/glite/etc/gip/provider/glite-info-provider-ganglia-wrapper
 #!/bin/bash
 /opt/bin/ganglia_ip -h 195.251.70.54 -p 8649 -o mds
-\end{lstlisting}
+\end{verbatim}
 
 \subsection{Web Service based - WSRF}
 
-\subsubsection{container}
-using WSRF (GT4, information services, information providers)
-Ganglia Resource Provider
-MDS Index Service
-GLUE CE 
+Globus on the other side, from version 4 and later provides the Web Service Resource Framework that offers a scalable information system with build-in aggregation framework and index service as shown in Figure \ref{figure:wsrf}. WSRF is an OASIS organization standard and follows the Glue schema and MDS specification.
 
-OASIS standard
-
-container
 \begin{figure}[htb]
 \centering
  \includegraphics[width=5in]{images/wsrf.eps}
@@ -272,43 +289,74 @@ container
 \label{figure:wsrf}
 \end{figure}
 
-\subsection{information provider}
+To install WSRF, Globus Toolkit version 4.0.7 was used. From its binary distribution, where extracted in the target system. A PostgreSQL database was installed and a special user and DB was created to host the RFT schema and data in order to have a minimal globus environment and start the container to service WSRF. A custom start/stop script was created for that container and the file rpprovider-config-gluece.xml was created as shown in Listing \ref{wsrfrp}.
 
-wssd
+\begin{lstlisting}[language=XML,caption=Ganglia Resource Provider for WSRF Index,label=wsrfrp]
+<ns1:ResourcePropertyProviderConfigArray xsi:type="ns1:ResourcePropertyProviderConfigArray" xmlns:ns1="http://mds.globus.org/rpprovider/2005/08" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <ns1:configArray xsi:type="ns1:resourcePropertyProviderConfig">
+  <ns1:resourcePropertyName xsi:type="xsd:QName" xmlns:mds="http://mds.globus.org/glue/ce/1.1">mds:GLUECE</ns1:resourcePropertyName>
+  <ns1:resourcePropertyImpl xsi:type="xsd:string">org.globus.mds.usefulrp.rpprovider.GLUEResourceProperty</ns1:resourcePropertyImpl>
+  <ns1:resourcePropertyElementProducers xsi:type="ns1:resourcePropertyElementProducerConfig">
+    <ns1:className xsi:type="xsd:string">org.globus.mds.usefulrp.glue.GangliaElementProducer</ns1:className>
+    <ns1:arguments xsi:type="xsd:string">195.251.70.55</ns1:arguments>
+    <ns1:arguments xsi:type="xsd:string">8649</ns1:arguments>
+    <ns1:period xsi:type="xsd:int">60</ns1:period>
+    <ns1:transformClass xsi:type="xsd:string">org.globus.mds.usefulrp.rpprovider.transforms.GLUEComputeElementTransform</ns1:transformClass>
+  </ns1:resourcePropertyElementProducers>
+  <ns1:resourcePropertyElementProducers xsi:type="ns1:resourcePropertyElementProducerConfig">
+    <ns1:className xsi:type="xsd:string">org.globus.mds.usefulrp.rpprovider.producers.SchedulerInfoElementProducer</ns1:className>
+    <ns1:arguments xsi:type="xsd:string">libexec/globus-scheduler-provider-fork</ns1:arguments>
+    <ns1:transformClass xsi:type="xsd:string">org.globus.mds.usefulrp.rpprovider.transforms.GLUESchedulerElementTransform</ns1:transformClass>
+    <ns1:period xsi:type="xsd:int">300</ns1:period>
+  </ns1:resourcePropertyElementProducers>
+ </ns1:configArray>
+</ns1:ResourcePropertyProviderConfigArray>
+\end{lstlisting}
 
-and
+File rpprovider-config-gluece.xml was included by the server-config.wsdd of the container as shown in Listing \ref{wsrfwsdd}.
 
-rp xml
+\begin{lstlisting}[language=XML,caption=Web Service Deployment Descriptor for WSRF Index,label=wsrfwsdd]
+    <service name="DefaultIndexService" provider="Handler"
+        use="literal" style="document">
+        <parameter name="providers"
+                   value="org.globus.mds.usefulrp.rpprovider.ResourcePropertyProviderCollection
+                          org.globus.wsrf.impl.servicegroup.ServiceGroupRegistrationProvider
+                          GetRPProvider
+                          GetMRPProvider
+                          QueryRPProvider
+                          DestroyProvider
+                          SetTerminationTimeProvider
+                          SubscribeProvider
+                          GetCurrentMessageProvider"/>
+        <parameter name="rpProviderConfigFile" value="/etc/globus_wsrf_mds_index/rpprovider-config-gluece.xml"/>
+        <parameter name="handlerClass" value="org.globus.axis.providers.RPCProvider"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="allowedMethods" value="*"/>
+        <parameter name="className"
+            value="org.globus.mds.index.impl.DefaultIndexService"/>
+        <wsdlFile>share/schema/mds/index/index_service.wsdl</wsdlFile>
+    </service>
+\end{lstlisting}
 
-and
-
-hierarchy.xml maybe in an "aggregation" section
-
-and
-
-deserialization of MDS query in gmond to WSRF
+When the container was started, using a user certificate and the following commands, some XPath queries were issued to test the integration:
  
-\begin{verbatim}
-# installation of globus, wsrf, ganglia:
--download binary 4.0.7 and extract to /opt/globus
-wget http://www-unix.globus.org/ftppub/gt4/4.0/4.0.7/installers/bin/gt4.0.7-x86_rhas_4-installer.tar.gz
-export $JAVA_HOME=/usr/java/default
-[root@osweb ~]# export JAVA_HOME=/etc/alternatives/java_sdk
-export PATH=$JAVA_HOME/bin:$PATH
-./configure
-make
-make install
--install postgresql, create user & db
--configure globus to connect to postgresql
--create init script for wsrf container
--create ganglia resource provider for wsrf and connect to gmond
--call wsrf to get ganglia metrics
-
-# query WSRF for ganglia data:
-[root@osweb ~]# grid-proxy-init -verify -debug
-[root@osweb ~]# wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//*[local-name()='Host']"
-[root@osweb ~]# /opt/globus/bin/wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//glue:Host[glue:ProcessorLoad[@glue:Last15Min>20]]"  |grep Load
-\end{verbatim}
+\begin{lstlisting}[caption=WSRF command line query]
+[root@osweb ~]# /opt/globus/bin/grid-proxy-init
+Your identity: /C=GR/O=HellasGrid/OU=teipir.gr/CN=Theofylaktos Papapanagiotou
+Enter GRID pass phrase for this identity:
+Creating proxy ................................... Done
+Your proxy is valid until: Thu Feb 17 11:11:59 2011
+[root@osweb ~]# /opt/globus/bin/wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//*[local-name()='Host']"
+<ns1:Host ns1:Name="gr02.oslab.teipir.gr" ns1:UniqueID="gr02.oslab.teipir.gr" xmlns:ns1="http://mds.globus.org/glue/ce/1.1">
+ <ns1:Processor ns1:CacheL1="0" ns1:CacheL1D="0" ns1:CacheL1I="0" ns1:CacheL2="0" ns1:ClockSpeed="2527" ns1:InstructionSet="x86"/>
+ <ns1:MainMemory ns1:RAMAvailable="75" ns1:RAMSize="495" ns1:VirtualAvailable="1129" ns1:VirtualSize="1559"/>
+ <ns1:OperatingSystem ns1:Name="Linux" ns1:Release="2.6.18-194.26.1.el5"/>
+ <ns1:Architecture ns1:SMPSize="1"/>
+ <ns1:FileSystem ns1:AvailableSpace="34082" ns1:Name="entire-system" ns1:ReadOnly="false" ns1:Root="/" ns1:Size="38624"/>
+ <ns1:NetworkAdapter ns1:IPAddress="10.0.0.32" ns1:InboundIP="true" ns1:MTU="0" ns1:Name="gr02.oslab.teipir.gr" ns1:OutboundIP="true"/>
+ <ns1:ProcessorLoad ns1:Last15Min="0" ns1:Last1Min="0" ns1:Last5Min="0"/>
+...
+\end{lstlisting}
 
 \subsubsection{XPath}
 
@@ -333,41 +381,6 @@ Finally the following example may return only the $ProcessorLoad$ node of the $H
 //glue:Host[@glue:Name='xenia.oslab.teipir.gr']/glue:ProcessorLoad
 \end{verbatim}
 
-
-\subsubsection{XSLT}
-
-my note: WSRF is GLUE 2.0 schema CE compatible
-
-\begin{verbatim}
-file /opt/globus/etc/globus_wsrf_mds_usefulrp/ganglia_to_glue.xslt
-\end{verbatim}
-
-\begin{lstlisting}[language=XML,caption=WSRF XSLT for Ganglia Information Provider]
-<glue:ProcessorLoad>
-
-<xsl:attribute name="glue:Last1Min">
-  <xsl:call-template name="emitProperNumeric">
-    <xsl:with-param name="numeric" 
-    select="floor(100 * METRIC[@NAME='load_one']/@VAL)"/>
-  </xsl:call-template>
-</xsl:attribute>
-
-<xsl:attribute name="glue:Last5Min">
-  <xsl:call-template name="emitProperNumeric">
-    <xsl:with-param name="numeric" 
-    select="floor(100 * METRIC[@NAME='load_five']/@VAL)"/>
-  </xsl:call-template>
-</xsl:attribute>
-
-<xsl:attribute name="glue:Last15Min">
-  <xsl:call-template name="emitProperNumeric">
-    <xsl:with-param name="numeric" 
-    select="floor(100 * METRIC[@NAME='load_fifteen']/@VAL)"/>
-  </xsl:call-template>
-</xsl:attribute>
-
-</glue:ProcessorLoad>
-\end{lstlisting}
 
 \subsubsection{WebMDS}
 
