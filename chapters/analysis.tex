@@ -12,6 +12,21 @@ The flow of the monitoring process initialization is described from the GMA stan
 CALC\_LOAD - load average
 
 extra
+\subsubsection{Transport and sample}
+Gmond code uses the ganglia libmetrics library which in case of Linux operating system parses the $/proc/loadavg$ pseudo-file to get linux kernel calculated system load average.
+
+\begin{lstlisting}[language=C,caption=libmetrics code to get load average]
+timely_file proc_loadavg = { {0,0} , 5., "/proc/loadavg" };
+/* ... */
+g_val_t
+load_one_func ( void )
+{
+   g_val_t val;
+   val.f = strtod( update_file(&proc_loadavg), (char **)NULL);
+   return val;
+}
+\end{lstlisting}
+code from gmond client
 
 \subsection{Information Systems}
 

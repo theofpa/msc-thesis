@@ -12,6 +12,13 @@ To pass the information, two different information systems are examined, {\bf BD
 
 Finally, two sample small applications has been developed to provide a homogeneous interface that display the same information using the two different information systems.
 
+\begin{figure}[htb]
+\centering
+ \includegraphics[width=5in]{images/is.eps}
+\caption{Overview of Information Systems used to monitor the grid}
+\label{figure:is}
+\end{figure}
+
 \section{Design Methods}
 
 \subsection{Grid Monitoring Architecture}
@@ -102,7 +109,7 @@ running or uninterruptible state.
 \end{figure}
 
 
-\subsection{Ganglia}
+\subsection{Ganglia}\label{subsec:ganglia}
 
 The metrics about load in one, five and fifteen minutes are taken from Gmond daemon through the proc filesystem as seen in Figure \ref{figure:calc_load}. These values are multicasted using a UDP message on the network, only if the value has been changed from the previous one taken. There is also a time thresohold that after that time the value is been sent again, even if it haven't changed, so new hosts on the network may gather the data needed for their Gmond. Each host of a cluster have the information about the metrics of itself and each other node, so it stores the whole cluster state. Using loopback interface, every Gmond sends its metrics to itself.
 
@@ -114,6 +121,32 @@ If a TCP connection on the Gmond listening port 8649 is made, Gmond writes a ful
 \caption{Ganglia Network Communications}
 \label{figure:ganglia_network}
 \end{figure}
+
+\subsubsection{Installation and configuration}
+
+To install ganglia, some depencencies where needed to be installed on each node of the Computing Element. In the testbed, there where an LTSP installation existed \cite{ltsp} and easily deployment of ganglia succeeded. Ganglia sources compiled for Gmond on the nodes and Gmetad on the systems that Ganglia Web interface needed to be installed. Finally on worker nodes, iptables should accept connections on 8649/TCP port.
+
+\begin{verbatim}
+# yum install rrdtool perl-rrdtool rrdtool-devel apr-devel libconfuse \
+              libconfuse-devel expat expat-devel pcre pcre-devel
+# GANGLIA_ACK_SYSCONFDIR=1 ./configure --with-gmetad
+# make
+# make install
+# mkdir -p /var/lib/ganglia/rrds
+# chown -R nobody /var/lib/ganglia
+\end{verbatim}
+
+\begin{verbatim}
+# yum install apr-devel libconfuse libconfuse-devel expat expat-devel \
+              pcre pcre-devel
+# GANGLIA_ACK_SYSCONFDIR=1 ./configure
+# make
+# make install
+# iptables -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp \
+           --dport 8649 -j ACCEPT
+\end{verbatim}
+
+Gmond and Gmetad default configuration may be generated using the daemon itself. Gmond may be configured using multicast to communicate metrics between nodes or unicast to solve problems with jitter when deployed in environments like amazon ec2 that do not support multicast.
 
 \subsection{Nagios}
 

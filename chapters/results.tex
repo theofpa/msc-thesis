@@ -17,7 +17,6 @@ which may also be displayed using the {\bf uptime command}:
 
 Looking in the Linux kernel source, there is the CALC\_LOAD macro command which takes the options that have been discused and returns the result of the metric. The definition of the macro can be seen in file {\bf /usr/src/kernels/`uname -r`/include/linux/sched.h}:
 
-
 \begin{lstlisting}[language=C,caption=Linux kernel CALC\_LOAD macro]
 extern unsigned long avenrun[];         /* Load averages */
 extern void get_avenrun(unsigned long *loads, 
@@ -48,56 +47,17 @@ extern unsigned long this_cpu_load(void);
 
 \subsection{Ganglia}
 
-\subsubsection{Installation and configuration}
+When gmond starts, it listens on port 8649/TCP by default, to accept TCP connections and throw XML report for the whole cluster. It also binds to the multicast address on port 8649/UDP to get other hosts messages for metrics changes, and also multicast its own metrics. Listing \ref{lsof} shows the opened sockets of Gmond daemon, and Listing \ref{telnet_gmond} display a sample xml output when connecting to 8649/TCP to transfer metrics through XML.
 
-\begin{lstlisting}[language=bash,caption=Gmetad installation]
-# yum install rrdtool perl-rrdtool rrdtool-devel apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
-# GANGLIA_ACK_SYSCONFDIR=1 ./configure --with-gmetad
-# make
-# make install
-# mkdir -p /var/lib/ganglia/rrds
-# chown -R nobody /var/lib/ganglia
-\end{lstlisting}
-
-\begin{lstlisting}[language=bash,caption=Gmond installation]
-# yum install apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
-# GANGLIA_ACK_SYSCONFDIR=1 ./configure
-# make
-# make install
-# iptables -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 8649 -j ACCEPT
-\end{lstlisting}
-
-configure with multicast or unicast. jitter problem environments may use unicast, as long as amazon ec2 environments that are not support multicast.
-
-\subsubsection{Transport and sample}
-Gmond code uses the ganglia libmetrics library which in case of Linux operating system parses the $/proc/loadavg$ pseudo-file to get linux kernel calculated system load average.
-
-\begin{lstlisting}[language=C,caption=libmetrics code to get load average]
-timely_file proc_loadavg = { {0,0} , 5., "/proc/loadavg" };
-/* ... */
-g_val_t
-load_one_func ( void )
-{
-   g_val_t val;
-   val.f = strtod( update_file(&proc_loadavg), (char **)NULL);
-   return val;
-}
-\end{lstlisting}
-code from gmond client
-
-example output 
-
-When gmond starts, it listens on port 8649/TCP by default, to accept TCP connections and throw XML report for the whole cluster. It also binds to the multicast address on port 8649/UDP to get other hosts messages for metrics changes, and also multicast its own metrics.
-\begin{lstlisting}[language=bash,caption=Gmond networking]
+\begin{lstlisting}[language=bash,caption=Gmond networking,label=lsof]
 [root@gr01 ~]# lsof -i 4 -a -p `pidof gmond`
 COMMAND   PID   USER   FD   TYPE DEVICE SIZE NODE NAME
 gmond   11900 nobody    4u  IPv4  33699       UDP 239.2.11.71:8649 
 gmond   11900 nobody    5u  IPv4  33701       TCP *:8649 (LISTEN)
 gmond   11900 nobody    6u  IPv4  33703       UDP gr01.oslab.teipir.gr:39991->239.2.11.71:8649 
 \end{lstlisting}
-port and XML staff
 
-\begin{lstlisting}[language=XML,caption=Gmond XML cluster report]
+\begin{lstlisting}[language=XML,caption=Gmond XML cluster report,label=telnet_gmond]
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <GANGLIA_XML VERSION="3.1.7" SOURCE="gmond">
 	<CLUSTER NAME="RDLAB" LOCALTIME="1297198943" OWNER="TEIPIR" LATLONG="unspecified" URL="unspecified">
@@ -115,11 +75,8 @@ port and XML staff
 	</CLUSTER>
 </GANGLIA_XML>
 \end{lstlisting}
-multicast examples
 
-\subsubsection{Gmetad}
-
-XDR output
+Worker nodes are configured to transfer metrics data using multicast. Each Gmond daemon of each Computing Element node, by Ganglia definition has to know the state of the whole Computing Element cluster. Using standard unix commands to listen the data transfered on the multicast network, we observe a sample transfer of load\_one metric. As described in Subsection \ref{subsec:ganglia}, metric data are multicasted by Gmond when there is a change in the value, or when the time threshold is reached.
 
 \begin{lstlisting}[language=bash,caption=XDR sample]
 [root@gr01 ~]# tcpdump -A -i eth2 dst host 239.2.11.71
@@ -127,9 +84,9 @@ XDR output
 E..T..@..........G.7!..@.X........gr01.oslab.teipir.gr....load_one........%.2f..
 \end{lstlisting}
 
-gstat -al1
+Using Ganglia build-in command $gstat$, a nice output of Processor Load metrics is shown for the whole cluster in Listing \ref{gstat}
 
-\begin{lstlisting}[language=bash,caption=Gstat output]
+\begin{lstlisting}[language=bash,caption=Gstat output,label=gstat]
 [root@gr01 ~]# gstat -al1
 gr03.oslab.teipir.gr     2 (    0/   87) [  0.00,  0.00,  0.00] [   0.0,   0.0,   0.0,  99.9,   0.1] OFF
 gr01.oslab.teipir.gr     1 (    0/   75) [  0.00,  0.00,  0.00] [   0.0,   0.0,   0.0,  99.9,   0.0] OFF
@@ -192,28 +149,39 @@ rrdtool
 \subsubsection{XSLT}
 
 \subsubsection{WebMDS and XPath}
-query examples
 
-interface and forms description
-XPath query:
+Using the following XPath query in the WebMDS form, a request to get the metrics of Host node with name $ltsp.oslab.teipir.gr$ was sent.
+
 \begin{verbatim}
 //glue:Host[@glue:Name='ltsp.oslab.teipir.gr']
 \end{verbatim}
-Result:
-\begin{lstlisting}[language=XML,caption=WebMDS results from XPath query]
+
+%TODO how many minutes to expire cache
+WebMDS match the query in its cache and replies only the specific node that was requested. If the cache was expired (its default value is ?? minutes) it is using the Resource Provider to fetch the XML from Gmond and transform it using XSLT to Glue schema and serve the new values as shown in Listing \ref{xpath_result}.
+
+\begin{lstlisting}[language=XML,caption=WebMDS results from XPath query,label=xpath_result]
 <WebmdsResults>
-	<ns1:Host ns1:Name="ltsp.oslab.teipir.gr" ns1:UniqueID="ltsp.oslab.teipir.gr">
-		<ns1:Processor ns1:CacheL1="0" ns1:CacheL1D="0" ns1:CacheL1I="0" ns1:CacheL2="0" ns1:ClockSpeed="1600" ns1:InstructionSet="x86_64"/>
-		<ns1:MainMemory ns1:RAMAvailable="17806" ns1:RAMSize="20121" ns1:VirtualAvailable="22137" ns1:VirtualSize="24508"/>
-		<ns1:OperatingSystem ns1:Name="Linux" ns1:Release="2.6.32-24-server"/>
-		<ns1:Architecture ns1:SMPSize="8"/>
-		<ns1:FileSystem ns1:AvailableSpace="34243" ns1:Name="entire-system" ns1:ReadOnly="false" ns1:Root="/" ns1:Size="251687"/>
-		<ns1:NetworkAdapter ns1:IPAddress="192.168.0.101" ns1:InboundIP="true" ns1:MTU="0" ns1:Name="ltsp.oslab.teipir.gr" ns1:OutboundIP="true"/>
-		<ns1:ProcessorLoad ns1:Last15Min="9" ns1:Last1Min="1" ns1:Last5Min="9"/>
-	</ns1:Host>
+ <ns1:Host ns1:Name="ltsp.oslab.teipir.gr" 
+ ns1:UniqueID="ltsp.oslab.teipir.gr">
+   <ns1:Processor ns1:CacheL1="0" ns1:CacheL1D="0" 
+   ns1:CacheL1I="0" ns1:CacheL2="0" ns1:ClockSpeed="1600" 
+   ns1:InstructionSet="x86_64"/>
+   <ns1:MainMemory ns1:RAMAvailable="17806" ns1:RAMSize="20121" 
+   ns1:VirtualAvailable="22137" ns1:VirtualSize="24508"/>
+   <ns1:OperatingSystem ns1:Name="Linux" 
+   ns1:Release="2.6.32-24-server"/>
+   <ns1:Architecture ns1:SMPSize="8"/>
+   <ns1:FileSystem ns1:AvailableSpace="34243" 
+   ns1:Name="entire-system" ns1:ReadOnly="false" ns1:Root="/" 
+   ns1:Size="251687"/>
+   <ns1:NetworkAdapter ns1:IPAddress="192.168.0.101" 
+   ns1:InboundIP="true" ns1:MTU="0" ns1:Name="ltsp.oslab.teipir.gr" 
+   ns1:OutboundIP="true"/>
+   <ns1:ProcessorLoad ns1:Last15Min="9" ns1:Last1Min="1" 
+   ns1:Last5Min="9"/>
+ </ns1:Host>
 </WebmdsResults>
 \end{lstlisting}
-raw XML output from WebMDS
 
 \subsection{BDII}
 /opt/glite/etc/gip/provider/glite-info-provider-service-xxx
