@@ -32,9 +32,13 @@ code from gmond client
 
 \subsubsection{BDII}
 
+values left as decimal numbers because its easy for ldap to handle string values of numbers
+
 \subsubsection{WSRF}
 
 The XML that Ganglia Resource Provider took from Gmond process through TCP, using XSLT technology is transformed on WSRF to another XML document, that is following the Glue-CE schema. In directory globus\_wsrf\_mds\_usefulrp of globus configuration root, there is the file ganglia\_to\_glue.xslt where we can focus on the transformation rules. A snippet of interest for the case of ProcessorLoad class is seen in Listing \ref{xslt}.
+
+there is some XPath and a multiplication with 100 to get an integer that should be mentioned:
 
 \begin{lstlisting}[language=XML,caption=WSRF XSLT for Ganglia Information Provider,label=xslt]
 <glue:ProcessorLoad>
@@ -63,6 +67,23 @@ The XML that Ganglia Resource Provider took from Gmond process through TCP, usin
 </glue:ProcessorLoad>
 \end{lstlisting}
 
+\subsection{Nagios}
+
+\begin{verbatim}
+define command{
+        command_name    check-ganglia
+        ;command_line   $USER1$/check_ganglia -H 195.251.70.54 -P 8649 -O hostcheck -T $HOSTNAME$ -w $ARG2$ -c $ARG3$ -M $ARG1$
+        command_line    /usr/local/src/ganglia-3.1.7/contrib/check_ganglia.py -h $HOSTNAME$ -m $ARG1$ -w $ARG2$ -c $ARG3$ -s 195.251.70.54 -p 8649
+        }
+
+define service{
+        use                             wn
+        hostgroup_name                  worker-nodes
+        service_description             load_one
+        check_command                   check-ganglia!load_one!4!5
+        action_url                      https://osweb.teipir.gr/nagios/html/pnp4nagios/index.php?host=$HOSTNAME$&srv=$SERVICEDESC$
+        }
+\end{verbatim}
 
 \section{Interpretation of Results}
 

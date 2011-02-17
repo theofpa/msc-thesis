@@ -250,7 +250,7 @@ As we can see, the LDIF exported by these tools, follow the schema defined by th
 
 \begin{table}[ht]
 \small\addtolength{\tabcolsep}{-3pt}
-\begin{tabular}{ | l | l | r |}
+\begin{tabular}{ | l | l | l |}
 \hline
 {\bf Common Name} & {\bf Attribute} & {\bf Objectclass} \\ \hline
 Hostname & GlueHostName & GlueHost \\ \hline
@@ -426,4 +426,12 @@ WebMDS is a web interface to query WSRF resource property information. It consis
 \label{figure:webmds}
 \end{figure}
 
-For this project an Apache Tomcat server was installed in the box that globus toolkit was running, and the {\bf webmds application} from the GT4 home was deployed. In webmds configuration file, the globa option to allow user specified queries using XPath was enabled.
+For this project an Apache Tomcat server was installed in the box that globus toolkit was running, and the {\bf webmds application} from the GT4 home was deployed. In webmds configuration file, the global option to allow user specified queries using XPath was enabled.
+
+\begin{verbatim}
+[root@osweb ~]# cat /opt/globus/lib/webmds/globalconfig.xml 
+<WebmdsGlobalConfig>
+  <newStyleErrors>true</newStyleErrors>
+  <allowUserSpecifiedQuery>true</allowUserSpecifiedQuery>
+</WebmdsGlobalConfig>
+\end{verbatim}

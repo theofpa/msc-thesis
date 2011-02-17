@@ -1,7 +1,12 @@
-\section{Tables and Plots}
+\section{Events source}
+
+Results are displayed from the generation of metrics to the aggregation using various information services and the presentation using ready and custom developed interfaces.
+
 \subsection{Unix stuff}
 
-As described in subsection \nameref{subsec:metrics} in the previous chapter, linux provides through the {\bf proc pseudo-filesystem} a simple file interface to the metrics taken from the scheduler of processes that are queued in the processor. The three metrics about cpu load on 1, 5 and 15 minutes average is displayed as follows:
+As described in subsection \nameref{subsec:metrics} of the previous chapter, linux provides through the {\bf proc pseudo-filesystem} a simple file interface to the metrics taken from the scheduler of processes that are queued in the processor.
+
+The three metrics about cpu load on 1, 5 and 15 minutes average is displayed as follows:
 
 \begin{verbatim}
 [root@gr03 ~]# cat /proc/loadavg 
@@ -15,9 +20,9 @@ which may also be displayed using the {\bf uptime command}:
  00:01:20 up  1:41,  3 users,  load average: 2.29, 0.73, 0.32
 \end{verbatim}
 
-Looking in the Linux kernel source, there is the CALC\_LOAD macro command which takes the options that have been discused and returns the result of the metric. The definition of the macro can be seen in file {\bf /usr/src/kernels/`uname -r`/include/linux/sched.h}:
+Examining the Linux kernel source code, there is the CALC\_LOAD macro command which takes the options that have been discused and returns the result of the metric. The definition of the macro can be seen in file {\bf /usr/src/kernels/`uname -r`/include/linux/sched.h}, Listing \ref{kernel}.
 
-\begin{lstlisting}[language=C,caption=Linux kernel CALC\_LOAD macro]
+\begin{lstlisting}[language=C,caption=Linux kernel CALC\_LOAD macro,label=kernel]
 extern unsigned long avenrun[];         /* Load averages */
 extern void get_avenrun(unsigned long *loads, 
                         unsigned long offset, int shift);
@@ -69,9 +74,7 @@ gmond   11900 nobody    6u  IPv4  33703       UDP gr01.oslab.teipir.gr:39991->23
 			<EXTRA_ELEMENT NAME="TITLE" VAL="One Minute Load Average"/>
 			</EXTRA_DATA>
 			</METRIC>
-			...
 		</HOST>
-		...
 	</CLUSTER>
 </GANGLIA_XML>
 \end{lstlisting}
@@ -93,31 +96,23 @@ gr01.oslab.teipir.gr     1 (    0/   75) [  0.00,  0.00,  0.00] [   0.0,   0.0, 
 gr02.oslab.teipir.gr     1 (    0/   99) [  0.00,  0.00,  0.00] [   0.0,   0.0,   0.1,  99.9,   0.0] OFF
 \end{lstlisting}
 
-\subsection{Visualization}
-Drill down and levels of visualization
-\begin{enumerate}
-  \item local resource
-  \item site
-  \item regional
-  \item grid
-\end{enumerate}
+\section{Aggregation and transfer}
 
-ganglia GUI
-
-rrdtool
-
-\section{Methods of Presentation}
-
+Metrics taken from the event source are passed to the information service using the informatio/resource provider.
 
 \subsection{WSRF}
+
+In WSRF the $wsrf-query$ command is executed using the URL of the container where the WSRF has deployed. The container should run in a host with a host certificate signed by a certificate authority, and a certificate proxy should be initiatlized with a valid user certificate that is requesting the information. 
+
 \begin{verbatim}
 /opt/globus/bin/wsrf-query \
 -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService \
 "//*[local-name()='Host']"
 \end{verbatim}
 
+The result of the abuve query returns a list of all cluster nodes. An abstract result is displayed here in Listing \ref{wsrfquery}.
 
-\begin{lstlisting}[language=XML,caption=WSRF query output]
+\begin{lstlisting}[language=XML,caption=WSRF query output,label=wsrfquery]
  <ns1:GLUECE xmlns:ns1="http://mds.globus.org/glue/ce/1.1">
   <ns1:Cluster ns1:Name="OSLAB" ns1:UniqueID="OSLAB">
    <ns1:SubCluster ns1:Name="main" ns1:UniqueID="main">
@@ -146,9 +141,9 @@ rrdtool
  </ns1:GLUECE>
 \end{lstlisting}
 
-\subsubsection{XSLT}
-
 \subsubsection{WebMDS and XPath}
+
+The role-based access control model of the grid security context allow queries only by authenticated and authorized users. Building a testbed with full grid security in mind would be out of this project scope, so XML result of Web Service calls is taken through WebMDS instead of WSDL discovery and SOAP messaging.
 
 Using the following XPath query in the WebMDS form, a request to get the metrics of Host node with name $ltsp.oslab.teipir.gr$ was sent.
 
@@ -156,8 +151,7 @@ Using the following XPath query in the WebMDS form, a request to get the metrics
 //glue:Host[@glue:Name='ltsp.oslab.teipir.gr']
 \end{verbatim}
 
-%TODO how many minutes to expire cache
-WebMDS match the query in its cache and replies only the specific node that was requested. If the cache was expired (its default value is ?? minutes) it is using the Resource Provider to fetch the XML from Gmond and transform it using XSLT to Glue schema and serve the new values as shown in Listing \ref{xpath_result}.
+WebMDS match the query in its cache and replies only the specific node that was requested. If the cache was expired (its default value is 60 seconds) it is using the Resource Provider to fetch the XML from Gmond and transform it using XSLT to Glue schema and serve the new values as shown in Listing \ref{xpath_result}.
 
 \begin{lstlisting}[language=XML,caption=WebMDS results from XPath query,label=xpath_result]
 <WebmdsResults>
@@ -184,11 +178,55 @@ WebMDS match the query in its cache and replies only the specific node that was 
 \end{lstlisting}
 
 \subsection{BDII}
-/opt/glite/etc/gip/provider/glite-info-provider-service-xxx
-create a wrapper to present ganglia url and status to the BDII
 
-Ganglia official python client:
-\begin{lstlisting}[language=bash,caption=Python Ganglia client MDS export]
+On the other information service, using $ldapsearch$ command and specifying the base DN for the search, the host URI and the desired attributes to return, we may get the values asked from the BDII as seen on Listing \ref{ldapsearchbdii}
+
+\begin{lstlisting}[language=bash,caption=BDII LDAP search for Glue CE ProcessorLoad attributes,label=ldapsearcbdii]
+# ldapsearch -H ldap://osweb.teipir.gr:2170 -x \
+-b GlueHostName=ainex.local,Mds-Vo-name=local,o=grid \
+GlueHostProcessorLoadLast1Min GlueHostProcessorLoadLast5Min \
+GlueHostProcessorLoadLast15Min
+
+# ainex.local, local, grid
+dn: GlueHostName=ainex.local,Mds-Vo-name=local,o=grid
+GlueHostProcessorLoadLast1Min: 27
+GlueHostProcessorLoadLast15Min: 22
+GlueHostProcessorLoadLast5Min: 20
+\end{lstlisting}
+
+The above information has been given by the BDII LDAP instance which used the wrapper of Ganglia Resource Provider, a customised Perl script to export MDS format as shown in Listing \ref{perlbdii}.
+
+\begin{lstlisting}[language=bash,caption=Perl Ganglia Information Provider for MDS,label=perlbdii]
+[root@mon ~]# ./ganglia_ip -h mon -p 8649 -o mds | grep -A 22 host=gr03
+
+dn: host=gr03.oslab.teipir.gr, cl=RDLAB, \
+ mds-vo-name=local, o=grid
+objectclass: GlueHost
+GlueHostName: gr03.oslab.teipir.gr
+GlueHostUniqueID: RDLAB-TEIPIR-gr03.oslab.teipir.gr
+objectclass: GlueHostProcessorLoad
+GlueHostProcessorLoadLast1Min: 2.57
+GlueHostProcessorLoadLast5Min: 1.48
+GlueHostProcessorLoadLast15Min: 0.58
+objectclass: GlueHostSMPLoad
+GlueHostSMPLoadLast1Min: 2.57
+GlueHostSMPLoadLast5Min: 1.48
+GlueHostSMPLoadLast15Min: 0.58
+objectclass: GlueHostArchitecture
+GlueHostArchitectureSMPSize: 2
+objectclass: GlueHostProcessor
+GlueHostProcessorClockSpeed: 2392
+objectclass: GlueHostNetworkAdapter
+GlueHostNetworkAdapterName: gr03.oslab.teipir.gr
+GlueHostNetworkAdapterIPAddress: 10.0.0.33
+objectclass: GlueHostMainMemory
+GlueHostMainMemoryRAMSize: 1035104
+GlueHostMainMemoryRAMAvailable: 306280
+\end{lstlisting}
+
+Using the Ganglia official python client (Listing \ref{pythonbdii} which is distributed with the source code of Ganglia Client, rejected as an option because Perl is easier in handling regular expressions for string operations and transformation.
+
+\begin{lstlisting}[language=bash,caption=Python Ganglia client MDS export,label=pythonbdii]
 [root@mon ~]# /opt/ganglia/bin/ganglia --format=MDS | grep -A 30 host=gr03
 
 dn: host=gr03.oslab.teipir.gr, scl=sub2, cl=datatag-CNAF, \
@@ -224,83 +262,12 @@ GlueHostStorageDeviceAvailableSpace: 197120000
 GlueHostStorageDeviceType: disk
 \end{lstlisting}
 
-Perl script to export MDS format:
-\begin{lstlisting}[language=bash,caption=Perl Ganglia Information Provider for MDS]
-[root@mon ~]# ./ganglia_ip -h mon -p 8649 -o mds | grep -A 22 host=gr03
+\section{Presentation}
 
-dn: host=gr03.oslab.teipir.gr, cl=RDLAB, \
- mds-vo-name=local, o=grid
-objectclass: GlueHost
-GlueHostName: gr03.oslab.teipir.gr
-GlueHostUniqueID: RDLAB-TEIPIR-gr03.oslab.teipir.gr
-objectclass: GlueHostProcessorLoad
-GlueHostProcessorLoadLast1Min: 2.57
-GlueHostProcessorLoadLast5Min: 1.48
-GlueHostProcessorLoadLast15Min: 0.58
-objectclass: GlueHostSMPLoad
-GlueHostSMPLoadLast1Min: 2.57
-GlueHostSMPLoadLast5Min: 1.48
-GlueHostSMPLoadLast15Min: 0.58
-objectclass: GlueHostArchitecture
-GlueHostArchitectureSMPSize: 2
-objectclass: GlueHostProcessor
-GlueHostProcessorClockSpeed: 2392
-objectclass: GlueHostNetworkAdapter
-GlueHostNetworkAdapterName: gr03.oslab.teipir.gr
-GlueHostNetworkAdapterIPAddress: 10.0.0.33
-objectclass: GlueHostMainMemory
-GlueHostMainMemoryRAMSize: 1035104
-GlueHostMainMemoryRAMAvailable: 306280
-\end{lstlisting}
-
-\begin{lstlisting}[language=bash,caption=BDII LDAP search for Glue CE ProcessorLoad attributes]
-
-# ldapsearch -H ldap://osweb.teipir.gr:2170 -x \
--b GlueHostName=ainex.local,Mds-Vo-name=local,o=grid \
-GlueHostProcessorLoadLast1Min GlueHostProcessorLoadLast5Min \
-GlueHostProcessorLoadLast15Min
-
-# ainex.local, local, grid
-dn: GlueHostName=ainex.local,Mds-Vo-name=local,o=grid
-GlueHostProcessorLoadLast1Min: 27
-GlueHostProcessorLoadLast15Min: 22
-GlueHostProcessorLoadLast5Min: 20
-
-\end{lstlisting}
-
-\section{Description of Information}
-
-\subsection{DOM}
-
-\begin{lstlisting}[language=PHP,caption=PHP DOM call to WebMDS]
-$url="http://osweb.teipir.gr:8080/webmds/webmds?info=indexinfo&xsl=&xmlSource.indexinfo.param.xpathQuery=%2F%2F*[local-name%28%29%3D%27Host%27]";
-$file  = file_get_contents($url);
-$dom = DOMDocument::loadXML($file);
-$host = $dom->getElementsByTagName('Host');
-$procload = $host->item($k)->getElementsByTagName('ProcessorLoad');
-echo $procload->item($i)->getAttribute('Last1Min');
-\end{lstlisting}
-
-\subsection{LDAP}
-
-\begin{lstlisting}[language=PHP,caption=PHP LDAP call to BDII]
-$ds=ldap_connect("osweb.teipir.gr","2170");
-if ($ds)
-{
-    $r=ldap_bind($ds);
-    $sr=ldap_search($ds, "mds-vo-name=local,o=grid", "(&(objectClass=GlueHostProcessorLoad))");
-    if ($sr)
-    {
-         $info = ldap_get_entries($ds, $sr) or die("could not fetch entries");
-         echo ($info[0][gluehostprocessorloadlast1min][0])/100;
-    }
-ldap_close($ds);
-}
-\end{lstlisting}
-
-
+Finally, to present the information there has been used two custom developed interfaces in PHP. Both programs reside in Brunel University webserver which supports the needed libraries and network connections. The source code is available under that page, and when called using BDII or WSRF, the result is exactly the same and looks like Table \ref{tab:html_output}.
 
 \begin{table}[ht]
+\centering
 \small\addtolength{\tabcolsep}{-3pt}
 \begin{tabular}{ | l | l | l | l | l |}
 \hline
@@ -318,8 +285,56 @@ ldap_close($ds);
 \label{tab:html_output}
 \end{table}
 
+\subsection{DOM}
+
+The one uses PHP DOM functions to call the WebMDS and get the XML as it would happed calling the WSRF Web Service with security in mind. Listing \ref{wsrf.php} is an abstraction of the code deployed in Brunel's webserver and returns only one value. The purpose of this listing is to present the use of functions and not the HTML stuff.
+
+\begin{lstlisting}[language=PHP,caption=PHP DOM call to WebMDS,label=wsrf.php]
+$url="http://osweb.teipir.gr:8080/webmds/webmds?info=indexinfo&xsl=&xmlSource.indexinfo.param.xpathQuery=%2F%2F*[local-name%28%29%3D%27Host%27]";
+$file  = file_get_contents($url);
+$dom = DOMDocument::loadXML($file);
+$host = $dom->getElementsByTagName('Host');
+$procload = $host->item($k)->getElementsByTagName('ProcessorLoad');
+echo $procload->item($i)->getAttribute('Last1Min');
+\end{lstlisting}
+
+\subsection{LDAP}
+
+The other PHP is using LDAP functions to connect to BDII instance and get the results from objects that instanciates the GlueHostProcessorLoad class. Listing \ref{bdii.php} displays the method to bind anonymously, form the query and get a sample result.
+
+\begin{lstlisting}[language=PHP,caption=PHP LDAP call to BDII,label=bdii.php]
+$ds=ldap_connect("osweb.teipir.gr","2170");
+if ($ds)
+{
+    $r=ldap_bind($ds);
+    $sr=ldap_search($ds, "mds-vo-name=local,o=grid", "(&(objectClass=GlueHostProcessorLoad))");
+    if ($sr)
+    {
+         $info = ldap_get_entries($ds, $sr) or die("could not fetch entries");
+         echo ($info[0][gluehostprocessorloadlast1min][0])/100;
+    }
+ldap_close($ds);
+}
+\end{lstlisting}
 
 \subsection{Nagios}
+
+Nagios calls check\_ganglia periodically (configured as check interval) and logs the state of each service and host check. Load averages are described as services. Listing \ref{nagioslog} shows the log file of nagios service check for these values straight from Ganglia.
+\begin{lstlisting}[caption=Nagios log with load check,label=nagioslog]
+[1297634400] CURRENT SERVICE STATE: xenia.oslab.teipir.gr;load_fifteen;OK;HARD;1;CHECKGANGLIA OK: load_fifteen is 0.00
+[1297634400] CURRENT SERVICE STATE: xenia.oslab.teipir.gr;load_five;OK;HARD;1;CHECKGANGLIA OK: load_five is 0.00
+[1297634400] CURRENT SERVICE STATE: xenia.oslab.teipir.gr;load_one;OK;HARD;1;CHECKGANGLIA OK: load_one is 0.00
+\end{lstlisting}
+
+NPCD is configured in bulk mode so with some luck a file may be found in the spool directory before the interval passes to process it with perl script to RRD database. Listing \ref{npcdfile} contains the performance data metrics.
+
+\begin{lstlisting}[caption=NPCD temporary file in spool directory,label=npcdfile]
+[root@osweb ~]# cat /var/spool/pnp4nagios/host-perfdata.1297973378 
+DATATYPE::HOSTPERFDATA	TIMET::1297973368	HOSTNAME::osweb.teipir.gr	HOSTPERFDATA::rta=0.057000ms;3000.000000;5000.000000;0.000000 pl=0%;80;100;0	HOSTCHECKCOMMAND::ncg_check_host_alive	HOSTSTATE::UP	HOSTSTATETYPE::HARD
+\end{lstlisting}
+
+Finally, Nagios Web interface displays the aggregated values of host performance state in multiple views, as shown in Table \ref{tab:nagios_service_detail}.
+
 \begin{table}[ht]
 \small\addtolength{\tabcolsep}{-3pt}
 \begin{tabular}{ | l | l | l | l | l |}
@@ -341,9 +356,4 @@ ldap_close($ds);
 \caption{Example Nagios service status details for ganglia check}
 \label{tab:nagios_service_detail}
 \end{table}
-
-screenshot of output (green/yellow/red) colored
-
-
-pages from \url{http://people.brunel.ac.uk/~dc09ttp}
 

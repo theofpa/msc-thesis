@@ -51,9 +51,6 @@ The information service in version 3.1 of gLite is similar to MDS of Globus midd
 
 \nomenclature{BDII}{Berkeley Database Information Index}
 
-
-%% TODO more about glite
-
 \section{Information Services}
 A Grid Monitoring Architecture \cite{tierney2002grid} was proposed in early 2000's. Information systems were developed to create repositories of information needed to be stored for monitoring and statistical reporting reasons. Such an organized system later was specified by the Aggregated Topology Provider (ATP) definition. The largest world grids adopt that model, forming OIM in OSG (USA) and GOCDB as that information base in EGEE (Europe). Message Bus was also defined as a mean to transfer the underlying data, and well known tools came up such as Gstat, GOCDB and BDII with Glue specification. Grid performance monitoring and keeping of such an information system has also impact in the performance of the system it shelf \cite{zhang2003performance}, so various methods were developed to give the solution to the scaling and performance problem, such as MDS2 (GIIS \& GRIS), GMA and R-GMA \cite{wilson2004information}, which offers relational environment \cite{fisher2001relational}, has experience on production systems \cite{byrom-production} and scales to reach huge needs such as CMS project \cite{Bonacorsi2004,Byrom}.
 
@@ -88,7 +85,6 @@ Top-level BDII contains aggregated information about the sites and the services 
 
 Information about the status of a service and its parameters is pushed on BDII using external processes. An information provider is also used (such as in WSRF) to describe the service attributes using the GLUE schema.
 
-%% TODO make a graph about BDII
 \begin{figure}[htb]
 \centering
  \includegraphics[width=6in]{images/bdii.eps}
@@ -99,7 +95,6 @@ Information about the status of a service and its parameters is pushed on BDII u
 \section{Performance Monitoring}
 %TODO those two paragraphs should be replaced or removed
 Standards are being published about the operational models that the grid computing initiative will use. Last decade the EGEE I, II \& III was adopted by european universities to fund and establish a collaborative community of researchers under a central point, the CERN oriented research project in Particle Physics. After EGEE, the European Grid Initiative were formed to lead to the explode of that community into regional initiatives. Performance and availability monitoring tools and views also follow that format, phasing out commonly used SAM \cite{egee3dsa122} and having the adoption of Nagios as the monitoring of regional performance tool.
-
 
 A taxonomy effort has been made \cite{gerndt2004performance} to present the differences of performance monitoring systems of the grid, and later a more general \cite{zanikolas2007importance} taxonomy paper was published to give a more general visibility of these tools. GridICE was generally used to aggregate the performance metrics of ROCs in high level reports \cite{andreozzi2005gridice}. Later GridICE was left as long as the SAM left, to meet the milestone of EGI to have a regional monitoring tool (Nagios) to report the reliability of the joined sites and report the values for SLA reasons.
 
