@@ -1,8 +1,10 @@
-\documentclass[a4paper,12pt,oneside]{book}
+\documentclass[a4paper]{book}
+%\documentclass[a4paper,12pt,oneside]{book}
 
 % TODO page numbers appear twice
 % TODO full name shouldn't appear in each page footer
 % TODO remove draft watermark
+% TODO There is no restriction on font. Times Roman is acceptable; size must be around 12 point.
 \usepackage{draftwatermark}
 % Use the following to make modification
 %\SetWatermarkAngle{45}
@@ -12,10 +14,10 @@
 %\SetWatermarkText{DRAFT}
 
 \usepackage[latin1]{inputenc}
-\usepackage[left=1in, right=1in]{geometry}
+%\usepackage[vcentering,right=40mm,top=20mm,left=40mm]{geometry}
 \usepackage[font=footnotesize, center]{caption}
 \usepackage{tikz}
-\usepackage{fancyhdr}
+%\usepackage{fancyhdr}
 \usepackage{verbatim}
 \usepackage{listings}
 \usepackage{pstricks}
@@ -33,8 +35,8 @@
 \usepackage{hyperref}
 \usepackage{tocloft}
 \setcounter{tocdepth}{2}
-\renewcommand{\baselinestretch}{1.5}
-\setlength{\headheight}{15pt}
+%\renewcommand{\baselinestretch}{1.5}
+%\setlength{\headheight}{15pt}
 \usetikzlibrary{arrows,trees}
 \DeclareGraphicsExtensions{.jpg,.png}
 %\renewcommand{\chaptername}{}
@@ -58,6 +60,25 @@
  frame=single,
  escapeinside={(*@}{@*)},
 }
+
+% TODO The text should be double-spaced, with a 40 mm margin on the left-hand side of the pages and 20 mm top and bottom margins.
+\usepackage{anysize}
+\marginsize{40mm}{40mm}{20mm}{20mm}
+
+\usepackage{setspace}
+\doublespacing
+\pagestyle{plain}
+%\addtolength{\textheight}{20mm}
+%\addtolength{\voffset}{-20mm}
+%\renewcommand{\headrulewidth}{1pt}
+%\renewcommand{\footrulewidth}{1pt}
+%\addtolength{\headheight}{0pt}
+%\fancyfoot[L]{Grid Monitoring}
+%\fancyfoot[RO]{Theofylaktos Papapanagiotou}
+%\addtolength{\textheight}{70pt}
+%\setlength{\marginparwidth}{40mm}
+
+
 
 \makenomenclature
 \makeindex
