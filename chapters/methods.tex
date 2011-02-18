@@ -127,8 +127,9 @@ If a TCP connection on the Gmond listening port 8649 is made, Gmond writes a ful
 To install ganglia, some depencencies where needed to be installed on each node of the Computing Element. In the testbed, there where an LTSP installation existed \cite{ltsp} and easily deployment of ganglia succeeded. Ganglia sources compiled for Gmond on the nodes and Gmetad on the systems that Ganglia Web interface needed to be installed. Finally on worker nodes, iptables should accept connections on 8649/TCP port.
 
 \begin{verbatim}
-# yum install rrdtool perl-rrdtool rrdtool-devel apr-devel libconfuse \
-              libconfuse-devel expat expat-devel pcre pcre-devel
+# yum install rrdtool perl-rrdtool rrdtool-devel apr-devel \
+              libconfuse libconfuse-devel expat \
+              expat-devel pcre pcre-devel
 # GANGLIA_ACK_SYSCONFDIR=1 ./configure --with-gmetad
 # make
 # make install
@@ -137,13 +138,13 @@ To install ganglia, some depencencies where needed to be installed on each node 
 \end{verbatim}
 
 \begin{verbatim}
-# yum install apr-devel libconfuse libconfuse-devel expat expat-devel \
-              pcre pcre-devel
+# yum install apr-devel libconfuse libconfuse-devel expat \
+              expat-devel pcre pcre-devel
 # GANGLIA_ACK_SYSCONFDIR=1 ./configure
 # make
 # make install
-# iptables -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp \
-           --dport 8649 -j ACCEPT
+# iptables -A RH-Firewall-1-INPUT -m state --state NEW \
+           -m tcp -p tcp --dport 8649 -j ACCEPT
 \end{verbatim}
 
 Gmond and Gmetad default configuration may be generated using the daemon itself. Gmond may be configured using multicast to communicate metrics between nodes or unicast to solve problems with jitter when deployed in environments like amazon ec2 that do not support multicast.
@@ -213,8 +214,8 @@ both information services are following the MDS specification and are using the 
 To evaluate the LDAP based information service, a system had to have installed the gLite so it have the BDII service running. To do this, a Scientific Linux installation were used, and CERN repositories were added. The installation of gLite-UI automatically installs BDII, so using {\bf yum command} the needed packages where installed. An ldapsearch returned the top elements of the BDII as shown below:
 
 \begin{verbatim}
-[root@osweb ~]# ldapsearch -x -h osweb.teipir.gr -p 2170 -b ""\
-                -s base "(objectClass=*)" namingContexts
+[root@osweb~]# ldapsearch -x -h osweb.teipir.gr -p 2170 -b\
+                "" -s base "(objectClass=*)" namingContexts
 ...
 namingContexts: o=grid
 namingContexts: o=glue
@@ -298,15 +299,17 @@ gLite have a dedicated directory for information providers, where the wrappers o
 
 \begin{verbatim}
 [root@osweb ~]# ps -ef | grep bdi[i]
-edguser  24951     1  0 19:47 ?        00:00:01 /usr/sbin/slapd -f \
-                                                /opt/bdii/etc/bdii-slapd.conf -h \
-                                                ldap://osweb.teipir.gr:2170 -u edguser
-edguser  24990     1  0 19:47 ?        00:00:01 /usr/bin/python \
-                                                /opt/bdii/bin/bdii-update -c \
-                                                /opt/bdii/etc/bdii.conf -d
+edguser  24951  1  0 19:47 /usr/sbin/slapd -f \
+                           /opt/bdii/etc/bdii-slapd.conf \
+                           -h ldap://osweb.teipir.gr:2170 \
+                           -u edguser
+edguser  24990  1  0 19:47 /usr/bin/python \
+                           /opt/bdii/bin/bdii-update -c \
+                           /opt/bdii/etc/bdii.conf -d
 [root@osweb ~]# grep PROVIDER /opt/bdii/etc/bdii.conf
 BDII_PROVIDER_DIR=/opt/glite/etc/gip/provider
-[root@osweb ~]# cat /opt/glite/etc/gip/provider/glite-info-provider-ganglia-wrapper
+[root@osweb ~]# cat \
+/opt/glite/etc/gip/provider/glite-provider-ganglia-wrapper
 #!/bin/bash
 /opt/bin/ganglia_ip -h 195.251.70.54 -p 8649 -o mds
 \end{verbatim}
@@ -409,9 +412,9 @@ Another example is a more complex query that asks the WSRF for all nodes with na
 //glue:Host[glue:ProcessorLoad[@glue:Last15Min>20]]
 \end{verbatim}
 
-Finally the following example may return only the $ProcessorLoad$ node of the $Host$ that has the attribute Name set to $xenia.oslab.teipir.gr$:
+Finally the following example may return only the $ProcessorLoad$ node of the $Host$ that has the attribute Name set to $xenia.teipir.gr$:
 \begin{verbatim}
-//glue:Host[@glue:Name='xenia.oslab.teipir.gr']/glue:ProcessorLoad
+//glue:Host[@glue:Name='xenia.teipir.gr']/glue:ProcessorLoad
 \end{verbatim}
 
 

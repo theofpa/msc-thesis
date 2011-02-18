@@ -9,10 +9,10 @@
 % The sloped option gives rotated edge labels. Personally
 % I find sloped labels a bit difficult to read. Remove the sloped options
 % to get horizontal labels. 
-\begin{tikzpicture}[grow=right, sloped]
+\begin{tikzpicture}[grow=right,sloped]
 \node[bag] {Data Store and Query}
     child {
-        node[bag] {Service-Based}        
+        node[bag] {WSRF}        
             child {
                 node[end, label=right:
                     {MDS4}] {}
@@ -32,7 +32,7 @@
             node[below]  {}
     }
     child {
-        node[bag] {Directory-Based}        
+        node[bag] {LDAP}        
         child {
                 node[end, label=right:
                     {MDS2}] {}

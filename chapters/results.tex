@@ -17,7 +17,7 @@ which may also be displayed using the {\bf uptime command}:
 
 \begin{verbatim}
 [root@gr03 ~]# uptime
- 00:01:20 up  1:41,  3 users,  load average: 2.29, 0.73, 0.32
+ 00:01:20 up  1:41,  3 users, load average: 2.29 0.73 0.32
 \end{verbatim}
 
 Examining the Linux kernel source code, there is the CALC\_LOAD macro command which takes the options that have been discused and returns the result of the metric. The definition of the macro can be seen in file {\bf /usr/src/kernels/`uname -r`/include/linux/sched.h}, Listing \ref{kernel}.
@@ -104,11 +104,9 @@ Metrics taken from the event source are passed to the information service using 
 
 In WSRF the $wsrf-query$ command is executed using the URL of the container where the WSRF has deployed. The container should run in a host with a host certificate signed by a certificate authority, and a certificate proxy should be initiatlized with a valid user certificate that is requesting the information. 
 
-\begin{verbatim}
-/opt/globus/bin/wsrf-query \
--s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService \
-"//*[local-name()='Host']"
-\end{verbatim}
+\begin{lstlisting}
+/opt/globus/bin/wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//*[local-name()='Host']"
+\end{lstlisting}
 
 The result of the abuve query returns a list of all cluster nodes. An abstract result is displayed here in Listing \ref{wsrfquery}.
 
@@ -181,7 +179,7 @@ WebMDS match the query in its cache and replies only the specific node that was 
 
 On the other information service, using $ldapsearch$ command and specifying the base DN for the search, the host URI and the desired attributes to return, we may get the values asked from the BDII as seen on Listing \ref{ldapsearchbdii}
 
-\begin{lstlisting}[language=bash,caption=BDII LDAP search for Glue CE ProcessorLoad attributes,label=ldapsearcbdii]
+\begin{lstlisting}[language=bash,caption=BDII LDAP search for Glue CE ProcessorLoad attributes,label=ldapsearchbdii]
 # ldapsearch -H ldap://osweb.teipir.gr:2170 -x \
 -b GlueHostName=ainex.local,Mds-Vo-name=local,o=grid \
 GlueHostProcessorLoadLast1Min GlueHostProcessorLoadLast5Min \
@@ -337,6 +335,7 @@ Finally, Nagios Web interface displays the aggregated values of host performance
 
 \begin{table}[ht]
 \small\addtolength{\tabcolsep}{-3pt}
+\scalebox{0.8}{
 \begin{tabular}{ | l | l | l | l | l |}
 \hline
  Host & Service & Status & Last Check & Status Information \\ \hline
@@ -352,7 +351,7 @@ Finally, Nagios Web interface displays the aggregated values of host performance
 \hline
  & load\_one & \colorbox{red}{CRITICAL} & 02-08-2011 20:14:43 & CHECKGANGLIA OK: load\_one is 11.60 \\
 \hline
-\end{tabular}
+\end{tabular}}
 \caption{Example Nagios service status details for ganglia check}
 \label{tab:nagios_service_detail}
 \end{table}

@@ -1,5 +1,4 @@
-\documentclass[a4paper]{book}
-%\documentclass[a4paper,12pt,oneside]{book}
+\documentclass[a4paper,12pt,oneside]{book}
 
 % TODO page numbers appear twice
 % TODO full name shouldn't appear in each page footer
@@ -25,7 +24,6 @@
 \usepackage{graphicx}
 \usepackage{nomencl}
 \usepackage{pslatex}
-\usepackage{hyperref}
 \usepackage{listings}
 \usepackage{listings}
 \lstset{language=C}
@@ -34,7 +32,6 @@
 \usepackage{makeidx}
 \usepackage{hyperref}
 \usepackage{tocloft}
-\setcounter{tocdepth}{2}
 %\renewcommand{\baselinestretch}{1.5}
 %\setlength{\headheight}{15pt}
 \usetikzlibrary{arrows,trees}
@@ -62,14 +59,28 @@
 }
 
 % TODO The text should be double-spaced, with a 40 mm margin on the left-hand side of the pages and 20 mm top and bottom margins.
-\usepackage{anysize}
-\marginsize{40mm}{40mm}{20mm}{20mm}
+%\usepackage{anysize}
+%\marginsize{40mm}{40mm}{20mm}{20mm}
 
 \usepackage{setspace}
 \doublespacing
-\pagestyle{plain}
+\pagestyle{headings}
+%\setlength{\hoffset}{-1in}
+%\setlength{\voffset}{-1in}
 %\addtolength{\textheight}{20mm}
-%\addtolength{\voffset}{-20mm}
+\addtolength{\hoffset}{-1in}
+\addtolength{\hoffset}{20mm}
+\addtolength{\voffset}{20mm}
+\addtolength{\voffset}{-1in}
+\oddsidemargin=20mm
+\topmargin=5mm
+\headheight=10mm
+\headsep=5mm
+\textheight=257mm
+\textwidth=130mm
+\marginparsep=20mm
+\marginparwidth=20mm
+\footskip=10mm
 %\renewcommand{\headrulewidth}{1pt}
 %\renewcommand{\footrulewidth}{1pt}
 %\addtolength{\headheight}{0pt}
@@ -77,6 +88,7 @@
 %\fancyfoot[RO]{Theofylaktos Papapanagiotou}
 %\addtolength{\textheight}{70pt}
 %\setlength{\marginparwidth}{40mm}
+%\usepackage{layout}
 
 
 
@@ -84,6 +96,7 @@
 \makeindex
 
 \begin{document}
+%\layout
 
 \frontmatter
 \input{extra/cover}
