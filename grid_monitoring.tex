@@ -1,9 +1,8 @@
 \documentclass[a4paper,12pt,oneside]{book}
 
-% TODO page numbers appear twice
-% TODO full name shouldn't appear in each page footer
+% TODO check spelling
+% TODO find duplicates in labels
 % TODO remove draft watermark
-% TODO There is no restriction on font. Times Roman is acceptable; size must be around 12 point.
 \usepackage{draftwatermark}
 % Use the following to make modification
 %\SetWatermarkAngle{45}
@@ -14,7 +13,8 @@
 
 \usepackage[latin1]{inputenc}
 %\usepackage[vcentering,right=40mm,top=20mm,left=40mm]{geometry}
-\usepackage[font=footnotesize, center]{caption}
+%\usepackage[a4paper]{geometry}
+%\usepackage[font=footnotesize, center]{caption}
 \usepackage{tikz}
 %\usepackage{fancyhdr}
 \usepackage{verbatim}
@@ -23,10 +23,9 @@
 \usepackage{graphics}
 \usepackage{graphicx}
 \usepackage{nomencl}
-\usepackage{pslatex}
+%\usepackage{pslatex}
 \usepackage{listings}
 \usepackage{listings}
-\lstset{language=C}
 \usepackage{color}
 \usepackage{textcomp}
 \usepackage{makeidx}
@@ -57,11 +56,22 @@
  frame=single,
  escapeinside={(*@}{@*)},
 }
-
-% TODO The text should be double-spaced, with a 40 mm margin on the left-hand side of the pages and 20 mm top and bottom margins.
-%\usepackage{anysize}
-%\marginsize{40mm}{40mm}{20mm}{20mm}
-
+\hypersetup{
+	pdftitle={Grid Monitoring},
+	pdfauthor={Theofylaktos Papapanagiotou},
+	pdfsubject={Grid Computing},
+	baseurl={http://people.brunel.ac.uk/~dc09ttp/grid_monitoring.pdf},
+	pdfdisplaydoctitle={true},
+	pdffitwindow={false},
+	pdfkeywords={grid monitoring, ganglia},
+	pdfprintscaling={None},
+	pdfpagelayout={TwoPageLeft},
+	setpagesize={true},
+}
+% There is no restriction on font. Times Roman is acceptable; size must be around 12 point.
+\usepackage[T1]{fontenc}
+\usepackage{times}
+% The text should be double-spaced, with a 40 mm margin on the left-hand side of the pages and 20 mm top and bottom margins.
 \usepackage{setspace}
 \doublespacing
 \pagestyle{headings}
@@ -70,7 +80,7 @@
 %\addtolength{\textheight}{20mm}
 \addtolength{\hoffset}{-1in}
 \addtolength{\hoffset}{20mm}
-\addtolength{\voffset}{20mm}
+\addtolength{\voffset}{10mm}
 \addtolength{\voffset}{-1in}
 \oddsidemargin=20mm
 \topmargin=5mm

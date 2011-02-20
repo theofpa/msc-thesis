@@ -17,7 +17,7 @@ bib:
 	bibtex $(MAIN)
 
 ps:     dvi
-	dvips -Ppdf -G0 $(MAIN) -o
+	dvips -t a4 -Ppdf -G0 $(MAIN) -o
 
 pdf:    dvi ps
 	ps2pdf $(MAIN).ps $(MAIN).pdf

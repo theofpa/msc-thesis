@@ -9,13 +9,16 @@ The flow of the monitoring process initialization is described from the GMA stan
 
 \subsection{Performance Metrics}
 
-CALC\_LOAD - load average
+Linux kernel proccess scheduler provides the three numbers for the processor load during the last one, five and fifteen minutes period. There are many ways to calculate the system load in UNIX systems, updating the values on each scheduler event or periodically sampling the scheduler state.
 
-extra
+Scheduler efficiency impact on total system's performance, and periodic sampling lead to more accurate load averages. Linux uses the second one, with the period of five seconds, five clock ticks. Each "clock tick" represented by the HZ variable which is the pulse rate of a kernel activity. This method is more performance-wise from the first one where recalcuation of load occurs in every scheduler event. 
+
+There is a significant difference between processor load and processor usage of a system. Processor usage is a percent representation of the use of CPU by processes, and not used in this project. CPU load is a better metric for the system performance because it does not have a top value of 100\% but is based in processes running and waiting in the scheduler queue.
+
 \subsubsection{Transport and sample}
-Gmond code uses the ganglia libmetrics library which in case of Linux operating system parses the $/proc/loadavg$ pseudo-file to get linux kernel calculated system load average.
+Gmond code uses the ganglia libmetrics library which in case of Linux operating system parses the $/proc/loadavg$ pseudo-file to get linux kernel calculated system load average as shown in Listing \ref{libmetrics}. When this value is taken, it is pushed to the multicast network using UDP datagram. If this value has not changed from the previous one, it is not pushed until a timeout is reached.
 
-\begin{lstlisting}[language=C,caption=libmetrics code to get load average]
+\begin{lstlisting}[language=C,caption=libmetrics code to get load average,label=libmetrics]
 timely_file proc_loadavg = { {0,0} , 5., "/proc/loadavg" };
 /* ... */
 g_val_t
@@ -26,19 +29,12 @@ load_one_func ( void )
    return val;
 }
 \end{lstlisting}
-code from gmond client
 
 \subsection{Information Systems}
-
-\subsubsection{BDII}
-
-values left as decimal numbers because its easy for ldap to handle string values of numbers
 
 \subsubsection{WSRF}
 
 The XML that Ganglia Resource Provider took from Gmond process through TCP, using XSLT technology is transformed on WSRF to another XML document, that is following the Glue-CE schema. globus\_wsrf\_mds\_usefulrp directory of globus configuration root, there is the file ganglia\_to\_glue.xslt where we can focus on the transformation rules. A snippet of interest for the case of ProcessorLoad class is seen in Listing \ref{xslt}.
-
-there is some XPath and a multiplication with 100 to get an integer that should be mentioned:
 
 \begin{lstlisting}[language=XML,caption=WSRF XSLT for Ganglia Information Provider,label=xslt]
 <glue:ProcessorLoad>
@@ -67,15 +63,28 @@ there is some XPath and a multiplication with 100 to get an integer that should 
 </glue:ProcessorLoad>
 \end{lstlisting}
 
+In Listing \ref{xslt} XPath queries noticed and a multiplication with 100 on CPU load values to get an integer is executed. This is happening in order to avoid the transfer of float values. In the frontend using DOM, a divition with 100 is done to get the original CPU load average number back.
+
+\subsubsection{BDII}
+
+On the other hand, in BDII Processor Load values left as decimal numbers because its easy for ldap to handle string values of numbers. The transformation from Gmond or Gmetad information provided using XML, is done by Perl XML::Parse and the output is done in MDS format. Some changes to the original Perl script written by Stratos Efstathiadis was done to match my testbed's LDAP schema.
+
 \subsection{Nagios}
 
-\begin{lstlisting}
+Nagios was installed in the testbed using YAIM tool. Some user certificates from TEIPIR and Brunel was added to access the interface through the VOMS2HTPASSWD tool.
+
+Custom check command was introduced to configure nagios with ganglia. Ganglia original check\_ganglia.py client was used as shown in Listing \ref{checkganglia}.
+
+\begin{lstlisting}[label=checkganglia]
 define command{
  command_name  check-ganglia
- command_line  check_ganglia.py -h $HOSTNAME$ -m $ARG1$ \
-               -w $ARG2$ -c $ARG3$ -s 195.251.70.54 -p 8649
+ command_line  check_ganglia.py -h $HOSTNAME$ -m $ARG1$ -w $ARG2$ -c $ARG3$ -s 195.251.70.54 -p 8649
  }
+\end{lstlisting}
 
+Nagios service check templates was created, to match all nodes of hostgroup named $worker-nodes$, one for each of the three metrics that will be aggregated in Nagios. Under the configuration listed in Listing \ref{nagiosservice}, options for warning and critical thresholds of Processor Load was applied, to notify the contacts that will be set to monitor these services through the rest of Nagios system.
+
+\begin{lstlisting}[label=nagiosservice]
 define service{
    use                  wn
    hostgroup_name       worker-nodes
@@ -85,40 +94,35 @@ define service{
    }
 \end{lstlisting}
 
-\section{Interpretation of Results}
+\section{Grid Performance and Site Reliability}
 
+Grid monitoring in gereral as proposed by Multi-Level Monitoring in EGEE SA1, is dealing with availability and reliability monitoring. There are threshold values for these metrics for a production site and SLA calculation make use of these metrics.
 
-Discussion about performance results based on
-load average.
+Performance monitoring when examed from this point of view, its main purpose is to count jobs that are successfully being submitted to a CE. Site reliability is calculated using that metric.
 
-some UNIX internals, processes, scheduler
-not a percentage counter of CPU usage
+For a system engineer, performance monitoring for system administration has to do with Processor Load metrics and not with jobs failed or executed successfully. With that in mind, a system engineer may take capacity management decisions to scale-out the Computing Element, or even scale-up a single node of it.
 
+This is the main goal of this project, to provide tools that allow the aggregation of Processor Load information to system engineers, and not job counting tools such as SAM, GridView and MyEGEE or MyEGI. Ganglia is the event source that publish the metrics taken from linux kernel as described, and multiple information services or even Nagios may be used to provide that information to users.
 
-Difference between these metrics and the availability of 
-a grid based on the queue of jobs have been submitted.
+\section{Information Services Scaling}
 
-Availability monitoring
+\subsection{LDAP}
 
--MyEGI, monitor visualization environment
--django data models
--MRS database, ATP based schema
+LDAP as the core technology of MDS2 has been investigated \cite{zhang2004performance} and proved that scales and performs good when the data are kept in cache. The performance of the information system when it is accessed by a large number of concurrent users have degrades dramatically when data caching is not used.
 
+Compared with WSRF, it {\bf performs faster} \cite{schopf2006monitoring} in small number of users, because of the LDAP base of this information service. LDAP backend is a Berkeley DB and is implemented in C, versus Java and SOAP over HTTP and XML of WSRF. Caching in LDAP although is reported to have problems.
 
-\section{Specific Interpretations}
+\subsection{WSRF}
 
-\subsection{Scaling}
-\subsubsection{LDAP}
+On the other side, MDS4 (WSRF) scales better than MDS2 (LDAP) in {\bf large number} of cuncurrent users. Both throughput and response in queries in large number of queries is consistent, which allows the use of MDS4 for robust operations.
 
-there is a paper about how information systems perform in large scale
+WSRF also supports {\bf many query languages}, unlike BDII which supports only LDAP queries. By default it is distributed only with support of XPath queries, but its architecture which is based in Java container and SOAP/XML standards, allow the distribution of the Information Service with other query languages as well.
 
-LDAP as the core technology of MDS2 has been investigated \cite{zhang2004performance} and proved that scales and performs good when the data are kept in cache. The performance of the information system when it is accessed by a large number of cocurrent users have degrades dramatically when data caching is not used.
+Adding a Resource Provider in WSRF was much easier than adding an Information Provider in BDII, which makes MDS4 more {\bf extensible} than MDS2. Even though in BDII a simple wrapper had to be installed in BDII GIP configuration directory, the Perl script (or the Python one provider by Ganglia) had to be changed to reach the running BDII instance of Glue schema. MDS4 and WSRF is based in XML and XSLT transformation mechanisms that allow the easy addition of other Providers of a site. It is even allowed to aggregate Index Services from other sites using the $downstream$ option to register them in the local Index Service.
 
-\subsubsection{WSRF}
-deserialization of MDS query in gmond to WSRF
+BDII LDAP based configuration is complex due to OID namespaces and naming authorities and is not portable with other information systems. WSRF configuration is much easier and {\bf flexible} because of the XML-based information model, which generaly considered more friendly.
 
-performance analysis of WSRF here \cite{schopf2006monitoring}
+{\bf Reliability} is another factor where WSRF is better than LDAP. BDII after a long period of heavy activity has memory usage problems and requests may have delay in being served, so periodically service restarts are needed, unlike WSRF Index which has been tested under heavy load and keeps serving without problems \cite{schopf2006monitoring}.
 
-and MDS4 vs MDS2
+Although WSRF in many factors is dominating, during this project there has been noticed that when some nodes of the Computing Element that report its status are down, problems occur. Some deserialization exceptions appear in the container log file for a few minutes until the WSRF learn about the new state of the cluster from Gmond.
 
-\section{Enveloping Interpretations}
