@@ -30,7 +30,6 @@
 \usepackage{color}
 \usepackage{textcomp}
 \usepackage{makeidx}
-\usepackage{hyperref}
 \usepackage{tocloft}
 %\renewcommand{\baselinestretch}{1.5}
 %\setlength{\headheight}{15pt}
@@ -56,18 +55,6 @@
   extendedchars=true,
  frame=single,
  escapeinside={(*@}{@*)},
-}
-\hypersetup{
-	pdftitle={Grid Monitoring},
-	pdfauthor={Theofylaktos Papapanagiotou},
-	pdfsubject={Grid Computing},
-	baseurl={http://people.brunel.ac.uk/~dc09ttp/grid_monitoring.pdf},
-	pdfdisplaydoctitle={true},
-	pdffitwindow={false},
-	pdfkeywords={grid monitoring, ganglia},
-	pdfprintscaling={None},
-	pdfpagelayout={TwoPageLeft},
-	setpagesize={true},
 }
 % There is no restriction on font. Times Roman is acceptable; size must be around 12 point.
 \usepackage[T1]{fontenc}
@@ -100,6 +87,33 @@
 %\addtolength{\textheight}{70pt}
 %\setlength{\marginparwidth}{40mm}
 %\usepackage{layout}
+
+\newcommand{\executeiffilenewer}[3]{%
+\ifnum\pdfstrcmp{\pdffilemoddate{#1}}%
+{\pdffilemoddate{#2}}>0%
+{\immediate\write18{#3}}\fi%
+}
+\newcommand{\includesvg}[1]{%
+\executeiffilenewer{#1.svg}{#1.pdf}%
+{inkscape -z -D --file=#1.svg %
+--export-pdf=#1.pdf --export-latex}%
+\input{#1.pdf_tex}%
+}
+
+\usepackage{hyperref}
+\hypersetup{
+	pdftitle={Grid Monitoring},
+	pdfauthor={Theofylaktos Papapanagiotou},
+	pdfsubject={Grid Computing},
+	baseurl={http://people.brunel.ac.uk/~dc09ttp/grid_monitoring.pdf},
+	pdfdisplaydoctitle={true},
+	pdffitwindow={false},
+	pdfkeywords={grid monitoring, ganglia},
+	pdfprintscaling={None},
+	pdfpagelayout={TwoPageLeft},
+	setpagesize={true},
+}
+\usepackage{hyperxmp}
 
 
 
@@ -140,7 +154,7 @@
 
 %\label{appb}
 %\lhead{Appendix B. \emph{Interim Report}}
-%\input{chapters/interim_report}
+%\input{extra/interim_report}
 
 \input{extra/mentor_report}
 \printindex
