@@ -22,14 +22,14 @@ ps:     dvi
 pdf:    dvi ps
 	ps2pdf $(MAIN).ps $(MAIN).pdf
 
-tgz:    pdf
-	tar -zcvf a1.barad.tgz *tex Makefile *bib *eps *pdf *sty
+tgz:    
+	tar -zcvf grid_monitoring.tgz *tex Makefile *pdf chapters images extra notes
 
 clean_aux:
 	rm -f *.aux 
 
 clean:
-	rm -f *.aux *.bbl *.blg *.log *~ \#*\# *.toc *.dvi *.idx *.lof *.nlo *.out *.ps *.lot *.lol
+	rm -f *.aux *.bbl *.blg *.log *~ \#*\# *.toc *.dvi *.idx *.lof *.nlo *.out *.ps *.lot *.lol *.tgz
 
 clobber:	clean
 	rm -f *.ps *.pdf

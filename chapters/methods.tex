@@ -1,12 +1,12 @@
 \section{Approach Adopted}
 
-Grid performance monitoring in this project is examed using {\bf GMA}, an architecture that established to provide the standards for a distributed monitoring system. The technologies that will be discussed here are about the Information Infrastructure that provides the metrics to the users/applications.
+Grid performance monitoring in this project is examined using {\bf GMA}, an architecture that established to provide the standards for a distributed monitoring system. The technologies that will be discussed here are about the Information Infrastructure that provides the metrics to the users/applications.
 
 The metrics are generated using {\bf Linux kernel}'s load average functions. {\bf Ganglia} is used to take that metrics and synchronize all cluster nodes with the relevant information, over the {\bf multicast channel}.
 
-Nagios is configured using a {\bf custom script} that takes the information for the cluster nodes, and periodically queries the {\bf Gmond} to get the metrics for the discovered nodes. The results are stored in its repository and using RRDTool and pnp4nagios, graph reports are generated on demand.
+Nagios is configured using a {\bf custom script} that takes the information for the cluster nodes, and periodically queries the {\bf Gmond} to get the metrics for the discovered nodes. The results are stored in its repository and using RRDTool and PNP4Nagios, graph reports are generated on demand.
 
-To pass the information, two different information systems are examined, {\bf BDII and WSRF}. Both are used in modern grid implementations and are described in {\bf MDS specification}. BDII queries event source (Gmond) using Perl/Python LDAP libraries. The results taken, fill the directory schema which has been extended using {\bf Glue schema} specification for Proccessor Load in Computing Element structure.
+To pass the information, two different information systems are examined, {\bf BDII and WSRF}. Both are used in modern grid implementations and are described in {\bf MDS specification}. BDII queries event source (Gmond) using Perl/Python LDAP libraries. The results taken, fill the directory schema which has been extended using {\bf Glue schema} specification for Processor Load in Computing Element structure.
 
 {\bf MDS4} introduces the use of {\bf WSRF} in grid information system. A {\bf Ganglia Information Provider} using {\bf XSLT} takes the XML output from Gmond and aggregates the metrics using WSRF {\bf Aggregation Framework}. In front of it, a Tomcat instance serves the {\bf WebMDS} frontend to allow {\bf XPath} queries to the results that has been aggregated.
 
@@ -48,7 +48,7 @@ Grid Monitoring Architecture supports two models to handle the communication bet
 \item {\bf Query/Response model}
 \end{itemize}
 
-The directory service is used by both producers to discover consumers and consumers to discover producers. The information of the availability of each producer/consumer is published to the directory service, and each component may initiate a connection to another type of component that has discovered in the directory service. Even though the role of the directory service is so centric in the discovery of components between each other, the performance data messages are transfered between the producer/consumer directly and not via the Directory Service.
+The directory service is used by both producers to discover consumers and consumers to discover producers. The information of the availability of each producer/consumer is published to the directory service, and each component may initiate a connection to another type of component that has discovered in the directory service. Even though the role of the directory service is so centric in the discovery of components between each other, the performance data messages are transferred between the producer/consumer directly and not via the Directory Service.
 
 \subsection{GLUE Schema}
 gained wide acceptance given its adoption by Globus MDS3
@@ -68,7 +68,7 @@ The implementation of Glue schema may be using LDAP, XML or SQL. The MDS impleme
 \begin{figure}[htb]
 \centering
  \includegraphics[width=130mm]{images/gluece_ext.eps}
-\caption{GLUE schema 2.0 extention for Host and SMP Load}
+\caption{GLUE schema 2.0 extension for Host and SMP Load}
 \label{figure:gluece_ext}
 \end{figure}
 
@@ -81,11 +81,11 @@ Because grid computing applications usually operate in large scale installations
 
 The number of components in a grid infrastructure scales up to hundreds of thousands of nodes, and these components should be available for queries by many different tools. That information should be discoverable using information indexes.
 
-Deployments, maintenance and operations in a large installation of many systems has operational costs for human resources. The information system should automaticaly discover and serve the availability paths for applications and grid resources/servives.
+Deployments, maintenance and operations in a large installation of many systems has operational costs for human resources. The information system should automatically discover and serve the availability paths for applications and grid resources/services.
 
-Because of the large number of different heterogeneous networks of nodes and clusters, there is a need of uniformity. Uniformity helps to simplify the developers to build applications that give better configuration decisions. APIs for common operations and data models for the representation of that information. Resources are devided in groups of computing, storage, network elements, etc.
+Because of the large number of different heterogeneous networks of nodes and clusters, there is a need of uniformity. Uniformity helps to simplify the developers to build applications that give better configuration decisions. APIs for common operations and data models for the representation of that information. Resources are divided in groups of computing, storage, network elements, etc.
 
-The solution proposed by GLUE standard and X.500 (Directory Service) is the key feature to scale, and get uniformity. It may be used to provide extensible distributed directory services. It is optimised for reads, its binary-tree like hierarchy and usually backend data structure provides a framework that well organize the information that need to be delivered by an Information Infrastructure.\cite{mds1}
+The solution proposed by GLUE standard and X.500 (Directory Service) is the key feature to scale, and get uniformity. It may be used to provide extensible distributed directory services. It is optimized for reads, its binary-tree like hierarchy and usually back-end data structure provides a framework that well organize the information that need to be delivered by an Information Infrastructure.\cite{mds1}
 
 \section{Data-acquisition Systems}
 
@@ -111,7 +111,7 @@ running or uninterruptible state.
 
 \subsection{Ganglia}\label{subsec:ganglia}
 
-The metrics about load in one, five and fifteen minutes are taken from Gmond daemon through the proc filesystem as seen in Figure \ref{figure:calc_load}. These values are multicasted using a UDP message on the network, only if the value has been changed from the previous one taken. There is also a time thresohold that after that time the value is been sent again, even if it haven't changed, so new hosts on the network may gather the data needed for their Gmond. Each host of a cluster have the information about the metrics of itself and each other node, so it stores the whole cluster state. Using loopback interface, every Gmond sends its metrics to itself.
+The metrics about load in one, five and fifteen minutes are taken from Gmond daemon through the proc filesystem as seen in Figure \ref{figure:calc_load}. These values are multicasted using a UDP message on the network, only if the value has been changed from the previous one taken. There is also a time threshold that after that time the value is been sent again, even if it haven't changed, so new hosts on the network may gather the data needed for their Gmond. Each host of a cluster have the information about the metrics of itself and each other node, so it stores the whole cluster state. Using loopback interface, every Gmond sends its metrics to itself.
 
 If a TCP connection on the Gmond listening port 8649 is made, Gmond writes a full cluster state of metrics in XML including its DTD. There is a typical access list in the configuration called trusted hosts, and of course every node that is in the cluster that a specific node is configured to be part of, is allowed to connect to get the XML.
 
@@ -124,7 +124,7 @@ If a TCP connection on the Gmond listening port 8649 is made, Gmond writes a ful
 
 \subsubsection{Installation and configuration}
 
-To install ganglia, some depencencies where needed to be installed on each node of the Computing Element. In the testbed, there where an LTSP installation existed \cite{ltsp} and easily deployment of ganglia succeeded. Ganglia sources compiled for Gmond on the nodes and Gmetad on the systems that Ganglia Web interface needed to be installed. Finally on worker nodes, iptables should accept connections on 8649/TCP port.
+To install ganglia, some dependencies where needed to be installed on each node of the Computing Element. In the testbed, there where an LTSP installation existed \cite{ltsp} and easily deployment of ganglia succeeded. Ganglia sources compiled for Gmond on the nodes and Gmetad on the systems that Ganglia Web interface needed to be installed. Finally on worker nodes, iptables should accept connections on 8649/TCP port.
 
 \begin{lstlisting}
 # yum install rrdtool perl-rrdtool rrdtool-devel apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
@@ -147,13 +147,13 @@ Gmond and Gmetad default configuration may be generated using the daemon itself.
 
 \subsection{Nagios}
 
-Nagios is the core monitoring tool that is used for grid computing monitoring as Multi Level Monitoring architecture proposes, to meet the needs of EGEE/EGI. Following SAM and Gridview, Nagios instances have been deployed in many levels of grid infrastructure, enhansing the functionality of scheduling and execution of site tests. The message bus that uses is MSG, which offers an integration between Nagios and the other monitoring tools of grid.
+Nagios is the core monitoring tool that is used for grid computing monitoring as Multi Level Monitoring architecture proposes, to meet the needs of EGEE/EGI. Following SAM and Gridview, Nagios instances have been deployed in many levels of grid infrastructure, enhancing the functionality of scheduling and execution of site tests. The message bus that uses is MSG, which offers an integration between Nagios and the other monitoring tools of grid.
 
 CERN provides MSG-Nagios-bridge, a mechanism to transfer test results between different levels of Nagios deployment (regional, project, site). MSG-Nagios-bridge both submit tests to other Nagios installations and consume results from them. 
 
-A Regional Metric Store is also used by nagios. It is a database that provides a backend to Nagios current and historical metrics, and connected with the frontend and the message bridge. The adaptor that provides such functionality called NDOUtils, and may have a MySQL/PorstgreSQL or Oracle backend.
+A Regional Metric Store is also used by Nagios. It is a database that provides a back-end to Nagios current and historical metrics, and connected with the frontend and the message bridge. The adapter that provides such functionality called NdoUtils, and may have a MySQL/PostgreSQL or Oracle back-end.
 
-In the front-end, users are allowed to discover the nodes and services provided in the monitoring levels by regions, projects and sites, using cgi scripts that are part of the Nagioc core distribution. Access control between levels of Nagios instances and between users and Nagios installations, is performed using the standard methods of grid, which is GOCDB as described in ATP. User authentication is done by user certificates.
+In the front-end, users are allowed to discover the nodes and services provided in the monitoring levels by regions, projects and sites, using CGI scripts that are part of the Nagios core distribution. Access control between levels of Nagios instances and between users and Nagios installations, is performed using the standard methods of grid, which is GOCDB as described in ATP. User authentication is done by user certificates.
 
 \begin{figure}[htb]
 \centering
@@ -162,7 +162,7 @@ In the front-end, users are allowed to discover the nodes and services provided 
 \label{figure:nagios_ganglia}
 \end{figure}
 
-To integrate Ganglia with Nagios as shown in Figure \ref{figure:nagios_ganglia}, a custom script has been created. This script queries the Gmond source for the current state of nodes of the cluster. The returned result is being transformed to a Nagios configuration file to configure the host check of the cluster nodes. The nagios service checks for these hosts are preconfigured to match what is needed. Script source may be found in Listing \ref{nagios_script}.
+To integrate Ganglia with Nagios as shown in Figure \ref{figure:nagios_ganglia}, a custom script has been created. This script queries the Gmond source for the current state of nodes of the cluster. The returned result is being transformed to a Nagios configuration file to configure the host check of the cluster nodes. The Nagios service checks for these hosts are pre configured to match what is needed. Script source may be found in Listing \ref{nagios_script}.
 
 \begin{lstlisting}[language=bash,caption=Ganglia to Nagios script,label=nagios_script]
 #!/bin/bash
@@ -186,7 +186,7 @@ define host{
 done > /etc/nagios/teipir/hosts.cfg
 \end{lstlisting}
 
-When a nagios check command is executed, results are stored in a file, and Performance Data are calculated by a perl script. To scale this process, the Buld Mode method is used to move the file to a spool directory which happened immediately with no important performance impact to the system. The NPCD (Nagios Performance C Daemon) is a daemon that is running on the Nagios host and its role is to monitor a spool directory for new files and pass the names of the files to process\_perfdata.pl. The script in turn, processes the performance data, and this operation is fully Nagios independent so it may be scaled-out more easily. Results are finally delivered to RRDTool, and graphs are being generated. This process is presented in Figure \ref{figure:pnp4nagios}
+When a nagios check command is executed, results are stored in a file, and Performance Data are calculated by a perl script. To scale this process, the Bulk Mode method is used to move the file to a spool directory which happened immediately with no important performance impact to the system. The NPCD (Nagios Performance C Daemon) is a daemon that is running on the Nagios host and its role is to monitor a spool directory for new files and pass the names of the files to process\_perfdata.pl. The script in turn, processes the performance data, and this operation is fully Nagios independent so it may be scaled-out more easily. Results are finally delivered to RRDTool, and graphs are being generated. This process is presented in Figure \ref{figure:pnp4nagios}
 
 \begin{figure}[htb]
 \centering
@@ -289,7 +289,7 @@ BDII_REGIONS="oslab.teipir.gr"
 # /opt/glite/yaim/bin/yaim -c -s site-info.def -n BDII_site
 \end{lstlisting}
 
-To integrate Ganglia with MDS in early versions of Globus and BDII of gLite, the schema of OpenLDAP should be extended using the Glue-CE definitions from the DataTAG web site (MDS version 2.4). The Ganglia Information Provider that used is a ganglia client on perl, and not the python client given by the ganglia development team itshelf.
+To integrate Ganglia with MDS in early versions of Globus and BDII of gLite, the schema of OpenLDAP should be extended using the Glue-CE definitions from the DataTAG web site (MDS version 2.4). The Ganglia Information Provider that used is a ganglia client on perl, and not the python client given by the ganglia development team it shelf.
 
 gLite have a dedicated directory for information providers, where the wrappers of each provider reside. To use the information provider with BDII, there has been created a one-line wrapper to call the perl script as shown below:
 

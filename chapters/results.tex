@@ -4,9 +4,9 @@ Results are displayed from the generation of metrics to the aggregation using va
 
 \subsection{Unix stuff}
 
-As described in subsection \nameref{subsec:metrics} of the previous chapter, linux provides through the {\bf proc pseudo-filesystem} a simple file interface to the metrics taken from the scheduler of processes that are queued in the processor.
+As described in subsection \nameref{subsec:metrics} of the previous chapter, Linux provides through the {\bf proc pseudo-filesystem} a simple file interface to the metrics taken from the scheduler of processes that are queued in the processor.
 
-The three metrics about cpu load on 1, 5 and 15 minutes average is displayed as follows:
+The three metrics about CPU load on 1, 5 and 15 minutes average is displayed as follows:
 
 \begin{verbatim}
 [root@gr03 ~]# cat /proc/loadavg 
@@ -20,7 +20,7 @@ which may also be displayed using the {\bf uptime command}:
  00:01:20 up  1:41,  3 users, load average: 2.29, 0.73, 0.32
 \end{lstlisting}
 
-Examining the Linux kernel source code, there is the CALC\_LOAD macro command which takes the options that have been discused and returns the result of the metric. The definition of the macro can be seen in file {\bf /usr/src/kernels/`uname -r`/include/linux/sched.h}, Listing \ref{kernel}.
+When we examine the Linux kernel source code, there is a macro command named $CALC_LOAD$ which takes the options that have been discussed and returns the result of the metric. The definition of the macro can be seen in file {\bf include/linux/sched.h}, Listing \ref{kernel}.
 
 \begin{lstlisting}[language=C,caption=Linux kernel CALC\_LOAD macro,label=kernel]
 extern unsigned long avenrun[];         /* Load averages */
@@ -79,7 +79,7 @@ gmond   11900 nobody    6u  IPv4  33703       UDP gr01.oslab.teipir.gr:39991->23
 </GANGLIA_XML>
 \end{lstlisting}
 
-Worker nodes are configured to transfer metrics data using multicast. Each Gmond daemon of each Computing Element node, by Ganglia definition has to know the state of the whole Computing Element cluster. Using standard unix commands to listen the data transfered on the multicast network, we observe a sample transfer of load\_one metric. As described in Subsection \ref{subsec:ganglia}, metric data are multicasted by Gmond when there is a change in the value, or when the time threshold is reached.
+Worker nodes are configured to transfer metrics data using multicast. Each Gmond daemon of each Computing Element node, by Ganglia definition has to know the state of the whole Computing Element cluster. Using standard UNIX commands to listen the data transferred on the multicast network, we observe a sample transfer of load\_one metric. As described in Subsection \ref{subsec:ganglia}, metric data are multicasted by Gmond when there is a change in the value, or when the time threshold is reached.
 
 \begin{lstlisting}[language=bash,caption=XDR sample]
 [root@gr01 ~]# tcpdump -A -i eth2 dst host 239.2.11.71
@@ -98,17 +98,17 @@ gr02.oslab.teipir.gr     1 (    0/   99) [  0.00,  0.00,  0.00] [   0.0,   0.0, 
 
 \section{Aggregation and transfer}
 
-Metrics taken from the event source are passed to the information service using the informatio/resource provider.
+Metrics taken from the event source are passed to the information service using the information/resource provider.
 
 \subsection{WSRF}
 
-In WSRF the $wsrf-query$ command is executed using the URL of the container where the WSRF has deployed. The container should run in a host with a host certificate signed by a certificate authority, and a certificate proxy should be initiatlized with a valid user certificate that is requesting the information. 
+In WSRF the $wsrf-query$ command is executed using the URL of the container where the WSRF has deployed. The container should run in a host with a host certificate signed by a certificate authority, and a certificate proxy should be initialized with a valid user certificate that is requesting the information. 
 
 \begin{lstlisting}
 /opt/globus/bin/wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//*[local-name()='Host']"
 \end{lstlisting}
 
-The result of the abuve query returns a list of all cluster nodes. An abstract result is displayed here in Listing \ref{wsrfquery}.
+The result of the above query returns a list of all cluster nodes. An abstract result is displayed here in Listing \ref{wsrfquery}.
 
 \begin{lstlisting}[language=XML,caption=WSRF query output,label=wsrfquery]
  <ns1:GLUECE xmlns:ns1="http://mds.globus.org/glue/ce/1.1">
@@ -192,7 +192,7 @@ GlueHostProcessorLoadLast15Min: 22
 GlueHostProcessorLoadLast5Min: 20
 \end{lstlisting}
 
-The above information has been given by the BDII LDAP instance which used the wrapper of Ganglia Resource Provider, a customised Perl script to export MDS format as shown in Listing \ref{perlbdii}.
+The above information has been given by the BDII LDAP instance which used the wrapper of Ganglia Resource Provider, a customized Perl script to export MDS format as shown in Listing \ref{perlbdii}.
 
 \begin{lstlisting}[language=bash,caption=Perl Ganglia Information Provider for MDS,label=perlbdii]
 [root@mon ~]# ./ganglia_ip -h mon -p 8649 -o mds | grep -A 22 host=gr03
@@ -285,7 +285,7 @@ Finally, to present the information there has been used two custom developed int
 
 \subsection{DOM}
 
-The one uses PHP DOM functions to call the WebMDS and get the XML as it would happed calling the WSRF Web Service with security in mind. Listing \ref{wsrf.php} is an abstraction of the code deployed in Brunel's webserver and returns only one value. The purpose of this listing is to present the use of functions and not the HTML stuff.
+The one uses PHP DOM functions to call the WebMDS and get the XML as it would happened calling the WSRF Web Service with security in mind. Listing \ref{wsrf.php} is an abstraction of the code deployed in Brunel's webserver and returns only one value. The purpose of this listing is to present the use of functions and not the HTML stuff.
 
 \begin{lstlisting}[language=PHP,caption=PHP DOM call to WebMDS,label=wsrf.php]
 $url="http://osweb.teipir.gr:8080/webmds/webmds?info=indexinfo&xsl=&xmlSource.indexinfo.param.xpathQuery=%2F%2F*[local-name%28%29%3D%27Host%27]";
@@ -298,7 +298,7 @@ echo ($procload->item($i)->getAttribute('Last1Min'))/100;
 
 \subsection{LDAP}
 
-The other PHP is using LDAP functions to connect to BDII instance and get the results from objects that instanciates the GlueHostProcessorLoad class. Listing \ref{bdii.php} displays the method to bind anonymously, form the query and get a sample result.
+The other PHP is using LDAP functions to connect to BDII instance and get the results from objects that instantiates the GlueHostProcessorLoad class. Listing \ref{bdii.php} displays the method to bind anonymously, form the query and get a sample result.
 
 \begin{lstlisting}[language=PHP,caption=PHP LDAP call to BDII,label=bdii.php]
 $ds=ldap_connect("osweb.teipir.gr","2170");
