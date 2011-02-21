@@ -1,37 +1,60 @@
-\section{Conclusions}
+% chapter Conclusions
 
 Grid monitoring is an important factor when working with Grid Systems. Reports extracted from monitoring systems, support decisions for capacity management, and proove that a system meets requirements needed for Service Level Aggrements.
 
+Metrics for Computing Element performance monitoring usually are:
+
+\begin{enumerate}
+ \item {\bf Total Jobs} in running or waiting to run state.
+ \item Individual per working node {\bf Processor Load}.
+ \item {\bf Benchmarking} metrics such as FLOP/s.
+\end{enumerate}
+
+This project focused in the calculation, aggregation and transfer to present the metrics for Processor Load of working nodes of a Computing Element. Running and waiting jobs monitoring is extremely analyzed under availability monitoring research.
+
+Calculation using the number of processes waiting in the queue of kernel scheduler where used. This metric is explained why is more accurate from the classic percentage CPU usage.
+
+Aggregation and transfer of metrics where examined in many different levels, from the multicasted XDR of Gmond to the resource providers of the information service that where used.
+
 Information Service is core technology that used in Grid Computing. It has evolved in parallel with Middleware. Current version of the Monitoring and Discovery Service standard has reached the MDS4, introducing the use of Web Services. MDS2 was based in LDAP, which is still used by some systems to discover services.
 
-BDII Information Service is great for use in site level environment. Site monitoring needs Nagios and Ganglia for a few hundreds of nodes. WSRF caching feature, Indexer and Aggregator Framework scales better and may be used for regional and top level monitoring.
+Nagios bulk aggregation features using NPCD and MSG-Nagios-Bridge also provide a method to aggregate Ganglia metrics without the use of the MDS.
 
+Presentation where simply examined using:
 
+\begin{enumerate}
+ \item {\bf DOM technology} to parse XML taken from WSRF through WebMDS interface using XPath
+ \item simple {\bf LDAP} communication to take the metrics from the BDII Information Service
+\end{enumerate}
 
-Conclusions should be based on an in depth critical analysis of the information presented in the dissertation and should be related to the objectives stated in the introduction.
+\section{Conclusions}
 
-do not simply summarize the dissertation
+Every aspect of grid monitoring keeps {\bf scalability in mind}. Distribution of metrics in all worker nodes using Gmond is the key to keep redundant that information.
 
-do not recapitulate the analysis or discussion
+BDII Information Service is great for use in site level environment, as LDAP performs faster than WSRF in less than a hundred users.
 
-do not introduce new ideas
+Site monitoring needs Nagios and Ganglia for a few hundreds of nodes. Nagios web interface is enough for site-level host and service view. Ganglia web interface supports good aggregation of many clusters, to the Region-level.
 
-identify specific points that have been clarified or discovered, and specific actions to be taken
+WSRF caching feature, Indexer and Aggregator Framework scales better and may be used for regional and top level monitoring.
 
-identify specific additional investigation that is required (and why)
+Heterogeneous environments should {\bf rely on standards} in order to interoperate and stay reliable. Even the Information Services mentioned above stick to the Glue schema.
 
-It is important to remember that conclusions should only be drawn on the basis of the information presented in the dissertation. Generalized conclusions without supporting evidence are to be
-discouraged.
+A tool may seem to be great for its purpose, but after focusing on a need is may be discontinued, such as SAM. This example is taken from the availability monitoring as its frontend were replaced by MyEGI and Nagios keeping its backend in MRS.
 
 \section{Further Work}
-Identify specific additional investigation that is required to be carried out.
 
-For testing purposes some URLs of other 
+\subsection{Aggregation}
 
-/opt/globus/etc/wsrf..,../hierarchy.xml maybe in an "aggregation" section
+Additional investigation is required to be carried out for the aggregation of collected information. WSRF offer the Aggregator Framework, which downstream information from many EPRs and deliver it through the Index service. To scale such information in the Regional monitoring level may have issues that only in that scale will came out.
+
+\subsection{Benchmarking}
+
+Performance metrics which are produced using benchmarking software is good standard way of measuring and advertise the performance of Computing Elements. Such metrics are not efficient for regularly runs and frequently changes because they are cost effective performance wise. It is good although to present the performance ability of a CE, so if they could be executed every some long time periods and pushed in the information service, will offer a good metric to select one CE of another.
 
 \subsection{Storage element performance monitoring}
-Storage Element performance monitoring, IOPS. Cases using IBM TotalStorage, NetApp OnTap and EMC Navisphere
-FC vs CFS \cite{brzezniak2008analysis}
-hadoop for CMS \cite{hadoop}
 
+Storage Element performance monitoring is an interesting area for research. Vendors that produce enterprise level storage systems also offer tools to monitor the performance of the storage system. Most used metric is I/O Operations per second and throughput in GByte per second, in every aspect of a storage system.
+
+Storage systems are also provided by different vendors and may also deployed as custom solution. Fiber Channel solutions versus Clustered File System cases are examined \cite{brzezniak2008analysis} as a chapter of distributed systems, storage oriented.
+
+Hadoop is the most commonly used distributed data storage. In CMS, an experiment that is known for its huge needs in data storage, Hadoop has been adopted \cite{hadoop} as the distributed file system. Grid computing community have adopted the use of Total and Used GB per Storage Element (as in Computing Element), but there is still enough work on the performance monitoring.
