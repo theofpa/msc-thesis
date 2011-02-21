@@ -148,3 +148,38 @@ make install
 -create init script for wsrf container
 -create ganglia resource provider for wsrf and connect to gmond
 -call wsrf to get ganglia metrics
+
+
+
+UKI ganglias:
+Liverpool
+http://map2.ph.liv.ac.uk/ganglia-lcg/
+Oxford
+http://t2lcfg.physics.ox.ac.uk/ganglia/
+RAL
+http://ganglia.gridpp.rl.ac.uk/ganglia/
+Lancaster
+http://fal-pygrid-17.lancs.ac.uk:8123/ganglia/
+Birmingham
+http://epgr08.ph.bham.ac.uk:8888/ganglia/
+Glasgow
+http://svr001.gla.scotgrid.ac.uk/ganglia/
+Durham
+http://www.dur.scotgrid.ac.uk/ganglia/
+Sheffield
+http://www.hep.shef.ac.uk/ganglia/
+http://iceberg2.shef.ac.uk/ganglia/
+Leicester
+http://rcs-manage-1.star.le.ac.uk/ganglia/
+NERC
+http://lovejoy.nerc-essc.ac.uk/ganglia/
+Warwick
+http://status.elab.warwick.ac.uk/ganglia/
+Westminster
+http://ganglia.ngs.wmin.ac.uk/
+Imperial
+http://ganglia.ps.ic.ac.uk/
+
+
+UKI ganglia fts
+http://ganglia.gridpp.rl.ac.uk/cgi-bin/ganglia-fts/fts-page.pl

@@ -1,0 +1,64 @@
+\documentclass{beamer}
+\usepackage{beamerthemesplit}
+
+\usepackage[absolute,overlay]{textpos}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+\newcommand{\MyLogo}{
+\begin{textblock}{10}(2.0,0.7)
+  \includegraphics[height=9mm]{images/logo.eps}
+\end{textblock}
+}
+\newcommand*\oldmacro{}
+\let\oldmacro\insertshorttitle
+\renewcommand*\insertshorttitle{
+  \MyLogo
+  \oldmacro\hfill
+}
+
+
+\begin{document}
+
+\title{Grid Monitoring}
+\author{Theofylaktos Papapanagiotou}
+\institute{Brunel University of West London}
+\subject{Grid Computing}
+\date{\today}
+
+\frame{\titlepage}
+
+\frame{\frametitle{Table of contents}\tableofcontents}
+
+
+
+\section{LHC}
+\subsection{Some physics}
+\frame{}
+\subsection{Experiments}
+\frame{}
+\subsection{Need for Computing power and Storage}
+\frame{}
+
+\section{Grid Computing}
+\subsection{Resource Brokers}
+\frame{}
+\subsection{Example job submission}
+\frame{}
+\subsection{Example storage access}
+\frame{}
+
+\section{Information Services}
+\subsection{BDII}
+\frame{}
+\subsection{WSRF}
+\frame{}
+
+\section{Monitoring}
+\subsection{Nagios}
+\frame{}
+\subsection{Ganglia}
+\frame{\frametitle{Title}
+Each frame should have a title.
+}
+
+\end{document}

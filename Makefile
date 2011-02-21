@@ -1,5 +1,6 @@
 
 MAIN = grid_monitoring
+PRES = presentation
 
 all:    pdf
 
@@ -29,8 +30,13 @@ clean_aux:
 	rm -f *.aux 
 
 clean:
-	rm -f *.aux *.bbl *.blg *.log *~ \#*\# *.toc *.dvi *.idx *.lof *.nlo *.out *.ps *.lot *.lol *.tgz
+	rm -f *.aux *.bbl *.blg *.log *~ \#*\# *.toc *.dvi *.idx *.lof *.nlo *.out *.ps *.lot *.lol *.tgz *.nav *.snm
 
 clobber:	clean
 	rm -f *.ps *.pdf
 
+presentation:
+	latex $(PRES)
+	latex $(PRES)
+	dvips -Ppdf -G0 $(PRES) -o
+	ps2pdf $(PRES).ps $(PRES).pdf

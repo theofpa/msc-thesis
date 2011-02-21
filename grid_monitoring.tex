@@ -1,8 +1,6 @@
 \documentclass[a4paper,12pt,oneside]{book}
 
-% TODO word count
 % TODO make sure to compile twice to create references correctly
-% TODO metadata
 % TODO check spelling (ispell filename.tex)
 % TODO find duplicates in labels
 % TODO find unreferenced bibliography
@@ -23,17 +21,16 @@
 %\usepackage{fancyhdr}
 \usepackage{verbatim}
 \usepackage{listings}
-\usepackage{pstricks}
+%\usepackage{pstricks}
 \usepackage{graphics}
 \usepackage{graphicx}
 \usepackage{nomencl}
 %\usepackage{pslatex}
 \usepackage{listings}
-\usepackage{listings}
 \usepackage{color}
-\usepackage{textcomp}
-\usepackage{makeidx}
-\usepackage{tocloft}
+%\usepackage{textcomp}
+%\usepackage{makeidx}
+%\usepackage{tocloft}
 %\renewcommand{\baselinestretch}{1.5}
 %\setlength{\headheight}{15pt}
 \usetikzlibrary{arrows,trees}
@@ -54,7 +51,7 @@
         breakatwhitespace=false,
         aboveskip={1.5\baselineskip},
   columns=fixed,
-  upquote=true,
+%  upquote=true,
   extendedchars=true,
  frame=single,
  escapeinside={(*@}{@*)},
@@ -65,7 +62,6 @@
 % The text should be double-spaced, with a 40 mm margin on the left-hand side of the pages and 20 mm top and bottom margins.
 \usepackage{setspace}
 \doublespacing
-\pagestyle{headings}
 %\setlength{\hoffset}{-1in}
 %\setlength{\voffset}{-1in}
 %\addtolength{\textheight}{20mm}
@@ -91,18 +87,6 @@
 %\setlength{\marginparwidth}{40mm}
 %\usepackage{layout}
 
-\newcommand{\executeiffilenewer}[3]{%
-\ifnum\pdfstrcmp{\pdffilemoddate{#1}}%
-{\pdffilemoddate{#2}}>0%
-{\immediate\write18{#3}}\fi%
-}
-\newcommand{\includesvg}[1]{%
-\executeiffilenewer{#1.svg}{#1.pdf}%
-{inkscape -z -D --file=#1.svg %
---export-pdf=#1.pdf --export-latex}%
-\input{#1.pdf_tex}%
-}
-
 \usepackage{hyperref}
 \hypersetup{
 	pdftitle={Grid Monitoring},
@@ -120,8 +104,8 @@
 
 
 
-\makenomenclature
-\makeindex
+%\makenomenclature
+%\makeindex
 
 \begin{document}
 %\layout
@@ -133,6 +117,7 @@
 \input{extra/frontmatter}
 
 \mainmatter
+\pagestyle{headings}
 
 % TODO spell checking
 
@@ -160,6 +145,6 @@
 %\input{extra/interim_report}
 
 \input{extra/mentor_report}
-\printindex
+%\printindex
 
 \end{document}
