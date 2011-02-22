@@ -1,14 +1,14 @@
 % chapter literature review
 
 \section{Grid Computing}
-Grid computing \cite{li2005grid} is the most last decade's technology innovation in high performance computing. A large number of scientists work on the operations of this huge co-operative project of EU. Monitoring \& information architecture \cite{fisher2002datagrid} has been standardized in the initial state of that project, to succeed in today scale of 150.000 cores in production. Use of grid computing nowadays takes place in academic and research environments. Also, applications in industry-based needs such as promising Power Grid control \cite{Taylor2006} are emerging.
+Grid computing \cite{li2005grid} is the technology innovation in high performance computing. A large number of scientists work on the operations of this huge co-operative project of EU. Monitoring \& information architecture \cite{fisher2002datagrid} has been standardized in the initial state of that project, to succeed in building a large-scale production grid of 150.000 cores. Use of grid computing nowadays takes place in academic and research environments. Also, applications in industry-based needs such as promising Power Grid control \cite{Taylor2006} are emerging.
 
 Grid computing may be the infrastructure over which Cloud Computing may reside. Cloud computing promise that it will change how services are developed, deployed and managed. The elastic demands of education and research community is a good place where cloud computing may be developed. Many datacenters all over Europe which are currently serving grid computing infrastructure for LHC, could later share the resources to help some other big academic projects scale up as needed.
 
 \section{Resource Brokers}
-Resource Brokers \cite{Kertesz06ataxonomy} where developed to manage the workload on Computer elements and Resource elements. Globus is a non-service based RB, and gLite RB which is service based. A Workload Management System (WMS) exists in gLite to do the distribution and management of the Computing and Storage oriented tasks.
+Resource Brokers \cite{Kertesz06ataxonomy} were developed to manage the workload on Computer elements and Resource elements. Globus is a non-service based RB, and gLite RB which is service based. A Workload Management System (WMS) exists in gLite to do the distribution and management of the Computing and Storage oriented tasks.
 
-Based on the middleware that resource brokers rely on, they use the equivalent information system. From resource broker's point of view, the relevant information is the data store and query. There are two main categories of information systems in middlewares. The Directory-based and the Service-based. They are used for resource mapping by the brokers when they access the resource data.
+The use of information system is based on the equivalent middleware that resource brokers rely on. From resource broker's point of view, the relevant information is the data store and query. There are two main categories of information systems in middlewares. The Directory-based and the Service-based. They are used for resource mapping by the brokers when they access the resource data.
 
 \begin{figure}[h]
 \begin{center}
@@ -54,7 +54,7 @@ The information service in version 3.1 of gLite is similar to MDS of Globus midd
 \nomenclature{BDII}{Berkeley Database Information Index}
 
 \section{Information Services}
-A Grid Monitoring Architecture \cite{tierney2002grid} was proposed in early 2000's. Information systems were developed to create repositories of information needed to be stored for monitoring and statistical reporting reasons. Such an organized system later was specified by the Aggregated Topology Provider (ATP) definition. The largest world grids adopt that model, forming OIM in OSG (USA) and GOCDB as that information base in EGEE (Europe). Message Bus was also defined as a mean to transfer the underlying data, and well known tools came up such as Gstat, GOCDB and BDII with Glue specification. Grid performance monitoring and keeping of such an information system has also impact in the performance of the system it shelf \cite{zhang2003performance}, so various methods were developed to give the solution to the scaling and performance problem, such as MDS2 (GIIS \& GRIS), GMA and R-GMA \cite{wilson2004information}, which offers relational environment \cite{fisher2001relational}, has experience on production systems \cite{byrom-production} and scales to reach huge needs such as CMS project \cite{Bonacorsi2004,Byrom}.
+A Grid Monitoring Architecture \cite{tierney2002grid} was proposed in early 2000's. Information systems were developed to create repositories of information needed to be stored for monitoring and statistical reporting reasons. Such an organized system later was specified by the Aggregated Topology Provider (ATP) definition. The largest world grids adopt that model, forming OIM in OSG (USA) and GOCDB as that information base in EGEE (Europe). Message Bus was also defined as a mean to transfer the underlying data, and many tools came up such as Gstat, GOCDB and BDII with Glue specification. Grid performance monitoring and keeping of such an information system has also impact in the performance of the system itself \cite{zhang2003performance}, so various methods were developed to give the solution to the scaling and performance problem, such as MDS2 (GIIS \& GRIS), GMA and R-GMA \cite{wilson2004information}, which offers relational environment \cite{fisher2001relational}, has experience on production systems \cite{byrom-production} and scales to reach huge needs such as CMS project \cite{Bonacorsi2004,Byrom}.
 
 \subsection{MDS}
 Monitoring and Discovery Services is about collecting, distributing, indexing and archiving information of the status of resources, services and configurations. The collected information is used to detect new services and resources, or to monitor the state of a system.
@@ -76,14 +76,14 @@ External software components that are used to collect information (such as Gangl
 
 
 \subsection{Glue}
-As long as Information Services are used to connect different infrastructures, the schema of its structure had to be standardized. To inter-operate EU and USA grids, DataTAG developed the GLUE schema implementation. GLUE specification quickly adopted by the communities and currently its recommended LDAP DIT is specified in GLUE specification v.$2.0$ from GLUE Working Group of OSG.
+As long as Information Services are used to connect different infrastructures, the schema of its structure had to be standardized. To inter-operate EU and USA grids, DataTAG developed the GLUE schema implementation. GLUE specification quickly was adopted by the communities and currently its recommended LDAP DIT is specified in GLUE specification v.$2.0$ from GLUE Working Group of OSG.
 
-Many objectclasses of the Glue schema define a Computer Element, a Storage Element, etc. As seen in Figure \ref{figure:gluece_ext} in later chapter, performance monitoring attributes such as processor load are defined in objectclasses that extends Computer Element objectclass.
+Many objectclasses of the Glue schema define a Computer Element, a Storage Element, etc. As seen in Figure \ref{figure:gluece_ext} in later chapter, performance monitoring attributes such as processor load, are defined in objectclasses that extend Computer Element objectclass.
 
 \subsection{BDII}\label{subsec:BDII}
 BDII is used by gLite as the Information Index Service of the LHC experiment. It is LDAP based and may be at top-level or site-level. The GIIS has been replaced by site BDII, which is fundamental for a site in order to be visible in the grid.
 
-Top-level BDII contains aggregated information about the sites and the services they provide. Site BDII collects the information from its Computer Elements, Storage Elements, etc as long as every configured service that is installed on the site.
+Top-level BDII contains aggregated information about the sites and the services they provide. Site BDII collects the information from its Computer Elements, Storage Elements, etc. It also collects information for each configured service that is installed on the site.
 
 Information about the status of a service and its parameters is pushed on BDII using external processes. An information provider is also used (such as in WSRF) to describe the service attributes using the GLUE schema.
 
@@ -95,21 +95,21 @@ Information about the status of a service and its parameters is pushed on BDII u
 \end{figure}
 
 \section{Performance Monitoring}
-After EGEE, the European Grid Initiative were formed to lead in the explosion of that european grid computing community to regional initiatives. Performance and availability monitoring tools and views also follow that format, phasing out commonly used SAM \cite{egee3dsa122} and having the adoption of Nagios as the monitoring of regional performance monitoring tool.
+After EGEE, the European Grid Initiative was formed to lead in the explosion of the european grid computing community to regional initiatives. Performance and availability monitoring tools and views also follow that format. The result is the phase out of SAM \cite{egee3dsa122} and the adoption of Nagios as the tool for regional grid performance monitoring.
 
-A taxonomy effort has been made \cite{gerndt2004performance} to present the differences of performance monitoring systems of the grid, and later a more general \cite{zanikolas2007importance} taxonomy paper was published to give a more general view of these tools. GridICE was generally used to aggregate the performance metrics of ROCs in high level reports \cite{andreozzi2005gridice}. Later GridICE was left as long as the SAM left, to meet the milestone of EGI to have a regional monitoring tool (Nagios) to report the reliability of the joined sites and report the values for SLA reasons.
+A taxonomy effort has been made \cite{gerndt2004performance} to present the differences of performance monitoring systems of the grid, and later a more general \cite{zanikolas2007importance} taxonomy paper was published to give a more general view of these tools. GridICE was generally used to aggregate the performance metrics of ROCs in high level reports \cite{andreozzi2005gridice}. Later GridICE was left, as SAM did, to meet the milestone of EGI to have a regional monitoring tool (Nagios) to report the reliability of the joined sites and report the values for SLA reasons.
 
-Grid performance can be also measured using benchmark tools in different levels of the grid architecture, using the micro-benchmarks at the Worker Node level, the Site (CE) level and the Grid VO level. Various benchmarks exist in these levels, using different libraries and algorithms, such as This project focuses on mathematically compute of the performance of a grid based on the metrics that are taken at the Worker Node level.
+Grid performance can be also measured using benchmark tools in different levels of the grid architecture, using the micro-benchmarks at the Worker Node level, the Site (CE) level and the Grid VO level. Different metrics and benchmarks exist, such as the measurement of the performance of CPUs in {\bf MIPS using EPWhetstone} and the evaluation of the performance of a CPU in {\bf FLOP/s and MB/s using BlasBench}. GridBench \cite{gridbench} provides a framework to collect those metrics using its own description language, {\bf GBDL}. 
 
-Different metrics and benchmarks exist, such as the measurement of the performance of CPUs in {\bf MIPS using EPWhetstone} and the evaluation of the performance of a CPU in {\bf FLOP/s and MB/s using BlasBench}. GridBench \cite{gridbench} provides a framework to collect those metrics using its own description language, {\bf GBDL}.
-
-GcpSensor \cite{gcpsensor} introduce a new performance metric called WMFLOPS. It uses PAPI \cite{papi} (Performance API) to access the hardware performance counters. For data distribution it uses MDS information system which provides dynamic metrics for CPU load average, one for 1, for 5 and for 15 minutes load.
+GcpSensor \cite{gcpsensor} introduce a new performance metric called WMFLOPS. It uses PAPI \cite{papi} (Performance API) to access the hardware performance counters. For data distribution it uses MDS information system which provides dynamic metrics for CPU load average for 1, 5 and 15 minutes load.
 
 Linux kernel provides built-in functions to monitor system performance using a metric called $load$. It is a method of individual system performance reporting based on the counter of processes running or waiting in the queue of the OS scheduler. This differs from the percentage load average report.
 
+This project focuses on mathematically compute of the performance of a grid based on the metrics that are taken at the Worker Node level.
+
 \subsection{Ganglia}
 
-Ganglia is a monitoring tool which provides a complete real time monitoring environment. It is used by both academia and industry to monitor large installations of clusters, grids. Any number of host metrics may be monitored in real time using the monitoring core, a multithreaded daemon called Gmond. It runs on every host that is in scope of monitoring. Its four main responsibilities are:
+Ganglia is a monitoring tool which provides a complete real time monitoring environment. It is used by both academia and industry community to monitor large installations of clusters and grids. Any number of host metrics may be monitored in real time using the monitoring core, a multithreaded daemon called Gmond. It runs on every host that is in scope of monitoring. Its four main responsibilities are:
 
 \begin{enumerate}
 \item Monitor the changes that happen in the host state
@@ -125,20 +125,19 @@ Ganglia is a monitoring tool which provides a complete real time monitoring envi
 \label{figure:ganglia}
 \end{figure}
 
-All the data that are gathered of the multicast channel are written to a hash table in memory. The metric data of each node that runs gmond and sends information over the multicast channel are been processed and saved. Data sent over the multicast channel is happening using external data representation (XDR). When there is a request over a TCP connection, the response is in XML.
+All the data that are gathered from the multicast channel are written to a hash table in memory. The metric data of each node that runs gmond and sends information over the multicast channel are been processed and saved. To send data over the multicast channel, Gmond uses external data representation (XDR). When there is a request over a TCP connection, the response is in XML.
 
 \subsection{Nagios}
-%TODO some literature review of nagios
-Nagios is a monitoring system which provide a scheduler to check hosts and services periodically, and report their status in a CGI developed interface. Its large acceptance in industry to monitor service availability has created a large community of developers of custom check commands (plug-ins). It was also accepted from the grid community as the tool to use as the replacement of SAM in front of its metrics to periodically parse data from information providers about services availability.
+Nagios is a monitoring system which provide a scheduler to check hosts and services periodically, and report their status in a CGI developed interface. Its large acceptance in industry to monitor service availability has created a large community of developers of custom check commands (plug-ins). It was also accepted from the grid community as the replacement of SAM in front of its metrics to periodically parse data from information providers about services availability.
 
-Its strong back-end, offer a message bus which integrates with other Nagios installations, to offer the scalability needed to connect site, regional and top level Nagios installations. Information Providers of other Information Services may be customized to be used as Nagios plugins.
+Nagios has a strong back-end, which offers a message bus to integrate with other Nagios installations, to offer the scalability needed to connect site, regional and top level Nagios installations. Information Providers of other Information Services may be customized to be used as Nagios plugins.
 
 Its web based front-end allows the integration with GOCDB to handle authentication, using VOMS to HTPASSWD system service. Tickets about problems or scheduled downtimes are also handled using Nagios.
 
-Finally, its backend may be scaled-out by using NDOUtils as a service to offer database for the logging of check operations and history. PNP4Nagios is a plug-in that offer visualization of the performance metrics, using the RRDTool. Its distributed monitoring solutions recently were expanded by the Distributed Nagios eXecutor and the Multi-Nagios Tactical Overview System \cite{Nagios}
+Finally, its backend may be scaled-out by using NDOUtils as a service to offer database for the logging of check operations and history. PNP4Nagios is a plug-in that offers visualization of the performance metrics, using the RRDTool. Its distributed monitoring solutions recently were expanded by the Distributed Nagios eXecutor and the Multi-Nagios Tactical Overview System \cite{Nagios}
 
 \section{European Grid Infrastructure}
-Latest EGI directive to form regional operation tools pushed the use of Nagios \cite{imamagic2007grid} as the main tools of availability \& performance (an so reliability) monitoring of the grid. Each NGI/ROC (regional level) has its own interface, and hierarchically there is a Super Nagios interface to report the top level view of general system availability. Nagios offers extensions such as NRPE to remotely invoke check commands in inaccessible/private installations. Another important add-on to Nagios is the NdoUtils, which offers an SQL store of history data to the monitoring interface. Nagios Configuration Generator was introduced to help the automatically generation of the configuration based on the information system of nodes and services.
+Latest EGI directive to form regional operation tools forced the use of Nagios \cite{imamagic2007grid} as the main tool of availability \& performance (an so reliability) monitoring of the grid. Each NGI/ROC (regional level) has its own interface, and hierarchically there is a Super Nagios interface to report the top level view of general system availability. Nagios offers extensions such as NRPE to remotely invoke check commands in inaccessible/private installations. Another important add-on to Nagios is the NdoUtils, which offers an SQL store of history data to the monitoring interface. Nagios Configuration Generator was introduced to help the automatically generation of the configuration based on the information system of nodes and services.
 
 Finally, there has been proposed an integration of SAM views to a Nagios customized interface, to offer the last good known SAM interface to the old users. Nagios also integrates with GGUS, a ticketing system that european grid initiative uses. Monitoring infrastructure in EGI is fully distributed using regional Nagios servers and the corresponding regional MyEGI portals.
 
