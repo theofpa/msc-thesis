@@ -1,8 +1,8 @@
 \documentclass[a4paper,12pt,oneside]{book}
 
+% TODO upload pdf to baseurl
 % TODO make sure to compile twice to create references correctly
 % TODO check spelling (ispell filename.tex)
-% TODO find duplicates in labels
 % TODO find unreferenced bibliography
 % TODO remove draft watermark
 \usepackage{draftwatermark}
@@ -11,7 +11,7 @@
 \SetWatermarkLightness{0.9}
 %\SetWatermarkFontSize{4cm}
 \SetWatermarkScale{1}
-%\SetWatermarkText{DRAFT}
+\SetWatermarkText{DRAFT}
 
 \usepackage[latin1]{inputenc}
 %\usepackage[vcentering,right=40mm,top=20mm,left=40mm]{geometry}
@@ -30,7 +30,7 @@
 \usepackage{color}
 %\usepackage{textcomp}
 %\usepackage{makeidx}
-%\usepackage{tocloft}
+\usepackage{tocloft}
 %\renewcommand{\baselinestretch}{1.5}
 %\setlength{\headheight}{15pt}
 \usetikzlibrary{arrows,trees}
@@ -87,9 +87,10 @@
 %\setlength{\marginparwidth}{40mm}
 %\usepackage{layout}
 
+
 \usepackage{hyperref}
 \hypersetup{
-	pdftitle={Grid Monitoring},
+	pdftitle={Grid Monitoring test},
 	pdfauthor={Theofylaktos Papapanagiotou},
 	pdfsubject={Grid Computing},
 	baseurl={http://people.brunel.ac.uk/~dc09ttp/grid_monitoring.pdf},
@@ -101,8 +102,6 @@
 	setpagesize={true},
 }
 \usepackage{hyperxmp}
-
-
 
 %\makenomenclature
 %\makeindex
@@ -116,11 +115,12 @@
 \input{extra/abstract}
 \input{extra/frontmatter}
 
-\mainmatter
-\pagestyle{headings}
+%\pagestyle{headings}
 
 % TODO spell checking
 
+\mainmatter
+\setcounter{page}{1}
 \chapter{Introduction}
 \input{chapters/introduction}
 \chapter{Literature Review}
@@ -129,6 +129,7 @@
 \input{chapters/methods}
 \chapter{Results}
 \input{chapters/results}
+\addtocontents{toc}{\protect\newpage}
 \chapter{Analysis}
 \input{chapters/analysis}
 \chapter{Conclusions}

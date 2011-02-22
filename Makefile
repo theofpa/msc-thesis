@@ -8,6 +8,7 @@ dvi:    clean_aux
 	latex $(MAIN)
 	bibtex $(MAIN)
 	latex $(MAIN)
+	latex $(MAIN)
 #	makeindex $(MAIN).nlo -s nomencl.ist -o $(MAIN).nls
 #	latex $(MAIN)
 
