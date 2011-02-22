@@ -12,35 +12,33 @@ WSRF aggregation framework and GLUE schema are examined to understand the gather
 %which aspects you will not consider, and why;
 Performance in the aspect of how many jobs are served by each site is not examined in this project.
 %what you hope to find out;
-Which of the two information services better transfer the metrics for the multi level monitoring architecture.
+This project examines which of the two information services better transfer the metrics for the multi level monitoring architecture.
 
 %what your starting point(s) will be
-Build a lab to gather performance data and start working on the development of the integration parts.
+A starting point was to build a lab to gather performance data and start working on the development of the integration parts.
 %what assumptions you are making
 It is assumed that the environment is a grid site, that already have the components needed to work together. Ganglia daemons on each node, presented by the GLUE schema on site BDII, Nagios/MyEGI monitoring frameworks.
 %how you will present the subject.
-A web interface is available to present the work of the integration of Ganglia into Nagios/MyEGI.
-
+A web interface is available to present the work of the integration of Ganglia into Nagios/MyEGI, BDII and WSRF.
 
 \section{Aims \& Objectives}
-%TODO rewrite aims & objectives
 %the aim and objectives of the work presented in the report
 
-Different role users are going to use a portal to get information about the performance status of the grid, to export the appropriate report for their job. This project aims to develop these particular pieces of code to support the aggregation of the metrics from Nagios, to allow the web based customization of the visualization of the reports. These metrics are needed to report the availability and reliability of NGIs and particular sites of the grid.
+This project aims to evaluate grid performance monitoring tools, and information services to distribute that data. It will digg in depth the whole chain of data generation, distribution, provision, transformation and display using some custom built interfaces.
 
-The procedures that are going to be used in order to achieve the above aims should include at the beginning some opening and exploration of the environment where the interface is going to be placed. The usage of grid computing in the world should be well known, so a visibility of the importance and the possible uses of the software will be recognized. The appropriate access to the infrastructure should be gained, on different platforms and levels. Brunel University site and GridPP/NGS VO at the beginning, as long as the UKI ROC operations may be a good point of collaboration with researchers to reach the bests possible requirements and data to analyze. The middleware used in both these VOs should be examined so with the knowledge of running projects and global usage of them may target to export better specifications. Existing operations on the grid should also be discovered. The European initiative milestones on the operations of the regional level should be considered as a route, and registration to news about the upcoming research projects that are going to use the grid should also be take place.
+Using a testbed, Ganglia agent should be installed in every worker node of the Computing Element. Globus and gLite middlewares should also be installed, to provide the Information Services for data aggregation and transfer.
 
-After that wide-opening to get the whole picture, a targeted and focused view should follow. Existing monitoring tools must be used to check the problems and search for requirements. The experience of SAM, Gridview, Gridmap, Gstat, GridICE, etc should be taken in order to merge their functionality as possible as it is. Information systems that already reside over the infrastructure, must also be learned. Standards and specifications should be examined, on how the message bus works and delivers the data in an hierarchical manner. A contact with the CERN team working on MyEGEE and Indiana University's MyOSG team should be established, to collaborate on the core of MyOSG source. Changes submission to subversion system as long as ticket closure of the development project tool will help to get to know the core of MyEGEE and Nagios. It is possible to create and upstream a Nagios customized web interface, to create different views of Nagios resources scheme to grid topology oriented architecture. Nagios, NRPE and Ganglia installations should be deployed across the CE\&SE nodes of Brunel's sites to have a working production environment to work on. Attention should be taken on the potential performance impact of these sensors deployment. UKI MyEGEE validation/testing portal will be used as a pre-production environment to check changes. PNP should be fixed in GridPP Nagios to be evaluated. Statistical access log analysis of existing tools may have results on trends of users/admins preferred views.
+Resource Providers should be integrated on BDII and WSRF Information Services, to get, parse/transform and deliver the data to the front interface. Authentication mechanism is not part of this project, but in order to respect the procedures a wrapping interface such as WebMDS should be installed. Standards and specifications about data organization in the information system such as the Glue schema will be covered.
 
-Various tools are going to be used to track changes and collaborate. Monitoring articles in GridPP wiki \& CERN twiki should be made. Snippets upstream \& status changes must be a regular operation in SVN/JIRA/Trac in CERN interfaces. Ongoing task through the dissertation project is the reading of papers and methodical updates of Mendeley citation management tool to have the bibliography organized. Possible changes suggestions to MSc on DCS course notes about grid monitoring may by made, as long as the EGI roadmap updates. Finally with the appropriate supervision and follow-up of meetings and presentations, a paper publishing might take place.
+Information Services should be selected for the different levels of the Multi Level Monitoring infrastucture, such as site, regional or top level. Nagios and ganglia integration should also be evaluated.
+
+The effect on performance by taking metrics is a problem with performance monitoring, that may be considered. Aggregation methods before display the metrics should also be used.
 
 \section{Organization}
 %TODO The dissertation should contain a section titled \sum_{anagement of Project' and the Interim Report should be bound in at the back.
 
 \subsection[Tools]{Tools}
-This project was developed in \LaTeX using Vi editor. Its releases may be found in Google Code, where Mercurial was used for source control. Citation management through Mendeley software. Papers obtained by becoming member of IEEE, ACM and USENIX. Operating Systems Laboratory of Technological Education Institute of Piraeus was used to build a testbed of grid site and tools to study existing monitoring tools.
-
-%TODO pages from \url{http://people.brunel.ac.uk/~dc09ttp}
+This project was developed in \LaTeX using Vi editor, all figures are vector graphics designed in Dia. Its releases may be found in Google Code, where Mercurial was used for source control. Citation management through Mendeley software. Papers obtained by becoming member of IEEE, ACM and USENIX. Operating Systems Laboratory of Technological Education Institute of Piraeus was used to build a testbed of grid site and tools to study existing monitoring tools.
 
 %the initial time plan for the project work
 \subsection[Time plan]{Time-plan (Gantt Chart)}
@@ -57,12 +55,10 @@ Task & Start date & End date & Days \\ \hline
   -  Write Interim Report & 11/28/10 & 12/04/10 & 5 \\ \hline 
   Experimental-Development & 12/04/10 & 02/14/11 & 51 \\ \hline 
   -  Evaluate performance monitoring tools & 12/04/10 & 12/25/10 & 15 \\ \hline 
-  -  Information/topology databases & 12/17/10 & 12/29/10 & 8 \\ \hline 
-  -  Develop Customized Interface & 12/29/10 & 02/14/11 & 34 \\ \hline 
-  ---    Coding of information aggregation & 12/29/10 & 01/21/11 & 16 \\ \hline 
-  ---    Development of the frontend & 01/21/11 & 02/10/11 & 14 \\ \hline 
-  ---    Complete the interface (auth, scale, etc) & 02/10/11 & 02/14/11 & 4 \\
-      \hline Report & 02/16/11 & 03/29/11 & 32 \\ \hline 
+  -  Information Services evaluation & 12/17/10 & 12/29/10 & 8 \\ \hline 
+  -  Build a testbed and test cases & 12/29/10 & 31/01/11 & 20 \\ \hline 
+  -  Develop interface & 01/02/11 & 02/14/11 & 14 \\ \hline 
+  Report & 02/16/11 & 03/29/11 & 32 \\ \hline 
   -  Begin Writing & 02/17/11 & 03/01/11 & 11 \\ \hline 
   -  Submit Draft \& Make Changes & 03/01/11 & 03/14/11 & 9 \\ \hline 
   -  Prepare Final & 03/14/11 & 03/29/11 & 11 \\ \hline 

@@ -213,7 +213,6 @@ To evaluate the LDAP based information service, a system had to have installed t
 
 \begin{lstlisting}
 [root@osweb~]# ldapsearch -x -h osweb.teipir.gr -p 2170 -b "" -s base "(objectClass=*)" namingContexts
-...
 namingContexts: o=grid
 namingContexts: o=glue
 namingContexts: o=infosys
@@ -228,7 +227,6 @@ objectclass: GlueTop
 objectclass: GlueGeneralTop
 GlueSchemaVersionMajor: 1
 GlueSchemaVersionMinor: 1
-...
 \end{lstlisting}
 
 \begin{lstlisting}
@@ -241,7 +239,6 @@ objectclass: GlueHostProcessorLoad
 GlueHostProcessorLoadLast1Min: 1
 GlueHostProcessorLoadLast5Min: 1
 GlueHostProcessorLoadLast15Min: 0
-...
 \end{lstlisting}
 
 As we can see, the LDIF exported by these tools, follow the schema defined by the Glue specification, whose attributes and objectclasses extended by Glue-CE ProcessorLoad as shown in Table \ref{tab:glue}.
@@ -275,7 +272,6 @@ Finally, BDII configured using {\bf yaim} with site-info definitions as shown be
 
 \begin{lstlisting}
 # cat site-info.def
-...
 CE_HOST="osweb.teipir.gr"
 SITE_BDII_HOST="osweb.teipir.gr"
 SITE_EMAIL="theofpa@teipir.gr"
@@ -382,7 +378,6 @@ Your proxy is valid until: Thu Feb 17 11:11:59 2011
  <ns1:FileSystem ns1:AvailableSpace="34082" ns1:Name="entire-system" ns1:ReadOnly="false" ns1:Root="/" ns1:Size="38624"/>
  <ns1:NetworkAdapter ns1:IPAddress="10.0.0.32" ns1:InboundIP="true" ns1:MTU="0" ns1:Name="gr02.oslab.teipir.gr" ns1:OutboundIP="true"/>
  <ns1:ProcessorLoad ns1:Last15Min="0" ns1:Last1Min="0" ns1:Last5Min="0"/>
-...
 \end{lstlisting}
 
 \subsubsection{XPath}

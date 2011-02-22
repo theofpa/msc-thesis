@@ -320,7 +320,7 @@ ldap_close($ds);
 \subsection{Nagios}
 
 Nagios calls check\_ganglia periodically (configured as check interval) and logs the state of each service and host check. Load averages are described as services. Listing \ref{nagioslog} shows the log file of nagios service check for these values straight from Ganglia.
-\begin{lstlisting}[caption=Nagios log with load check,label=nagioslog]
+\begin{lstlisting}[caption=Nagios log with load check,label=nagioslog,nolol]
 [1297634400] CURRENT SERVICE STATE: xenia.oslab.teipir.gr;load_fifteen;OK;HARD;1;CHECKGANGLIA OK: load_fifteen is 0.00
 [1297634400] CURRENT SERVICE STATE: xenia.oslab.teipir.gr;load_five;OK;HARD;1;CHECKGANGLIA OK: load_five is 0.00
 [1297634400] CURRENT SERVICE STATE: xenia.oslab.teipir.gr;load_one;OK;HARD;1;CHECKGANGLIA OK: load_one is 0.00
