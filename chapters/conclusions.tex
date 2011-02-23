@@ -12,15 +12,15 @@ Metrics for Computing Element performance monitoring usually are:
 
 This project focused in the calculation, aggregation and transfer to present the metrics for Processor Load of working nodes of a Computing Element. Running and waiting jobs monitoring is extremely analyzed under availability monitoring research.
 
-Calculation using the number of processes waiting in the queue of kernel scheduler where used. This metric is explained why is more accurate from the classic percentage CPU usage.
+Calculation using the number of processes waiting in the queue of kernel scheduler were used. It is explained why this metric is more accurate than the classic percentage CPU usage.
 
-Aggregation and transfer of metrics where examined in many different levels, from the multicasted XDR of Gmond to the resource providers of the information service that where used.
+Aggregation and transfer of metrics where examined in many different levels, from the multicasted XDR of Gmond to the resource providers of the information service that were used.
 
 Information Service is core technology that used in Grid Computing. It has evolved in parallel with Middleware. Current version of the Monitoring and Discovery Service standard has reached the MDS4, introducing the use of Web Services. MDS2 was based in LDAP, which is still used by some systems to discover services.
 
 Nagios bulk aggregation features using NPCD and MSG-Nagios-Bridge also provide a method to aggregate Ganglia metrics without the use of the MDS.
 
-Presentation where simply examined using:
+Presentation were simply examined using:
 
 \begin{enumerate}
  \item {\bf DOM technology} to parse XML taken from WSRF through WebMDS interface using XPath
@@ -39,22 +39,22 @@ WSRF caching feature, Indexer and Aggregator Framework scales better and may be 
 
 Heterogeneous environments should {\bf rely on standards} in order to inter-operate and stay reliable. Even the Information Services mentioned above stick to the Glue schema.
 
-A tool may seem to be great for its purpose, but after focusing on a need is may be discontinued, such as SAM. This example is taken from the availability monitoring as its frontend were replaced by MyEGI and Nagios keeping its back-end in MRS.
+A tool may seem to be great for its purpose, but after focusing on a need is may be discontinued, such as SAM. This example is taken from the availability monitoring, as its frontend was replaced by MyEGI and Nagios keeping its back-end in MRS.
 
 \section{Further Work}
 
 \subsection{Aggregation}
 
-Additional investigation is required to be carried out for the aggregation of collected information. WSRF offer the Aggregator Framework, which downstream information from many EPRs and deliver it through the Index service. To scale such information in the Regional monitoring level may have issues that only in that scale will came out.
+Additional investigation is required to be carried out for the aggregation of collected information. WSRF offer the Aggregator Framework, which downstream information from many EPRs and deliver it through the Index service. Scaling such information in the Regional monitoring level may introduce issues that only in that scale will be visible.
 
 \subsection{Benchmarking}
 
-Performance metrics which are produced using benchmarking software is good standard way of measuring and advertise the performance of Computing Elements. Such metrics are not efficient for regularly runs and frequently changes because they are cost effective performance wise. It is good although to present the performance ability of a CE, so if they could be executed every some long time periods and pushed in the information service, will offer a good metric to select one CE of another.
+Performance metrics which are produced using benchmarking software is a good standard way of measuring and advertising the performance of Computing Elements. Such metrics are not efficient for regularly runs and frequent changes because they are cost effective performance wise. It is good although to present the performance ability of a CE. Rare periodic execution and push in the information service, will offer a good metric to select one CE of another.
 
 \subsection{Storage element performance monitoring}
 
-Storage Element performance monitoring is an interesting area for research. Vendors that produce enterprise level storage systems also offer tools to monitor the performance of the storage system. Most used metric is I/O Operations per second and throughput in GByte per second, in every aspect of a storage system.
+Storage Element performance monitoring is an interesting area for research. Vendors that produce enterprise level storage systems also offer tools to monitor the performance of the storage system. The most used metric is I/O Operations per second and throughput in GByte per second, in every aspect of a storage system.
 
-Storage systems are also provided by different vendors and may also deployed as custom solution. Fiber Channel solutions versus Clustered File System cases are examined \cite{brzezniak2008analysis} as a chapter of distributed systems, storage oriented.
+Storage systems are also provided by different vendors and may also be deployed as custom solution. Fiber Channel solutions versus Clustered File System cases are examined \cite{brzezniak2008analysis} as a chapter of distributed systems, storage oriented.
 
-Hadoop is the most commonly used distributed data storage. In CMS, an experiment that is known for its huge needs in data storage, Hadoop has been adopted \cite{hadoop} as the distributed file system. Grid computing community have adopted the use of Total and Used GB per Storage Element (as in Computing Element), but there is still enough work on the performance monitoring.
+Hadoop is the most commonly used distributed data storage. In CMS, an experiment that is known for its huge needs in data storage, Hadoop has been adopted \cite{hadoop} as the distributed file system. Grid computing community has adopted the use of Total and Used GB per Storage Element (as in Computing Element), but there is still enough work on the performance monitoring.

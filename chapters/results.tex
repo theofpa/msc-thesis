@@ -2,13 +2,13 @@
 
 \section{Events source}
 
-Results are displayed from the generation of metrics to the aggregation using various information services and the presentation using ready and custom developed interfaces.
+Results are examined on the generation of metrics, during the aggregation using various information services and they are presented using ready and custom developed interfaces.
 
 \subsection{Unix stuff}
 
 As described in subsection \nameref{subsec:metrics} of the previous chapter, Linux provides through the {\bf proc pseudo-filesystem} a simple file interface to the metrics taken from the scheduler of processes that are queued in the processor.
 
-The three metrics about CPU load on 1, 5 and 15 minutes average is displayed as follows:
+The three metrics about CPU load on 1, 5 and 15 minutes average are displayed as follow:
 
 \begin{verbatim}
 [root@gr03 ~]# cat /proc/loadavg 
@@ -81,7 +81,7 @@ gmond   11900 nobody    6u  IPv4  33703       UDP gr01.oslab.teipir.gr:39991->23
 </GANGLIA_XML>
 \end{lstlisting}
 
-Worker nodes are configured to transfer metrics data using multicast. Each Gmond daemon of each Computing Element node, by Ganglia definition has to know the state of the whole Computing Element cluster. Using standard UNIX commands to listen the data transferred on the multicast network, we observe a sample transfer of load\_one metric. As described in Subsection \ref{subsec:ganglia}, metric data are multicasted by Gmond when there is a change in the value, or when the time threshold is reached.
+Worker nodes are configured to transfer metrics data using multicast. Each Gmond daemon of each Computing Element node, by Ganglia definition has to know the state of the whole Computing Element cluster. Using standard UNIX commands to listen to the data transferred on the multicast network, a sample transfer of load\_one metric is observed. As described in Subsection \ref{subsec:ganglia}, metric data are multicasted by Gmond when there is a change in the value, or when the time threshold is reached.
 
 \begin{lstlisting}[language=bash,caption=XDR sample]
 [root@gr01 ~]# tcpdump -A -i eth2 dst host 239.2.11.71
@@ -104,7 +104,7 @@ Metrics taken from the event source are passed to the information service using 
 
 \subsection{WSRF}
 
-In WSRF the $wsrf-query$ command is executed using the URL of the container where the WSRF has deployed. The container should run in a host with a host certificate signed by a certificate authority, and a certificate proxy should be initialized with a valid user certificate that is requesting the information. 
+In WSRF the $wsrf-query$ command is executed using the URL of the container where the WSRF was been deployed. The container should run in a host with a host certificate signed by a certificate authority, and a certificate proxy should be initialized with a valid user certificate that is requesting the information. 
 
 \begin{lstlisting}
 /opt/globus/bin/wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//*[local-name()='Host']"
@@ -151,7 +151,7 @@ Using the following XPath query in the WebMDS form, a request to get the metrics
 //glue:Host[@glue:Name='ltsp.oslab.teipir.gr']
 \end{verbatim}
 
-WebMDS match the query in its cache and replies only the specific node that was requested. If the cache was expired (its default value is 60 seconds) it is using the Resource Provider to fetch the XML from Gmond and transform it using XSLT to Glue schema and serve the new values as shown in Listing \ref{xpath_result}.
+WebMDS match the query in its cache and replies only the specific node that was requested. If the cache was expired (its default value is 60 seconds) the information system uses the Resource Provider to fetch the XML from Gmond and transform it using XSLT to Glue schema and serve the new values as shown in Listing \ref{xpath_result}.
 
 \begin{lstlisting}[language=XML,caption=WebMDS results from XPath query,label=xpath_result]
 <WebmdsResults>
@@ -179,7 +179,7 @@ WebMDS match the query in its cache and replies only the specific node that was 
 
 \subsection{BDII}
 
-On the other information service, using $ldapsearch$ command and specifying the base DN for the search, the host URI and the desired attributes to return, we may get the values asked from the BDII as seen on Listing \ref{ldapsearchbdii}
+On the other information service, using $ldapsearch$ command and specifying the base DN for the search, the host URI and the desired attributes to return, we may get the values asked from the BDII as seen on Listing \ref{ldapsearchbdii}.
 
 \begin{lstlisting}[language=bash,caption=BDII LDAP search for Glue CE ProcessorLoad attributes,label=ldapsearchbdii]
 # ldapsearch -H ldap://osweb.teipir.gr:2170 -x \
@@ -224,7 +224,7 @@ GlueHostMainMemoryRAMSize: 1035104
 GlueHostMainMemoryRAMAvailable: 306280
 \end{lstlisting}
 
-Using the Ganglia official python client (Listing \ref{pythonbdii} which is distributed with the source code of Ganglia Client, rejected as an option because Perl is easier in handling regular expressions for string operations and transformation.
+Using the Ganglia official python client (Listing \ref{pythonbdii}) which is distributed with the source code of Ganglia Client, rejected as an option because Perl is easier in handling regular expressions for string operations and transformation.
 
 \begin{lstlisting}[language=bash,caption=Python Ganglia client MDS export,label=pythonbdii]
 [root@mon ~]# /opt/ganglia/bin/ganglia --format=MDS | grep -A 30 host=gr03
@@ -264,7 +264,7 @@ GlueHostStorageDeviceType: disk
 
 \section{Presentation}
 
-Finally, to present the information there has been used two custom developed interfaces in PHP. Both programs reside in Brunel University webserver which supports the needed libraries and network connections. The source code is available under that page, and when called using BDII or WSRF, the result is exactly the same and looks like Table \ref{tab:html_output}.
+Finally, to present the information, two custom interfaces have been developed in PHP. Both programs reside in Brunel University webserver which supports the needed libraries and network connections. The source code is available under that page, and when called using BDII or WSRF, the result is exactly the same and looks like Table \ref{tab:html_output}.
 
 \begin{table}[ht]
 \centering
@@ -287,7 +287,7 @@ Finally, to present the information there has been used two custom developed int
 
 \subsection{DOM}
 
-The one uses PHP DOM functions to call the WebMDS and get the XML as it would happened calling the WSRF Web Service with security in mind. Listing \ref{wsrf.php} is an abstraction of the code deployed in Brunel's webserver and returns only one value. The purpose of this listing is to present the use of functions and not the HTML stuff.
+The first interface uses PHP DOM functions to call the WebMDS and get the XML as it would happened by calling the WSRF Web Service with native SOAP messages and authentication. Listing \ref{wsrf.php} is an abstraction of the code deployed in Brunel's webserver and returns only one value. The purpose of this listing is to present the use of functions and not the HTML stuff.
 
 \begin{lstlisting}[language=PHP,caption=PHP DOM call to WebMDS,label=wsrf.php]
 $url="http://osweb.teipir.gr:8080/webmds/webmds?info=indexinfo&xsl=&xmlSource.indexinfo.param.xpathQuery=%2F%2F*[local-name%28%29%3D%27Host%27]";
@@ -300,7 +300,7 @@ echo ($procload->item($i)->getAttribute('Last1Min'))/100;
 
 \subsection{LDAP}
 
-The other PHP is using LDAP functions to connect to BDII instance and get the results from objects that instantiates the GlueHostProcessorLoad class. Listing \ref{bdii.php} displays the method to bind anonymously, form the query and get a sample result.
+The second interface uses LDAP functions to connect to BDII instance and get the results from objects that instantiates the GlueHostProcessorLoad class. Listing \ref{bdii.php} displays the method to bind anonymously, form the query and get a sample result.
 
 \begin{lstlisting}[language=PHP,caption=PHP LDAP call to BDII,label=bdii.php]
 $ds=ldap_connect("osweb.teipir.gr","2170");
@@ -326,7 +326,7 @@ Nagios calls check\_ganglia periodically (configured as check interval) and logs
 [1297634400] CURRENT SERVICE STATE: xenia.oslab.teipir.gr;load_one;OK;HARD;1;CHECKGANGLIA OK: load_one is 0.00
 \end{lstlisting}
 
-NPCD is configured in bulk mode so with some luck a file may be found in the spool directory before the interval passes to process it with perl script to RRD database. Listing \ref{npcdfile} contains the performance data metrics.
+NPCD is configured in bulk mode so a file may be found in the spool directory before the interval passes to process it with perl script to RRD database. Listing \ref{npcdfile} contains the performance data metrics.
 
 \begin{lstlisting}[caption=NPCD temporary file in spool directory,label=npcdfile]
 [root@osweb ~]# cat /var/spool/pnp4nagios/host-perfdata.1297973378 

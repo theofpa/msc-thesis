@@ -5,7 +5,7 @@
 
 In complex distributed systems such as grids, performance bottlenecks may be located using monitoring data. From the processor usage on a single node of a computing element to the total usage of processed jobs in a large cluster, performance data help to focus on the problem that impacts the overall performance.
 
-In order to succeed in grid monitoring, some requirements should be considered. A very large amount of data should be delivered real-time, from many heterogeneous sources on different networks or even countries. These data must be accurate and consistent. There should be synchronized timestamps on the generation of each metric, to the measurement value that should be comparable between different architectures. The time synchronization of the hosts of each cluster may be done using network time protocol, so all metrics are taken on the time that they actually report. Metrics should have error bounds to preserve accuracy, and the consistency issue is solved using coordination of that activity, so the impact of a metric to other sensors is controlled.
+In order to succeed in grid monitoring, some requirements should be considered. A very large amount of data should be delivered real-time, from many heterogeneous sources on different networks or even countries. These data must be accurate and consistent. There should be synchronized timestamps on the generation of each metric, to the measurement value that should be comparable between different architectures. Hosts time synchronization is achieved with network time protocol, so all metrics are taken on the time that they actually report. Metrics should have error bounds to preserve accuracy, and the consistency issue is solved using coordination of that activity, so the impact of a metric to other sensors is controlled.
 
 The flow of the monitoring process initialization is described from the GMA standard. The application-consumer queries the directory service in order to declare its interest to get metrics for a specific host/cluster. The sensors of the elements that is equivalent to the specific query generates the metrics that will be given to the consumer from the producer, which in turn queries the directory service to find the consumer. The producer is the one that initializes the connection to the consumer in order to deliver the measurements, even if the consumer had asked the directory service for this. \cite{balatonuse}
 
@@ -14,7 +14,7 @@ The flow of the monitoring process initialization is described from the GMA stan
 
 Linux kernel process scheduler provides the three numbers for the processor load during the last one, five and fifteen minutes period. There are many ways to calculate the system load in UNIX systems, updating the values on each scheduler event or periodically sampling the scheduler state.
 
-Scheduler efficiency impact on total system's performance, and periodic sampling lead to more accurate load averages. Linux uses the second one, with the period of five seconds, five clock ticks. Each "clock tick" represented by the HZ variable which is the pulse rate of a kernel activity. This method is more performance-wise from the first one where recalculation of load occurs in every scheduler event. 
+Scheduler efficiency impact on total system's performance, and periodic sampling lead to more accurate load averages. Linux uses the second one, with the period of five seconds, five clock ticks. Each "clock tick" is represented by the HZ variable which is the pulse rate of a kernel activity. This method is more performance-wise from the first one where recalculation of load occurs in every scheduler event. 
 
 There is a significant difference between processor load and processor usage of a system. Processor usage is a percent representation of the use of CPU by processes, and not used in this project. CPU load is a better metric for the system performance because it does not have a top value of 100\% but is based in processes running and waiting in the scheduler queue.
 
@@ -37,7 +37,7 @@ load_one_func ( void )
 
 \subsubsection{WSRF}
 
-The XML that Ganglia Resource Provider took from Gmond process through TCP, using XSLT technology is transformed on WSRF to another XML document, that is following the Glue-CE schema. globus\_wsrf\_mds\_usefulrp directory of globus configuration root, there is the file ganglia\_to\_glue.xslt where we can focus on the transformation rules. A snippet of interest for the case of ProcessorLoad class is seen in Listing \ref{xslt}.
+The XML that Ganglia Resource Provider took from Gmond process through TCP, using XSLT technology is transformed on WSRF to another XML document, that is following the Glue-CE schema. In directory globus\_wsrf\_mds\_usefulrp of globus configuration root, there is the file ganglia\_to\_glue.xslt where we can focus on the transformation rules. A snippet of interest for the case of ProcessorLoad class is seen in Listing \ref{xslt}.
 
 \begin{lstlisting}[language=XML,caption=WSRF XSLT for Ganglia Information Provider,label=xslt]
 <glue:ProcessorLoad>
@@ -66,11 +66,11 @@ The XML that Ganglia Resource Provider took from Gmond process through TCP, usin
 </glue:ProcessorLoad>
 \end{lstlisting}
 
-In Listing \ref{xslt} XPath queries noticed and a multiplication with 100 on CPU load values to get an integer is executed. This is happening in order to avoid the transfer of float values. In the frontend using DOM, a division with 100 is done to get the original CPU load average number back.
+In Listing \ref{xslt}, XPath queries are visible and a multiplication with 100 on CPU load values to get an integer is executed. This is happening in order to avoid the transfer of float values. In the frontend using DOM, a division with 100 is done to get the original CPU load average number back.
 
 \subsubsection{BDII}
 
-On the other hand, in BDII Processor Load values left as decimal numbers because its easy for LDAP to handle string values of numbers. The transformation from Gmond or Gmetad information provided using XML, is done by Perl XML::Parse and the output is done in MDS format. Some changes to the original Perl script written by Stratos Efstathiadis was done to match my test-bed's LDAP schema.
+On the other hand, in BDII Processor Load values left as decimal numbers because its easy for LDAP to handle string values of numbers. The transformation from Gmond or Gmetad information provided using XML, is done by Perl XML::Parse and the output is given in MDS format. Some changes to the original Perl script written by Stratos Efstathiadis \cite{stratos_efstathiadis} were performed to match test-bed's LDAP schema.
 
 \subsection{Nagios}
 
@@ -85,7 +85,7 @@ define command{
  }
 \end{lstlisting}
 
-Nagios service check templates was created, to match all nodes of hostgroup named $worker-nodes$, one for each of the three metrics that will be aggregated in Nagios. Under the configuration listed in Listing \ref{nagiosservice}, options for warning and critical thresholds of Processor Load was applied, to notify the contacts that will be set to monitor these services through the rest of Nagios system.
+Nagios service check templates were created, to match all nodes of hostgroup named $worker-nodes$, one for each of the three metrics that will be aggregated in Nagios. Under the configuration listed in Listing \ref{nagiosservice}, options for warning and critical thresholds of Processor Load applied, to notify the contacts that will be set to monitor these services through the rest of Nagios system.
 
 \begin{lstlisting}[label=nagiosservice]
 define service{
@@ -99,9 +99,9 @@ define service{
 
 \section{Grid Performance and Site Reliability}
 
-Grid monitoring in general as proposed by Multi-Level Monitoring in EGEE SA1, is dealing with availability and reliability monitoring. There are threshold values for these metrics for a production site and SLA calculation make use of these metrics.
+Grid monitoring in general as proposed by Multi-Level Monitoring in EGEE SA1, is about availability and reliability monitoring. There are threshold values for these metrics for a production site and SLA calculation make use of these metrics.
 
-Performance monitoring when examined from this point of view, its main purpose is to count jobs that are successfully being submitted to a CE. Site reliability is calculated using that metric.
+The main purpose of performance monitoring, when examined from this point of view, is to count jobs that are successfully being submitted to a CE. Site reliability is calculated using that metric.
 
 For a system engineer, performance monitoring for system administration has to do with Processor Load metrics and not with jobs failed or executed successfully. With that in mind, a system engineer may take capacity management decisions to scale-out the Computing Element, or even scale-up a single node of it.
 
@@ -111,21 +111,20 @@ This is the main goal of this project, to provide tools that allow the aggregati
 
 \subsection{LDAP}
 
-LDAP as the core technology of MDS2 has been investigated \cite{zhang2004performance} and proved that scales and performs good when the data are kept in cache. The performance of the information system when it is accessed by a large number of concurrent users have degrades dramatically when data caching is not used.
+LDAP as the core technology of MDS2 has been investigated \cite{zhang2004performance} and proved that scales and performs good when the data are kept in cache. The performance of the information system, when it is accessed by a large number of concurrent users, degrades dramatically if data caching is not used.
 
 Compared with WSRF, it {\bf performs faster} \cite{schopf2006monitoring} in small number of users, because of the LDAP base of this information service. LDAP back-end is a Berkeley DB and is implemented in C, versus Java and SOAP over HTTP and XML of WSRF. Caching in LDAP although is reported to have problems.
 
 \subsection{WSRF}
 
-On the other side, MDS4 (WSRF) scales better than MDS2 (LDAP) in {\bf large number} of concurrent users. Both throughput and response in queries in large number of queries is consistent, which allows the use of MDS4 for robust operations.
+On the other side, MDS4 (WSRF) scales better than MDS2 (LDAP) in {\bf large number} of concurrent users. Both throughput and response in queries in large number of queries are consistent, which allows the use of MDS4 for robust operations.
 
 WSRF also supports {\bf many query languages}, unlike BDII which supports only LDAP queries. By default it is distributed only with support of XPath queries, but its architecture which is based in Java container and SOAP/XML standards, allow the distribution of the Information Service with other query languages as well.
 
 Adding a Resource Provider in WSRF was much easier than adding an Information Provider in BDII, which makes MDS4 more {\bf extensible} than MDS2. Even though in BDII a simple wrapper had to be installed in BDII GIP configuration directory, the Perl script (or the Python one provider by Ganglia) had to be changed to reach the running BDII instance of Glue schema. MDS4 and WSRF is based in XML and XSLT transformation mechanisms that allow the easy addition of other Providers of a site. It is even allowed to aggregate Index Services from other sites using the $downstream$ option to register them in the local Index Service.
 
-BDII LDAP based configuration is complex due to OID namespaces and naming authorities and is not portable with other information systems. WSRF configuration is much easier and {\bf flexible} because of the XML-based information model, which generally considered more friendly.
+BDII LDAP based configuration is complex due to OID namespaces and naming authorities and is not portable with other information systems. WSRF configuration is much easier and {\bf flexible} because of the XML-based information model, which generally is considered more friendly.
 
 {\bf Reliability} is another factor where WSRF is better than LDAP. BDII after a long period of heavy activity has memory usage problems and requests may have delay in being served, so periodically service restarts are needed, unlike WSRF Index which has been tested under heavy load and keeps serving without problems \cite{schopf2006monitoring}.
 
-Although WSRF in many factors is dominating, during this project there has been noticed that when some nodes of the Computing Element that report its status are down, problems occur. Some deserialization exceptions appear in the container log file for a few minutes until the WSRF learn about the new state of the cluster from Gmond.
-
+Although WSRF in many factors is dominating, during this project some problems occured when some nodes of the Computing Element are down. Some deserialization exceptions appear in the container log file for a few minutes until the WSRF learn about the new state of the cluster from Gmond.
