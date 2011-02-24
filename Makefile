@@ -1,5 +1,5 @@
 
-MAIN = grid_monitoring
+MAIN = dc09ttp-2011-thesis
 PRES = presentation
 
 all:    pdf
@@ -25,7 +25,7 @@ pdf:    dvi ps
 	ps2pdf $(MAIN).ps $(MAIN).pdf
 
 tgz:    
-	tar -zcvf grid_monitoring.tgz *tex Makefile *pdf chapters images extra notes
+	tar -zcvf dc09ttp-2001-thesis.tgz *tex Makefile *pdf chapters images extra notes
 
 clean_aux:
 	rm -f *.aux 

@@ -37,7 +37,9 @@ load_one_func ( void )
 
 \subsubsection{WSRF}
 
-The XML that Ganglia Resource Provider took from Gmond process through TCP, using XSLT technology is transformed on WSRF to another XML document, that is following the Glue-CE schema. In directory globus\_wsrf\_mds\_usefulrp of globus configuration root, there is the file ganglia\_to\_glue.xslt where we can focus on the transformation rules. A snippet of interest for the case of ProcessorLoad class is seen in Listing \ref{xslt}.
+The XML that Ganglia Resource Provider took from Gmond process through TCP, is transformed on WSRF using XSLT technology, to another XML document that follows the Glue-CE schema.
+
+Directory $globus\_wsrf\_mds\_usefulrp$ of globus configuration root, includes the file $ganglia\_to\_glue.xslt$, where we can focus on the transformation rules. A snippet of interest for the case of ProcessorLoad class is seen in Listing \ref{xslt}.
 
 \begin{lstlisting}[language=XML,caption=WSRF XSLT for Ganglia Information Provider,label=xslt]
 <glue:ProcessorLoad>
@@ -70,7 +72,7 @@ In Listing \ref{xslt}, XPath queries are visible and a multiplication with 100 o
 
 \subsubsection{BDII}
 
-On the other hand, in BDII Processor Load values left as decimal numbers because its easy for LDAP to handle string values of numbers. The transformation from Gmond or Gmetad information provided using XML, is done by Perl XML::Parse and the output is given in MDS format. Some changes to the original Perl script written by Stratos Efstathiadis \cite{stratos_efstathiadis} were performed to match test-bed's LDAP schema.
+On the other hand, in BDII Processor Load values left as decimal numbers because its easy for LDAP to handle string values of numbers. The transformation from Gmond or Gmetad information provided using XML, is done by Perl $XML::Parse$ and the output is given in MDS format. There were also some changes performed to the original Perl script, written by Stratos Efstathiadis, to match testbed's LDAP schema \cite{stratos_efstathiadis}.
 
 \subsection{Nagios}
 
