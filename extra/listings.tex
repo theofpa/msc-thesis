@@ -1,0 +1,407 @@
+\begin{lstlisting}[language=bash,caption=Gmetad installation,label=gmetad_installation]
+# yum install rrdtool perl-rrdtool rrdtool-devel apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
+# GANGLIA_ACK_SYSCONFDIR=1 ./configure --with-gmetad
+# make
+# make install
+# mkdir -p /var/lib/ganglia/rrds
+# chown -R nobody /var/lib/ganglia
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash,caption=Gmond installation,label=gmond_installation]
+# yum install apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
+# GANGLIA_ACK_SYSCONFDIR=1 ./configure
+# make
+# make install
+# iptables -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 8649 -j ACCEPT
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash,caption=Ganglia to Nagios script,label=nagios_script]
+#!/bin/bash
+if [ ! $1 ]
+then
+        echo "Please HOST argument"
+        echo "ex. ganglia_to_nagios 10.0.0.1"
+        exit
+fi
+/usr/src/redhat/SOURCES/ganglia-python-3.3.0/ganglia.py --host $1 --live | while read host
+do
+        echo ";$host.oslab.teipir.gr
+define host{
+        use     gmond-host
+        host_name       $host.oslab.teipir.gr
+        alias           $host
+        address         $host.oslab.teipir.gr
+        hostgroups      worker-nodes
+}
+"
+done > /etc/nagios/teipir/hosts.cfg
+\end{lstlisting}
+
+\begin{lstlisting}[label=tops,caption=Getting the top elements]
+[root@osweb~]# ldapsearch -x -h osweb.teipir.gr -p 2170 -b "" -s base "(objectClass=*)" namingContexts
+namingContexts: o=grid
+namingContexts: o=glue
+namingContexts: o=infosys
+\end{lstlisting}
+
+\begin{lstlisting}[label=python_gip,caption=Ganglia official Python client result]
+# /usr/bin/ganglia --host mon.oslab.teipir.gr --format=MDS
+dn: mds-vo-name=local, o=grid
+objectclass: GlueTop
+objectclass: GlueGeneralTop
+GlueSchemaVersionMajor: 1
+GlueSchemaVersionMinor: 1
+\end{lstlisting}
+
+\begin{lstlisting}[label=perl_gip,caption=Perl Ganglia Information Provider]
+# /root/ganglia_ip -h mon.oslab.teipir.gr -p 8649 -o mds
+dn: GlueHostName=gr02.oslab.teipir.gr, mds-vo-name=local, o=grid
+objectclass: GlueHost
+GlueHostName: gr02.oslab.teipir.gr
+GlueHostUniqueID: RDLAB-TEIPIR-gr02.oslab.teipir.gr
+objectclass: GlueHostProcessorLoad
+GlueHostProcessorLoadLast1Min: 1
+GlueHostProcessorLoadLast5Min: 1
+GlueHostProcessorLoadLast15Min: 0
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Site Information Definition file,label=siteinfo]
+# cat site-info.def
+CE_HOST="osweb.teipir.gr"
+SITE_BDII_HOST="osweb.teipir.gr"
+SITE_EMAIL="theofpa@teipir.gr"
+SITE_LAT=37.979166
+SITE_LONG=23.674719
+SITE_DESC="TEI of Piraeus"
+SITE_LOC="Athens, Greece"
+SITE_WEB="http://oslab.teipir.gr"
+SITE_SECURITY_EMAIL=$SITE_EMAIL
+SITE_SUPPORT_EMAIL=$SITE_EMAIL
+SITE_OTHER_GRID="EGEE"
+BDII_REGIONS="oslab.teipir.gr"
+# /opt/glite/yaim/bin/yaim -c -s site-info.def -n BDII_site
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Ldap Process running as BDII daemon,label=slapd]
+[root@osweb ~]# ps -ef |grep bdi[i]
+edguser  24951     1  0 Feb16 ?        00:00:23 /usr/sbin/slapd -f /opt/bdii/etc/bdii-slapd.conf -h ldap://osweb.teipir.gr:2170 -u edguser
+edguser  24990     1  0 Feb16 ?        00:01:00 /usr/bin/python /opt/bdii/bin/bdii-update -c /opt/bdii/etc/bdii.conf -d
+[root@osweb ~]# grep PROVIDER /opt/bdii/etc/bdii.conf
+BDII_PROVIDER_DIR=/opt/glite/etc/gip/provider
+[root@osweb ~]# cat /opt/glite/etc/gip/provider/glite-provider-ganglia-wrapper
+#!/bin/bash
+/opt/bin/ganglia_ip -h 195.251.70.54 -p 8649 -o mds
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML,caption=Ganglia Resource Provider for WSRF Index,label=wsrfrp]
+<ns1:ResourcePropertyProviderConfigArray xsi:type="ns1:ResourcePropertyProviderConfigArray" xmlns:ns1="http://mds.globus.org/rpprovider/2005/08" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <ns1:configArray xsi:type="ns1:resourcePropertyProviderConfig">
+  <ns1:resourcePropertyName xsi:type="xsd:QName" xmlns:mds="http://mds.globus.org/glue/ce/1.1">mds:GLUECE</ns1:resourcePropertyName>
+  <ns1:resourcePropertyImpl xsi:type="xsd:string">org.globus.mds.usefulrp.rpprovider.GLUEResourceProperty</ns1:resourcePropertyImpl>
+  <ns1:resourcePropertyElementProducers xsi:type="ns1:resourcePropertyElementProducerConfig">
+    <ns1:className xsi:type="xsd:string">org.globus.mds.usefulrp.glue.GangliaElementProducer</ns1:className>
+    <ns1:arguments xsi:type="xsd:string">195.251.70.55</ns1:arguments>
+    <ns1:arguments xsi:type="xsd:string">8649</ns1:arguments>
+    <ns1:period xsi:type="xsd:int">60</ns1:period>
+    <ns1:transformClass xsi:type="xsd:string">org.globus.mds.usefulrp.rpprovider.transforms.GLUEComputeElementTransform</ns1:transformClass>
+  </ns1:resourcePropertyElementProducers>
+  <ns1:resourcePropertyElementProducers xsi:type="ns1:resourcePropertyElementProducerConfig">
+    <ns1:className xsi:type="xsd:string">org.globus.mds.usefulrp.rpprovider.producers.SchedulerInfoElementProducer</ns1:className>
+    <ns1:arguments xsi:type="xsd:string">libexec/globus-scheduler-provider-fork</ns1:arguments>
+    <ns1:transformClass xsi:type="xsd:string">org.globus.mds.usefulrp.rpprovider.transforms.GLUESchedulerElementTransform</ns1:transformClass>
+    <ns1:period xsi:type="xsd:int">300</ns1:period>
+  </ns1:resourcePropertyElementProducers>
+ </ns1:configArray>
+</ns1:ResourcePropertyProviderConfigArray>
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML,caption=Web Service Deployment Descriptor for WSRF Index,label=wsrfwsdd]
+<service name="DefaultIndexService" provider="Handler" use="literal" style="document">
+ <parameter name="providers"
+  value="org.globus.mds.usefulrp.rpprovider.ResourcePropertyProviderCollection
+  org.globus.wsrf.impl.servicegroup.ServiceGroupRegistrationProvider
+  GetRPProvider
+  GetMRPProvider
+  QueryRPProvider
+  DestroyProvider
+  SetTerminationTimeProvider
+  SubscribeProvider
+  GetCurrentMessageProvider"/>
+ <parameter name="rpProviderConfigFile" value="/etc/globus_wsrf_mds_index/rpprovider-config-gluece.xml"/>
+ <parameter name="handlerClass" value="org.globus.axis.providers.RPCProvider"/>
+ <parameter name="scope" value="Application"/>
+ <parameter name="allowedMethods" value="*"/>
+ <parameter name="className"
+  value="org.globus.mds.index.impl.DefaultIndexService"/>
+ <wsdlFile>share/schema/mds/index/index_service.wsdl</wsdlFile>
+</service>
+\end{lstlisting}
+
+\begin{lstlisting}[caption=WSRF command line query,label=wsrfq]
+[root@osweb ~]# /opt/globus/bin/grid-proxy-init
+Your identity: /C=GR/O=HellasGrid/OU=teipir.gr/CN=Theofylaktos Papapanagiotou
+Enter GRID pass phrase for this identity:
+Creating proxy ................................... Done
+Your proxy is valid until: Thu Feb 17 11:11:59 2011
+[root@osweb ~]# /opt/globus/bin/wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//*[local-name()='Host']"
+<ns1:Host ns1:Name="gr02.oslab.teipir.gr" ns1:UniqueID="gr02.oslab.teipir.gr" xmlns:ns1="http://mds.globus.org/glue/ce/1.1">
+ <ns1:Processor ns1:CacheL1="0" ns1:CacheL1D="0" ns1:CacheL1I="0" ns1:CacheL2="0" ns1:ClockSpeed="2527" ns1:InstructionSet="x86"/>
+ <ns1:MainMemory ns1:RAMAvailable="75" ns1:RAMSize="495" ns1:VirtualAvailable="1129" ns1:VirtualSize="1559"/>
+ <ns1:OperatingSystem ns1:Name="Linux" ns1:Release="2.6.18-194.26.1.el5"/>
+ <ns1:Architecture ns1:SMPSize="1"/>
+ <ns1:FileSystem ns1:AvailableSpace="34082" ns1:Name="entire-system" ns1:ReadOnly="false" ns1:Root="/" ns1:Size="38624"/>
+ <ns1:NetworkAdapter ns1:IPAddress="10.0.0.32" ns1:InboundIP="true" ns1:MTU="0" ns1:Name="gr02.oslab.teipir.gr" ns1:OutboundIP="true"/>
+ <ns1:ProcessorLoad ns1:Last15Min="0" ns1:Last1Min="0" ns1:Last5Min="0"/>
+\end{lstlisting}
+
+\begin{lstlisting}[caption=WebMDS global configuration,label=globalconfig]
+[root@osweb ~]# cat /opt/globus/lib/webmds/globalconfig.xml 
+<WebmdsGlobalConfig>
+  <newStyleErrors>true</newStyleErrors>
+  <allowUserSpecifiedQuery>true</allowUserSpecifiedQuery>
+</WebmdsGlobalConfig>
+\end{lstlisting}
+
+\begin{lstlisting}[language=C,caption=Linux kernel CALC\_LOAD macro,label=kernel]
+extern unsigned long avenrun[];         /* Load averages */
+extern void get_avenrun(unsigned long *loads, 
+                        unsigned long offset, int shift);
+
+#define FSHIFT    11          /* nr of bits of precision */
+#define FIXED_1   (1<<FSHIFT) /* 1.0 as fixed-point */
+#define LOAD_FREQ (5*HZ+1)    /* 5 sec intervals */
+#define EXP_1     1884        /* 1/exp(5sec/1min) as fixed-point */
+#define EXP_5     2014        /* 1/exp(5sec/5min) */
+#define EXP_15    2037        /* 1/exp(5sec/15min) */
+
+#define CALC_LOAD(load,exp,n) \
+        load *= exp; \
+        load += n*(FIXED_1-exp); \
+        load >>= FSHIFT;
+
+extern unsigned long total_forks;
+extern int nr_threads;
+DECLARE_PER_CPU(unsigned long, process_counts);
+extern int nr_processes(void);
+extern unsigned long nr_running(void);
+extern unsigned long nr_uninterruptible(void);
+extern unsigned long nr_iowait(void);
+extern unsigned long nr_iowait_cpu(int cpu);
+extern unsigned long this_cpu_load(void);
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash,caption=Gmond networking,label=lsof]
+[root@gr01 ~]# lsof -i 4 -a -p `pidof gmond`
+COMMAND   PID   USER   FD   TYPE DEVICE SIZE NODE NAME
+gmond   11900 nobody    4u  IPv4  33699       UDP 239.2.11.71:8649 
+gmond   11900 nobody    5u  IPv4  33701       TCP *:8649 (LISTEN)
+gmond   11900 nobody    6u  IPv4  33703       UDP gr01.oslab.teipir.gr:39991->239.2.11.71:8649 
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML,caption=Gmond XML cluster report,label=telnet_gmond]
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<GANGLIA_XML VERSION="3.1.7" SOURCE="gmond">
+	<CLUSTER NAME="RDLAB" LOCALTIME="1297198943" OWNER="TEIPIR" LATLONG="unspecified" URL="unspecified">
+		<HOST NAME="gr02.oslab.teipir.gr" IP="10.0.0.32" REPORTED="1297198934" TN="8" TMAX="20" DMAX="0" LOCATION="unspecified" GMOND_STARTED="1296569542">
+			<METRIC NAME="load_one" VAL="0.01" TYPE="float" UNITS=" " TN="50" TMAX="70" DMAX="0" SLOPE="both">
+			<EXTRA_DATA>
+			<EXTRA_ELEMENT NAME="GROUP" VAL="load"/>
+			<EXTRA_ELEMENT NAME="DESC" VAL="One minute load average"/>
+			<EXTRA_ELEMENT NAME="TITLE" VAL="One Minute Load Average"/>
+			</EXTRA_DATA>
+			</METRIC>
+		</HOST>
+	</CLUSTER>
+</GANGLIA_XML>
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash,caption=XDR sample,label=tcpdump]
+[root@gr01 ~]# tcpdump -A -i eth2 dst host 239.2.11.71
+22:38:26.062266 IP gr01.oslab.teipir.gr.39991 > 239.2.11.71.8649: UDP, length 56
+E..T..@..........G.7!..@.X........gr01.oslab.teipir.gr....load_one........%.2f..
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML,caption=WSRF query output,label=wsrfquery]
+ <ns1:GLUECE xmlns:ns1="http://mds.globus.org/glue/ce/1.1">
+  <ns1:Cluster ns1:Name="OSLAB" ns1:UniqueID="OSLAB">
+   <ns1:SubCluster ns1:Name="main" ns1:UniqueID="main">
+    <ns1:Host ns1:Name="gr03.oslab.teipir.gr" 
+    ns1:UniqueID="gr03.oslab.teipir.gr" 
+    xmlns:ns1="http://mds.globus.org/glue/ce/1.1">
+     <ns1:Processor ns1:CacheL1="0" ns1:CacheL1D="0" 
+     ns1:CacheL1I="0" ns1:CacheL2="0" ns1:ClockSpeed="2392" 
+     ns1:InstructionSet="x86"/>
+     <ns1:MainMemory ns1:RAMAvailable="299" ns1:RAMSize="1010" 
+     ns1:VirtualAvailable="2403" ns1:VirtualSize="3132"/>
+     <ns1:OperatingSystem ns1:Name="Linux"
+     ns1:Release="2.6.18-194.26.1.el5"/>
+     <ns1:Architecture ns1:SMPSize="2"/>
+     <ns1:FileSystem ns1:AvailableSpace="201850" 
+     ns1:Name="entire-system" ns1:ReadOnly="false"
+     ns1:Root="/" ns1:Size="214584"/>
+     <ns1:NetworkAdapter ns1:IPAddress="10.0.0.33" 
+     ns1:InboundIP="true" ns1:MTU="0" 
+     ns1:Name="gr03.oslab.teipir.gr" ns1:OutboundIP="true"/>
+     <ns1:ProcessorLoad ns1:Last15Min="45" ns1:Last1Min="337"
+     ns1:Last5Min="126"/>
+    </ns1:Host>
+   </ns1:SubCluster>
+  </ns1:Cluster>
+ </ns1:GLUECE>
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML,caption=WebMDS results from XPath query,label=xpath_result]
+<WebmdsResults>
+ <ns1:Host ns1:Name="ltsp.oslab.teipir.gr" 
+ ns1:UniqueID="ltsp.oslab.teipir.gr">
+   <ns1:Processor ns1:CacheL1="0" ns1:CacheL1D="0" 
+   ns1:CacheL1I="0" ns1:CacheL2="0" ns1:ClockSpeed="1600" 
+   ns1:InstructionSet="x86_64"/>
+   <ns1:MainMemory ns1:RAMAvailable="17806" ns1:RAMSize="20121" 
+   ns1:VirtualAvailable="22137" ns1:VirtualSize="24508"/>
+   <ns1:OperatingSystem ns1:Name="Linux" 
+   ns1:Release="2.6.32-24-server"/>
+   <ns1:Architecture ns1:SMPSize="8"/>
+   <ns1:FileSystem ns1:AvailableSpace="34243" 
+   ns1:Name="entire-system" ns1:ReadOnly="false" ns1:Root="/" 
+   ns1:Size="251687"/>
+   <ns1:NetworkAdapter ns1:IPAddress="192.168.0.101" 
+   ns1:InboundIP="true" ns1:MTU="0" ns1:Name="ltsp.oslab.teipir.gr" 
+   ns1:OutboundIP="true"/>
+   <ns1:ProcessorLoad ns1:Last15Min="9" ns1:Last1Min="1" 
+   ns1:Last5Min="9"/>
+ </ns1:Host>
+</WebmdsResults>
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash,caption=Perl Ganglia Information Provider for MDS,label=perlbdii]
+[root@mon ~]# ./ganglia_ip -h mon -p 8649 -o mds | grep -A 22 host=gr03
+
+dn: host=gr03.oslab.teipir.gr, cl=RDLAB, \
+ mds-vo-name=local, o=grid
+objectclass: GlueHost
+GlueHostName: gr03.oslab.teipir.gr
+GlueHostUniqueID: RDLAB-TEIPIR-gr03.oslab.teipir.gr
+objectclass: GlueHostProcessorLoad
+GlueHostProcessorLoadLast1Min: 2.57
+GlueHostProcessorLoadLast5Min: 1.48
+GlueHostProcessorLoadLast15Min: 0.58
+objectclass: GlueHostSMPLoad
+GlueHostSMPLoadLast1Min: 2.57
+GlueHostSMPLoadLast5Min: 1.48
+GlueHostSMPLoadLast15Min: 0.58
+objectclass: GlueHostArchitecture
+GlueHostArchitectureSMPSize: 2
+objectclass: GlueHostProcessor
+GlueHostProcessorClockSpeed: 2392
+objectclass: GlueHostNetworkAdapter
+GlueHostNetworkAdapterName: gr03.oslab.teipir.gr
+GlueHostNetworkAdapterIPAddress: 10.0.0.33
+objectclass: GlueHostMainMemory
+GlueHostMainMemoryRAMSize: 1035104
+GlueHostMainMemoryRAMAvailable: 306280
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash,caption=Python Ganglia client MDS export,label=pythonbdii]
+[root@mon ~]# /opt/ganglia/bin/ganglia --format=MDS | grep -A 30 host=gr03
+
+dn: host=gr03.oslab.teipir.gr, scl=sub2, cl=datatag-CNAF, \
+ mds-vo-name=local, o=grid
+objectclass: GlueHost
+GlueHostName: gr03.oslab.teipir.gr
+GlueHostUniqueID: RDLAB-TEIPIR-gr03.oslab.teipir.gr
+objectclass: GlueHostArchitecture
+GlueHostArchitecturePlatformType: x86-Linux
+GlueHostArchitectureSMPSize: 2
+objectclass: GlueHostProcessor
+GlueHostProcessorClockSpeed: 2392
+objectclass: GlueHostMainMemory
+GlueHostMainMemoryRAMSize: 1035104
+GlueHostMainMemoryRAMAvailable: 306280
+objectclass: GlueHostNetworkAdapter
+GlueHostNetworkAdapterName: gr03.oslab.teipir.gr
+GlueHostNetworkAdapterIPAddress: 10.0.0.33
+GlueHostNetworkAdapterMTU: unknown
+GlueHostNetworkAdapterOutboundIP: 1
+GlueHostNetworkAdapterInboundIP: 1
+objectclass: GlueHostProcessorLoad
+GlueHostProcessorLoadLast1Min: 2.57
+GlueHostProcessorLoadLast5Min: 1.48
+GlueHostProcessorLoadLast15Min: 0.58
+objectclass: GlueHostSMPLoad
+GlueHostSMPLoadLast1Min: 2.57
+GlueHostSMPLoadLast5Min: 1.48
+GlueHostSMPLoadLast15Min: 0.58
+objectclass: GlueHostStorageDevice
+GlueHostStorageDeviceSize: 209555000
+GlueHostStorageDeviceAvailableSpace: 197120000
+GlueHostStorageDeviceType: disk
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Nagios log with load check,label=nagioslog,nolol]
+[1297634400] CURRENT SERVICE STATE: xenia.oslab.teipir.gr;load_fifteen;OK;HARD;1;CHECKGANGLIA OK: load_fifteen is 0.00
+[1297634400] CURRENT SERVICE STATE: xenia.oslab.teipir.gr;load_five;OK;HARD;1;CHECKGANGLIA OK: load_five is 0.00
+[1297634400] CURRENT SERVICE STATE: xenia.oslab.teipir.gr;load_one;OK;HARD;1;CHECKGANGLIA OK: load_one is 0.00
+\end{lstlisting}
+
+\begin{lstlisting}[caption=NPCD temporary file in spool directory,label=npcdfile]
+[root@osweb ~]# cat /var/spool/pnp4nagios/host-perfdata.1297973378 
+DATATYPE::HOSTPERFDATA	TIMET::1297973368	HOSTNAME::osweb.teipir.gr	HOSTPERFDATA::rta=0.057000ms;3000.000000;5000.000000;0.000000 pl=0%;80;100;0	HOSTCHECKCOMMAND::ncg_check_host_alive	HOSTSTATE::UP	HOSTSTATETYPE::HARD
+\end{lstlisting}
+
+\begin{lstlisting}[language=C,caption=libmetrics code to get load average,label=libmetrics]
+timely_file proc_loadavg = { {0,0} , 5., "/proc/loadavg" };
+/* ... */
+g_val_t
+load_one_func ( void )
+{
+   g_val_t val;
+   val.f = strtod( update_file(&proc_loadavg), (char **)NULL);
+   return val;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML,caption=WSRF XSLT for Ganglia Information Provider,label=xslt]
+<glue:ProcessorLoad>
+
+<xsl:attribute name="glue:Last1Min">
+  <xsl:call-template name="emitProperNumeric">
+    <xsl:with-param name="numeric" 
+    select="floor(100 * METRIC[@NAME='load_one']/@VAL)"/>
+  </xsl:call-template>
+</xsl:attribute>
+
+<xsl:attribute name="glue:Last5Min">
+  <xsl:call-template name="emitProperNumeric">
+    <xsl:with-param name="numeric" 
+    select="floor(100 * METRIC[@NAME='load_five']/@VAL)"/>
+  </xsl:call-template>
+</xsl:attribute>
+
+<xsl:attribute name="glue:Last15Min">
+  <xsl:call-template name="emitProperNumeric">
+    <xsl:with-param name="numeric" 
+    select="floor(100 * METRIC[@NAME='load_fifteen']/@VAL)"/>
+  </xsl:call-template>
+</xsl:attribute>
+
+</glue:ProcessorLoad>
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Nagios configuration to check ganglia,label=checkganglia]
+define command{
+ command_name  check-ganglia
+ command_line  check_ganglia.py -h $HOSTNAME$ -m $ARG1$ -w $ARG2$ -c $ARG3$ -s 195.251.70.54 -p 8649
+ }
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Nagios configuation service template,label=nagiosservice]
+define service{
+   use                  wn
+   hostgroup_name       worker-nodes
+   service_description  load_one
+   check_command        check-ganglia!load_one!4!5
+   action_url           https://osweb.teipir.gr/nagios/html/pnp4nagios/index.php?host=$HOSTNAME$&srv=$SERVICEDESC$
+   }
+\end{lstlisting}
+

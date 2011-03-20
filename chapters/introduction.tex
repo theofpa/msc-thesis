@@ -8,7 +8,7 @@ Performance monitoring of a grid is a key part in grid computing. Based on the r
 Current interfaces deliver performance graphs without following the standard topology schema introduced by the grid information system.
 
 %which aspects you will consider, and why;
-WSRF aggregation framework and GLUE schema are examined, to understand the gathering process of metrics. BDII LDAP is also examined, as the carrier of the information data. Ganglia's hierarchical delegation to create manageable monitoring domains is an important aspect. Performance metrics are taken using Linux kernel's load average.
+\ac{WSRF} aggregation framework and \ac{GLUE} schema are examined, to understand the gathering process of metrics. \ac{BDII} LDAP is also examined, as the carrier of the information data. Ganglia's hierarchical delegation to create manageable monitoring domains is an important aspect. Performance metrics are taken using Linux kernel's load average.
 %which aspects you will not consider, and why;
 Performance in the aspect of how many jobs are served by each site is not examined in this project.
 %what you hope to find out;
@@ -17,9 +17,9 @@ This project examines which of the two information services better transfer the 
 %what your starting point(s) will be
 A starting point was to build a lab to gather performance data and start working on the development of the integration parts.
 %what assumptions you are making
-It is assumed that the environment is a grid site, that already has the components needed to work together. Ganglia daemons on each node, presented by the GLUE schema on site BDII, Nagios/MyEGI monitoring frameworks.
+It is assumed that the environment is a grid site, that already has the components needed to work together. Ganglia daemons on each node, presented by the \ac{GLUE} schema on site \ac{BDII}, Nagios/MyEGI monitoring frameworks.
 %how you will present the subject.
-A web interface is available to present the work of the integration of Ganglia into Nagios/MyEGI, BDII and WSRF.
+A web interface is available to present the work of the integration of Ganglia into Nagios/MyEGI, \ac{BDII} and \ac{WSRF}.
 
 \section{Aims \& Objectives}
 %the aim and objectives of the work presented in the report
@@ -28,7 +28,7 @@ This project aims to evaluate grid performance monitoring tools, and information
 
 Using a testbed, Ganglia agent should be installed in every worker node of the Computing Element. Globus and gLite middlewares should also be installed, to provide the Information Services for data aggregation and transfer.
 
-Resource Providers should be integrated on BDII and WSRF Information Services, to get, parse/transform and deliver the data to the front interface. Authentication mechanism is not part of this project, but in order to respect the procedures, a wrapping interface such as WebMDS should be installed. Standards and specifications about data organization in the information system such as the Glue schema will be covered.
+Resource Providers should be integrated on \ac{BDII} and \ac{WSRF} Information Services, to get, parse/transform and deliver the data to the front interface. Authentication mechanism is not part of this project, but in order to respect the procedures, a wrapping interface such as WebMDS should be installed. Standards and specifications about data organization in the information system such as the Glue schema will be covered.
 
 Information Services should be selected for the different levels of the Multi Level Monitoring infrastucture, such as site, regional or top level. Nagios and ganglia integration should also be evaluated.
 

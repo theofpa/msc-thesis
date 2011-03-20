@@ -1,6 +1,4 @@
 % chapter analysis
-
-
 \section{Methods Adopted}
 
 In complex distributed systems such as grids, performance bottlenecks may be located using monitoring data. From the processor usage on a single node of a computing element to the total usage of processed jobs in a large cluster, performance data help to focus on the problem that impacts the overall performance.
@@ -8,7 +6,6 @@ In complex distributed systems such as grids, performance bottlenecks may be loc
 In order to succeed in grid monitoring, some requirements should be considered. A very large amount of data should be delivered real-time, from many heterogeneous sources on different networks or even countries. These data must be accurate and consistent. There should be synchronized timestamps on the generation of each metric, to the measurement value that should be comparable between different architectures. Hosts time synchronization is achieved with network time protocol, so all metrics are taken on the time that they actually report. Metrics should have error bounds to preserve accuracy, and the consistency issue is solved using coordination of that activity, so the impact of a metric to other sensors is controlled.
 
 The flow of the monitoring process initialization is described from the GMA standard. The application-consumer queries the directory service in order to declare its interest to get metrics for a specific host/cluster. The sensors of the elements that is equivalent to the specific query generates the metrics that will be given to the consumer from the producer, which in turn queries the directory service to find the consumer. The producer is the one that initializes the connection to the consumer in order to deliver the measurements, even if the consumer had asked the directory service for this. \cite{balatonuse}
-
 
 \subsection{Performance Metrics}
 
@@ -21,18 +18,6 @@ There is a significant difference between processor load and processor usage of 
 \subsubsection{Transport and sample}
 Gmond code uses the ganglia libmetrics library which in case of Linux operating system parses the $/proc/loadavg$ pseudo-file to get Linux kernel calculated system load average as shown in Listing \ref{libmetrics}. When this value is taken, it is pushed to the multicast network using UDP datagram. If this value has not changed from the previous one, it is not pushed until a timeout is reached.
 
-\begin{lstlisting}[language=C,caption=libmetrics code to get load average,label=libmetrics]
-timely_file proc_loadavg = { {0,0} , 5., "/proc/loadavg" };
-/* ... */
-g_val_t
-load_one_func ( void )
-{
-   g_val_t val;
-   val.f = strtod( update_file(&proc_loadavg), (char **)NULL);
-   return val;
-}
-\end{lstlisting}
-
 \subsection{Information Systems}
 
 \subsubsection{WSRF}
@@ -40,33 +25,6 @@ load_one_func ( void )
 The XML that Ganglia Resource Provider took from Gmond process through TCP, is transformed on WSRF using XSLT technology, to another XML document that follows the Glue-CE schema.
 
 Directory $globus\_wsrf\_mds\_usefulrp$ of globus configuration root, includes the file $ganglia\_to\_glue.xslt$, where we can focus on the transformation rules. A snippet of interest for the case of ProcessorLoad class is seen in Listing \ref{xslt}.
-
-\begin{lstlisting}[language=XML,caption=WSRF XSLT for Ganglia Information Provider,label=xslt]
-<glue:ProcessorLoad>
-
-<xsl:attribute name="glue:Last1Min">
-  <xsl:call-template name="emitProperNumeric">
-    <xsl:with-param name="numeric" 
-    select="floor(100 * METRIC[@NAME='load_one']/@VAL)"/>
-  </xsl:call-template>
-</xsl:attribute>
-
-<xsl:attribute name="glue:Last5Min">
-  <xsl:call-template name="emitProperNumeric">
-    <xsl:with-param name="numeric" 
-    select="floor(100 * METRIC[@NAME='load_five']/@VAL)"/>
-  </xsl:call-template>
-</xsl:attribute>
-
-<xsl:attribute name="glue:Last15Min">
-  <xsl:call-template name="emitProperNumeric">
-    <xsl:with-param name="numeric" 
-    select="floor(100 * METRIC[@NAME='load_fifteen']/@VAL)"/>
-  </xsl:call-template>
-</xsl:attribute>
-
-</glue:ProcessorLoad>
-\end{lstlisting}
 
 In Listing \ref{xslt}, XPath queries are visible and a multiplication with 100 on CPU load values to get an integer is executed. This is happening in order to avoid the transfer of float values. In the frontend using DOM, a division with 100 is done to get the original CPU load average number back.
 
@@ -76,38 +34,21 @@ On the other hand, in BDII Processor Load values left as decimal numbers because
 
 \subsection{Nagios}
 
-Nagios was installed in the testbed using YAIM tool. Some user certificates from TEIPIR and Brunel was added to access the interface through the VOMS2HTPASSWD tool.
+Nagios was installed in the testbed using \ac{YAIM} tool. Some user certificates from \ac{TEIPIR} and Brunel was added to access the interface through the VOMS2HTPASSWD tool.
 
 Custom check command was introduced to configure Nagios with ganglia. Ganglia original check\_ganglia.py client was used as shown in Listing \ref{checkganglia}.
 
-\begin{lstlisting}[label=checkganglia]
-define command{
- command_name  check-ganglia
- command_line  check_ganglia.py -h $HOSTNAME$ -m $ARG1$ -w $ARG2$ -c $ARG3$ -s 195.251.70.54 -p 8649
- }
-\end{lstlisting}
-
 Nagios service check templates were created, to match all nodes of hostgroup named $worker-nodes$, one for each of the three metrics that will be aggregated in Nagios. Under the configuration listed in Listing \ref{nagiosservice}, options for warning and critical thresholds of Processor Load applied, to notify the contacts that will be set to monitor these services through the rest of Nagios system.
-
-\begin{lstlisting}[label=nagiosservice]
-define service{
-   use                  wn
-   hostgroup_name       worker-nodes
-   service_description  load_one
-   check_command        check-ganglia!load_one!4!5
-   action_url           https://osweb.teipir.gr/nagios/html/pnp4nagios/index.php?host=$HOSTNAME$&srv=$SERVICEDESC$
-   }
-\end{lstlisting}
 
 \section{Grid Performance and Site Reliability}
 
-Grid monitoring in general as proposed by Multi-Level Monitoring in EGEE SA1, is about availability and reliability monitoring. There are threshold values for these metrics for a production site and SLA calculation make use of these metrics.
+Grid monitoring in general as proposed by Multi-Level Monitoring in EGEE Service Activity SA1, is about availability and reliability monitoring. There are threshold values for these metrics for a production site and SLA calculation make use of these metrics.
 
-The main purpose of performance monitoring, when examined from this point of view, is to count jobs that are successfully being submitted to a CE. Site reliability is calculated using that metric.
+The main purpose of performance monitoring, when examined from this point of view, is to count jobs that are successfully being submitted to a \ac{CE}. Site reliability is calculated using that metric.
 
 For a system engineer, performance monitoring for system administration has to do with Processor Load metrics and not with jobs failed or executed successfully. With that in mind, a system engineer may take capacity management decisions to scale-out the Computing Element, or even scale-up a single node of it.
 
-This is the main goal of this project, to provide tools that allow the aggregation of Processor Load information to system engineers, and not job counting tools such as SAM, Gridview and MyEGEE or MyEGI. Ganglia is the event source that publish the metrics taken from Linux kernel as described, and multiple information services or even Nagios may be used to provide that information to users.
+This is the main goal of this project, to provide tools that allow the aggregation of Processor Load information to system engineers, and not job counting tools such as \ac{SAM}, Gridview and MyEGEE or MyEGI. Ganglia is the event source that publish the metrics taken from Linux kernel as described, and multiple information services or even Nagios may be used to provide that information to users.
 
 \section{Information Services Scaling}
 
@@ -123,7 +64,7 @@ On the other side, MDS4 (WSRF) scales better than MDS2 (LDAP) in {\bf large numb
 
 WSRF also supports {\bf many query languages}, unlike BDII which supports only LDAP queries. By default it is distributed only with support of XPath queries, but its architecture which is based in Java container and SOAP/XML standards, allow the distribution of the Information Service with other query languages as well.
 
-Adding a Resource Provider in WSRF was much easier than adding an Information Provider in BDII, which makes MDS4 more {\bf extensible} than MDS2. Even though in BDII a simple wrapper had to be installed in BDII GIP configuration directory, the Perl script (or the Python one provider by Ganglia) had to be changed to reach the running BDII instance of Glue schema. MDS4 and WSRF is based in XML and XSLT transformation mechanisms that allow the easy addition of other Providers of a site. It is even allowed to aggregate Index Services from other sites using the $downstream$ option to register them in the local Index Service.
+Adding a Resource Provider in WSRF was much easier than adding an Information Provider in BDII, which makes MDS4 more {\bf extensible} than MDS2. Even though in BDII a simple wrapper had to be installed in BDII \ac{GIP} configuration directory, the Perl script (or the Python one provider by Ganglia) had to be changed to reach the running BDII instance of Glue schema. MDS4 and WSRF is based in XML and XSLT transformation mechanisms that allow the easy addition of other Providers of a site. It is even allowed to aggregate Index Services from other sites using the $downstream$ option to register them in the local Index Service.
 
 BDII LDAP based configuration is complex due to OID namespaces and naming authorities and is not portable with other information systems. WSRF configuration is much easier and {\bf flexible} because of the XML-based information model, which generally is considered more friendly.
 

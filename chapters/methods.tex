@@ -2,15 +2,15 @@
 
 \section{Approach Adopted}
 
-Grid performance monitoring in this project is examined using {\bf GMA}, an architecture introduced to provide the standards for a distributed monitoring system. The technologies that will be discussed here are about the Information Infrastructure that provides the metrics to the users/applications.
+Grid performance monitoring in this project is examined using {\bf \ac{GMA}}, an architecture introduced to provide the standards for a distributed monitoring system. The technologies that will be discussed here are about the Information Infrastructure that provides the metrics to the users/applications.
 
 The metrics are generated using {\bf Linux kernel}'s load average functions. {\bf Ganglia} is used to take these metrics and synchronize all cluster nodes with the relevant information, over the {\bf multicast channel}.
 
 Nagios is configured using a {\bf custom script} that takes the information for the cluster nodes, and periodically queries the {\bf Gmond} to get the metrics for the discovered nodes. The results are stored in its repository and using RRDTool and PNP4Nagios, graph reports are generated on demand.
 
-To pass the information, two different information systems are examined, {\bf BDII and WSRF}. Both are used in modern grid implementations and are described in {\bf MDS specification}. BDII queries event source (Gmond) using Perl/Python LDAP libraries. The results taken, fill the directory schema which has been extended using {\bf Glue schema} specification for Processor Load in Computing Element structure.
+To pass the information, two different information systems are examined, {\bf \ac{BDII} and \ac{WSRF}}. Both are used in modern grid implementations and are described in {\bf \ac{MDS} specification}. \ac{BDII} queries event source (Gmond) using Perl/Python LDAP libraries. The results taken, fill the directory schema which has been extended using {\bf Glue schema} specification for Processor Load in \ac{CE} structure.
 
-{\bf MDS4} introduces the use of {\bf WSRF} in grid information system. A {\bf Ganglia Information Provider} using {\bf XSLT} takes the XML output from Gmond and aggregates the metrics using WSRF {\bf Aggregation Framework}. In front of it, a Tomcat instance serves the {\bf WebMDS} frontend to allow {\bf XPath} queries to the results that have been aggregated.
+{\bf \ac{MDS}4} introduces the use of {\bf \ac{WSRF}} in grid information system. A {\bf \ac{GIP}} using {\bf \ac{XSLT}} takes the XML output from Gmond and aggregates the metrics using \ac{WSRF} {\bf Aggregation Framework}. In front of it, a Tomcat instance serves the {\bf WebMDS} frontend to allow {\bf XPath} queries to the results that have been aggregated.
 
 Finally, two sample small applications has been developed to provide a homogeneous interface that displays the same information using the two different information systems.
 
@@ -41,9 +41,9 @@ By definition \cite{Taylor2006} Grid Monitoring Architecture consists of three c
 \label{figure:gma}
 \end{figure}
 
-In GMA, all metrics that are transmitted by the producer are handled as events with a timestamp, so performance data should be accurate. These events are transmitted to the consumer directly, and not through the directory service (whose role is just to advertise producers to consumers and vice versa). The GMA recommends that the structure of these data should be following a schema definition. 
+In \ac{GMA}, all metrics that are transmitted by the producer are handled as events with a timestamp, so performance data should be accurate. These events are transmitted to the consumer directly, and not through the directory service (whose role is just to advertise producers to consumers and vice versa). The GMA recommends that the structure of these data should be following a schema definition. 
 
-Grid Monitoring Architecture supports two models to handle the communication between producers and consumers:
+\acf{GMA} supports two models to handle the communication between producers and consumers:
 
 \begin{itemize}
 \item {\bf Streaming publish/subscribe model}
@@ -54,12 +54,12 @@ The directory service is used by producers to discover consumers and by consumer
 
 \subsection{GLUE Schema}
 
-GLUE schema came to provide the interoperability needed between US and European Physics Grid Projects. As a standard, a common schema was introduced to describe and monitor the grid resources. Major components include:
+\ac{GLUE} schema came to provide the interoperability needed between US and European Physics Grid Projects. As a standard, a common schema was introduced to describe and monitor the grid resources. Major components include:
 
 \begin{itemize}
-\item Computing Element (CE)
-\item Storage Element (SE)
-\item Network Element (NE)
+\item \acf{CE}
+\item \acf{SE}
+\item \ac{NE}
 \end{itemize}
 
 The implementation of Glue schema may be using LDAP, XML or SQL. The MDS implementation of the Glue schema in this project includes the core Information Provider and the Ganglia Interface for the cluster information.
@@ -84,7 +84,7 @@ Deployments, maintenance and operations in a large installation of many systems 
 
 Because of the large number of different heterogeneous networks of nodes and clusters, there is a need of uniformity. Uniformity helps developers to build applications that give better configuration decisions, by simplification, to build APIs for common operations and data models for the representation of that information. Resources are divided in groups of computing, storage, network elements, etc.
 
-The solution proposed by GLUE standard and X.500 (Directory Service) is the key feature to scale, and get uniformity. It may be used to provide extensible distributed directory services. It is optimized for reads, its binary-tree like hierarchy and usually back-end data structure provides a framework that well organizes the information that need to be delivered by an Information Infrastructure.\cite{mds1}
+The solution proposed by \ac{GLUE} standard and X.500 (Directory Service) is the key feature to scale, and get uniformity. It may be used to provide extensible distributed directory services. It is optimized for reads, its binary-tree like hierarchy and usually back-end data structure provides a framework that well organizes the information that need to be delivered by an Information Infrastructure.\cite{mds1}
 
 \section{Data-acquisition Systems}
 
@@ -123,36 +123,19 @@ If a TCP connection on the Gmond listening port 8649 is made, Gmond writes a ful
 
 \subsubsection{Installation and configuration}
 
-In order to install ganglia, some dependencies were needed to be installed on each node of the Computing Element. In the testbed, there were an installation of LTSP \cite{ltsp} and the quick deployment of ganglia succeeded. Ganglia sources compiled for Gmond on the nodes and Gmetad on the systems that Ganglia Web interface needed to be installed. Finally on worker nodes, iptables should accept connections on 8649/TCP port.
-
-\begin{lstlisting}
-# yum install rrdtool perl-rrdtool rrdtool-devel apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
-# GANGLIA_ACK_SYSCONFDIR=1 ./configure --with-gmetad
-# make
-# make install
-# mkdir -p /var/lib/ganglia/rrds
-# chown -R nobody /var/lib/ganglia
-\end{lstlisting}
-
-\begin{lstlisting}
-# yum install apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
-# GANGLIA_ACK_SYSCONFDIR=1 ./configure
-# make
-# make install
-# iptables -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 8649 -j ACCEPT
-\end{lstlisting}
+In order to install ganglia, some dependencies were needed to be installed on each node of the \ac{CE}. In the testbed, there were an installation of \ac{LTSP} \cite{ltsp} and the quick deployment of ganglia succeeded. Ganglia sources compiled for Gmond on the nodes and Gmetad on the systems that Ganglia Web interface needed to be installed. Finally on worker nodes, iptables should accept connections on 8649/TCP port. Listings \ref{gmetad_installation} and \ref{gmond_installation} describe the steps that followed to install both daemons.
 
 Gmond and Gmetad default configuration may be generated using the daemon itself. Gmond may be configured using multicast to communicate metrics between nodes or unicast to solve problems with jitter when deployed in environments like amazon ec2 that do not support multicast.
 
 \subsection{Nagios}
 
-Nagios is the core monitoring tool that is used for grid computing monitoring as Multi Level Monitoring architecture proposes, to meet the needs of EGEE/EGI. Following SAM and Gridview, Nagios instances have been deployed in many levels of grid infrastructure, enhancing the functionality of scheduling and execution of site tests. The message bus that uses is MSG, which offers an integration between Nagios and the other monitoring tools of grid.
+Nagios is the core monitoring tool that is used for grid computing monitoring as Multi Level Monitoring architecture proposes, to meet the needs of EGEE/EGI. Following \ac{SAM} and Gridview, Nagios instances have been deployed in many levels of grid infrastructure, enhancing the functionality of scheduling and execution of site tests. The message bus that uses is MSG, which offers an integration between Nagios and the other monitoring tools of grid.
 
 CERN provides MSG-Nagios-bridge, a mechanism to transfer test results between different levels of Nagios deployment (regional, project, site). MSG-Nagios-bridge submit tests to other Nagios installations and consume results from them. 
 
 A Regional Metric Store is also used by Nagios. It is a database that provides a back-end to Nagios current and historical metrics, and connects with the frontend and the message bridge. The adapter that provides such functionality called NdoUtils, and may have a MySQL/PostgreSQL or Oracle back-end.
 
-In the front-end, users are allowed to discover the nodes and services provided in the monitoring levels by regions, projects and sites, using CGI scripts that are part of the Nagios core distribution. Access control, between levels of Nagios instances and between users and Nagios installations, is performed using the standard methods of grid, which is GOCDB as described in ATP. User authentication is done by user certificates.
+In the front-end, users are allowed to discover the nodes and services provided in the monitoring levels by regions, projects and sites, using \ac{CGI} scripts that are part of the Nagios core distribution. Access control, between levels of Nagios instances and between users and Nagios installations, is performed using the standard methods of grid, which is \ac{GOCDB} as described in \ac{ATP}. User authentication is done by user certificates.
 
 \begin{figure}[htb]
 \centering
@@ -163,29 +146,7 @@ In the front-end, users are allowed to discover the nodes and services provided 
 
 To integrate Ganglia with Nagios as shown in Figure \ref{figure:nagios_ganglia}, a custom script has been created. This script queries the Gmond source for the current state of nodes of the cluster. The returned result is being transformed to a Nagios configuration file to configure the host check of the cluster nodes. The Nagios service checks for these hosts are preconfigured. Script source may be found in Listing \ref{nagios_script}.
 
-\begin{lstlisting}[language=bash,caption=Ganglia to Nagios script,label=nagios_script]
-#!/bin/bash
-if [ ! $1 ]
-then
-        echo "Please HOST argument"
-        echo "ex. ganglia_to_nagios 10.0.0.1"
-        exit
-fi
-/usr/src/redhat/SOURCES/ganglia-python-3.3.0/ganglia.py --host $1 --live | while read host
-do
-        echo ";$host.oslab.teipir.gr
-define host{
-        use     gmond-host
-        host_name       $host.oslab.teipir.gr
-        alias           $host
-        address         $host.oslab.teipir.gr
-        hostgroups      worker-nodes
-}
-"
-done > /etc/nagios/teipir/hosts.cfg
-\end{lstlisting}
-
-When a nagios check command is executed, results are stored in a file, and Performance Data are calculated by a perl script. To scale this process, the Bulk Mode method is used to move the file to a spool directory which takes place immediately with no important performance impact to the system, because its only an inode operation. The NPCD (Nagios Performance C Daemon) is a daemon that is running on the Nagios host and its role is to monitor a spool directory for new files and pass the names of the files to process\_perfdata.pl. The script processes the performance data, and this operation is fully Nagios independent so it may be scaled-out more easily. Results are finally delivered to RRDTool, and graphs are being generated. This process is presented in Figure \ref{figure:pnp4nagios}
+When a nagios check command is executed, results are stored in a file, and Performance Data are calculated by a perl script. To scale this process, the Bulk Mode method is used to move the file to a spool directory which takes place immediately with no important performance impact to the system, because its only an inode operation. The \ac{NPCD} is a daemon that is running on the Nagios host and its role is to monitor a spool directory for new files and pass the names of the files to process\_perfdata.pl. The script processes the performance data, and this operation is fully Nagios independent so it may be scaled-out more easily. Results are finally delivered to RRDTool, and graphs are being generated. This process is presented in Figure \ref{figure:pnp4nagios}
 
 \begin{figure}[htb]
 \centering
@@ -202,46 +163,18 @@ To deliver Ganglia metrics, two different information systems were evaluated:
   \item {\bf WSRF}, the framework that Globus uses to aggregate and deliver information using {\bf Web Services}.
 \end{itemize}
 
-Both Information Services are following the MDS specification and are using the Glue Schema to present the results of the metrics that are aggregated in its store.
+Both Information Services are following the \ac{MDS} specification and are using the Glue Schema to present the results of the metrics that are aggregated in its store.
 
 \subsection{LDAP based}
 
-To evaluate the LDAP based information service, a system should have the gLite installed and the BDII service running. To do this, a Scientific Linux installation were used, and CERN repositories were added. The installation of gLite-UI automatically installs BDII, and by using {\bf yum command} the needed packages were installed. An ldapsearch returned the top elements of the BDII as shown below:
+To evaluate the LDAP based information service, a system should have the gLite installed and the BDII service running. To do this, a Scientific Linux installation were used, and CERN repositories were added. The installation of gLite-UI automatically installs \ac{BDII}, and by using {\bf yum command} the needed packages were installed. An ldapsearch returned the top elements of the \ac{BDII} as shown in Listing \ref{tops}.
 
-\begin{lstlisting}
-[root@osweb~]# ldapsearch -x -h osweb.teipir.gr -p 2170 -b "" -s base "(objectClass=*)" namingContexts
-namingContexts: o=grid
-namingContexts: o=glue
-namingContexts: o=infosys
-\end{lstlisting}
-
-To test the connection to the Gmond service over TCP, and the transformation to MDS, two different ways were used:
+To test the connection to the Gmond service over TCP, and the transformation to \ac{MDS}, two different ways were used:
 
 \begin{enumerate}
-\item The official ganglia python client, and
-\item A perl script that is doing the same transformation
+\item The official ganglia python client that is executed in Listing \ref{python_gip}, and
+\item A perl script that is doing the same transformation show in Listing \ref{perl_gip}.
 \end{enumerate}
-
-\begin{lstlisting}
-# /usr/bin/ganglia --host mon.oslab.teipir.gr --format=MDS
-dn: mds-vo-name=local, o=grid
-objectclass: GlueTop
-objectclass: GlueGeneralTop
-GlueSchemaVersionMajor: 1
-GlueSchemaVersionMinor: 1
-\end{lstlisting}
-
-\begin{lstlisting}
-# /root/ganglia_ip -h mon.oslab.teipir.gr -p 8649 -o mds
-dn: GlueHostName=gr02.oslab.teipir.gr, mds-vo-name=local, o=grid
-objectclass: GlueHost
-GlueHostName: gr02.oslab.teipir.gr
-GlueHostUniqueID: RDLAB-TEIPIR-gr02.oslab.teipir.gr
-objectclass: GlueHostProcessorLoad
-GlueHostProcessorLoadLast1Min: 1
-GlueHostProcessorLoadLast5Min: 1
-GlueHostProcessorLoadLast15Min: 0
-\end{lstlisting}
 
 As we can see, the LDIF exported by these tools, follows the schema defined by the Glue specification, whose attributes and objectclasses were extended by Glue-CE ProcessorLoad as shown in Table \ref{tab:glue}.
 
@@ -270,43 +203,15 @@ Free RAM (in KBytes)  & GlueHostMainMemoryRAMAvailable & GlueHostMainMemory \\ \
 \label{tab:glue}
 \end{table}
 
-Finally, BDII was configured using {\bf yaim} command with site-info definitions in the appropriate file as shown below:
+Finally, BDII was configured using {\bf yaim} command with site-info definitions in the appropriate file as shown in Listing \ref{siteinfo}.
 
-\begin{lstlisting}
-# cat site-info.def
-CE_HOST="osweb.teipir.gr"
-SITE_BDII_HOST="osweb.teipir.gr"
-SITE_EMAIL="theofpa@teipir.gr"
-SITE_LAT=37.979166
-SITE_LONG=23.674719
-SITE_DESC="TEI of Piraeus"
-SITE_LOC="Athens, Greece"
-SITE_WEB="http://oslab.teipir.gr"
-SITE_SECURITY_EMAIL=$SITE_EMAIL
-SITE_SUPPORT_EMAIL=$SITE_EMAIL
-SITE_OTHER_GRID="EGEE"
-BDII_REGIONS="oslab.teipir.gr"
-# /opt/glite/yaim/bin/yaim -c -s site-info.def -n BDII_site
-\end{lstlisting}
+In order to integrate Ganglia with \ac{MDS} in early versions of Globus and BDII of gLite, the schema of OpenLDAP should be extended using the Glue-CE definitions from the DataTAG web site (MDS version 2.4). The Ganglia Information Provider that was used is a ganglia client on perl, and not the python client given by the ganglia development team it shelf.
 
-In order to integrate Ganglia with MDS in early versions of Globus and BDII of gLite, the schema of OpenLDAP should be extended using the Glue-CE definitions from the DataTAG web site (MDS version 2.4). The Ganglia Information Provider that was used is a ganglia client on perl, and not the python client given by the ganglia development team it shelf.
-
-gLite has a dedicated directory for information providers, where the wrappers of each provider reside. An one-line wrapper to call the perl script was created, to use the information provider with BDII as shown below:
-
-\begin{lstlisting}
-[root@osweb ~]# ps -ef |grep bdi[i]
-edguser  24951     1  0 Feb16 ?        00:00:23 /usr/sbin/slapd -f /opt/bdii/etc/bdii-slapd.conf -h ldap://osweb.teipir.gr:2170 -u edguser
-edguser  24990     1  0 Feb16 ?        00:01:00 /usr/bin/python /opt/bdii/bin/bdii-update -c /opt/bdii/etc/bdii.conf -d
-[root@osweb ~]# grep PROVIDER /opt/bdii/etc/bdii.conf
-BDII_PROVIDER_DIR=/opt/glite/etc/gip/provider
-[root@osweb ~]# cat /opt/glite/etc/gip/provider/glite-provider-ganglia-wrapper
-#!/bin/bash
-/opt/bin/ganglia_ip -h 195.251.70.54 -p 8649 -o mds
-\end{lstlisting}
+gLite has a dedicated directory for information providers, where the wrappers of each provider reside. An one-line wrapper to call the perl script was created, to use the information provider with \ac{BDII} as shown in Listing \ref{slapd}
 
 \subsection{Web Service based - WSRF}
 
-Globus on the other hand, since version 4 and later provides the Web Service Resource Framework that offers a scalable information system with build-in aggregation framework and index service as shown in Figure \ref{figure:wsrf}. WSRF is an OASIS organization standard and follows the Glue schema and MDS specification.
+Globus on the other hand, since version 4 and later provides the Web Service Resource Framework that offers a scalable information system with build-in aggregation framework and index service as shown in Figure \ref{figure:wsrf}. \ac{WSRF} is an \ac{OASIS} organization standard and follows the Glue schema and MDS specification.
 
 \begin{figure}[htb]
 \centering
@@ -315,73 +220,12 @@ Globus on the other hand, since version 4 and later provides the Web Service Res
 \label{figure:wsrf}
 \end{figure}
 
-Globus Toolkit version 4.0.7 was used to install WSRF, by extracting its binary distribution in the target system. A PostgreSQL database was installed and a special user and DB was created to host the RFT schema and data in order to have a minimal globus environment and start the container to service WSRF. A custom start/stop script was created for that container and the file rpprovider-config-gluece.xml was created as shown in Listing \ref{wsrfrp}.
-
-\begin{lstlisting}[language=XML,caption=Ganglia Resource Provider for WSRF Index,label=wsrfrp]
-<ns1:ResourcePropertyProviderConfigArray xsi:type="ns1:ResourcePropertyProviderConfigArray" xmlns:ns1="http://mds.globus.org/rpprovider/2005/08" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
- <ns1:configArray xsi:type="ns1:resourcePropertyProviderConfig">
-  <ns1:resourcePropertyName xsi:type="xsd:QName" xmlns:mds="http://mds.globus.org/glue/ce/1.1">mds:GLUECE</ns1:resourcePropertyName>
-  <ns1:resourcePropertyImpl xsi:type="xsd:string">org.globus.mds.usefulrp.rpprovider.GLUEResourceProperty</ns1:resourcePropertyImpl>
-  <ns1:resourcePropertyElementProducers xsi:type="ns1:resourcePropertyElementProducerConfig">
-    <ns1:className xsi:type="xsd:string">org.globus.mds.usefulrp.glue.GangliaElementProducer</ns1:className>
-    <ns1:arguments xsi:type="xsd:string">195.251.70.55</ns1:arguments>
-    <ns1:arguments xsi:type="xsd:string">8649</ns1:arguments>
-    <ns1:period xsi:type="xsd:int">60</ns1:period>
-    <ns1:transformClass xsi:type="xsd:string">org.globus.mds.usefulrp.rpprovider.transforms.GLUEComputeElementTransform</ns1:transformClass>
-  </ns1:resourcePropertyElementProducers>
-  <ns1:resourcePropertyElementProducers xsi:type="ns1:resourcePropertyElementProducerConfig">
-    <ns1:className xsi:type="xsd:string">org.globus.mds.usefulrp.rpprovider.producers.SchedulerInfoElementProducer</ns1:className>
-    <ns1:arguments xsi:type="xsd:string">libexec/globus-scheduler-provider-fork</ns1:arguments>
-    <ns1:transformClass xsi:type="xsd:string">org.globus.mds.usefulrp.rpprovider.transforms.GLUESchedulerElementTransform</ns1:transformClass>
-    <ns1:period xsi:type="xsd:int">300</ns1:period>
-  </ns1:resourcePropertyElementProducers>
- </ns1:configArray>
-</ns1:ResourcePropertyProviderConfigArray>
-\end{lstlisting}
+Globus Toolkit version 4.0.7 was used to install \ac{WSRF}, by extracting its binary distribution in the target system. A PostgreSQL database was installed and a special user and DataBase was created to host the \ac{RFT} schema and data in order to have a minimal globus environment and start the container to service \ac{WSRF}. A custom start/stop script was created for that container and the file rpprovider-config-gluece.xml was created as shown in Listing \ref{wsrfrp}.
 
 File rpprovider-config-gluece.xml was included by the server-config.wsdd of the container as shown in Listing \ref{wsrfwsdd}.
 
-\begin{lstlisting}[language=XML,caption=Web Service Deployment Descriptor for WSRF Index,label=wsrfwsdd]
-<service name="DefaultIndexService" provider="Handler" use="literal" style="document">
- <parameter name="providers"
-  value="org.globus.mds.usefulrp.rpprovider.ResourcePropertyProviderCollection
-  org.globus.wsrf.impl.servicegroup.ServiceGroupRegistrationProvider
-  GetRPProvider
-  GetMRPProvider
-  QueryRPProvider
-  DestroyProvider
-  SetTerminationTimeProvider
-  SubscribeProvider
-  GetCurrentMessageProvider"/>
- <parameter name="rpProviderConfigFile" value="/etc/globus_wsrf_mds_index/rpprovider-config-gluece.xml"/>
- <parameter name="handlerClass" value="org.globus.axis.providers.RPCProvider"/>
- <parameter name="scope" value="Application"/>
- <parameter name="allowedMethods" value="*"/>
- <parameter name="className"
-  value="org.globus.mds.index.impl.DefaultIndexService"/>
- <wsdlFile>share/schema/mds/index/index_service.wsdl</wsdlFile>
-</service>
-\end{lstlisting}
-
-When the container started, a user proxy certificate was initialised and an XPath query was issued to test the integration:
+When the container started, a user proxy certificate was initialised and an XPath query was issued to test the integration (Listing \ref{wsrfq}.
  
-\begin{lstlisting}[caption=WSRF command line query]
-[root@osweb ~]# /opt/globus/bin/grid-proxy-init
-Your identity: /C=GR/O=HellasGrid/OU=teipir.gr/CN=Theofylaktos Papapanagiotou
-Enter GRID pass phrase for this identity:
-Creating proxy ................................... Done
-Your proxy is valid until: Thu Feb 17 11:11:59 2011
-[root@osweb ~]# /opt/globus/bin/wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//*[local-name()='Host']"
-<ns1:Host ns1:Name="gr02.oslab.teipir.gr" ns1:UniqueID="gr02.oslab.teipir.gr" xmlns:ns1="http://mds.globus.org/glue/ce/1.1">
- <ns1:Processor ns1:CacheL1="0" ns1:CacheL1D="0" ns1:CacheL1I="0" ns1:CacheL2="0" ns1:ClockSpeed="2527" ns1:InstructionSet="x86"/>
- <ns1:MainMemory ns1:RAMAvailable="75" ns1:RAMSize="495" ns1:VirtualAvailable="1129" ns1:VirtualSize="1559"/>
- <ns1:OperatingSystem ns1:Name="Linux" ns1:Release="2.6.18-194.26.1.el5"/>
- <ns1:Architecture ns1:SMPSize="1"/>
- <ns1:FileSystem ns1:AvailableSpace="34082" ns1:Name="entire-system" ns1:ReadOnly="false" ns1:Root="/" ns1:Size="38624"/>
- <ns1:NetworkAdapter ns1:IPAddress="10.0.0.32" ns1:InboundIP="true" ns1:MTU="0" ns1:Name="gr02.oslab.teipir.gr" ns1:OutboundIP="true"/>
- <ns1:ProcessorLoad ns1:Last15Min="0" ns1:Last1Min="0" ns1:Last5Min="0"/>
-\end{lstlisting}
-
 \subsubsection{XPath}
 
 XPath is used to parse an XML document and get a part of it using an address scheme. XPath considers XML document as a tree, consisting of nodes. Its purpose as a language is to get from that document, the nodes that are addressed using the XPath query.
@@ -419,12 +263,4 @@ WebMDS is a web interface to query WSRF resource property information. It consis
 
 Figure \ref{figure:webmds} display the data flow of the WSRF Information System case. The PHP from Brunel's web server calls WebMDS and get the result in XML which parses using DOM. WebMDS is deployed in the Tomcat container, and calls the Index Service of WSRF which is deployed in the GT4 container. WSRF connects (if cache has expired) to the Gmond process and transforms the data received using XSLT.
 
-For this project an Apache Tomcat server was installed in the box that globus toolkit was running, and the {\bf webmds application} from the GT4 home was deployed. In webmds configuration file, the global option to allow user specified queries using XPath was enabled.
-
-\begin{lstlisting}
-[root@osweb ~]# cat /opt/globus/lib/webmds/globalconfig.xml 
-<WebmdsGlobalConfig>
-  <newStyleErrors>true</newStyleErrors>
-  <allowUserSpecifiedQuery>true</allowUserSpecifiedQuery>
-</WebmdsGlobalConfig>
-\end{lstlisting}
+For this project an Apache Tomcat server was installed in the box that globus toolkit was running, and the {\bf webmds application} from the GT4 home was deployed. In webmds configuration file, the global option to allow user specified queries using XPath was enabled (Listing \ref{globalconfig}).

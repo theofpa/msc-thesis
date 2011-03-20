@@ -15,6 +15,9 @@
 \SetWatermarkScale{1}
 \SetWatermarkText{DRAFT}
 
+\usepackage{appendix}
+\usepackage{acronym}
+%\usepackage{setspace}
 \usepackage[latin1]{inputenc}
 %\usepackage[vcentering,right=40mm,top=20mm,left=40mm]{geometry}
 %\usepackage[a4paper]{geometry}
@@ -145,6 +148,14 @@
 \bibliographystyle{ieeetr}
 \nocite{*}
 \bibliography{extra/books}
+
+\appendix
+\chapter{Appendix A. Listings}
+\input{extra/listings}
+
+%\appendix
+%\chapter*{Appendix A. Listings}
+%\input{extra/listings}
 
 %\label{appb}
 %\lhead{Appendix B. \emph{Interim Report}}

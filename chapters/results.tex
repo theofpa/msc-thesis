@@ -24,70 +24,11 @@ which may also be displayed using the {\bf uptime command}:
 
 When we examine the Linux kernel source code, there is a macro command named $CALC_LOAD$ which takes the options that have been discussed and returns the result of the metric. The definition of the macro can be seen in file {\bf include/linux/sched.h}, Listing \ref{kernel}.
 
-\begin{lstlisting}[language=C,caption=Linux kernel CALC\_LOAD macro,label=kernel]
-extern unsigned long avenrun[];         /* Load averages */
-extern void get_avenrun(unsigned long *loads, 
-                        unsigned long offset, int shift);
-
-#define FSHIFT    11          /* nr of bits of precision */
-#define FIXED_1   (1<<FSHIFT) /* 1.0 as fixed-point */
-#define LOAD_FREQ (5*HZ+1)    /* 5 sec intervals */
-#define EXP_1     1884        /* 1/exp(5sec/1min) as fixed-point */
-#define EXP_5     2014        /* 1/exp(5sec/5min) */
-#define EXP_15    2037        /* 1/exp(5sec/15min) */
-
-#define CALC_LOAD(load,exp,n) \
-        load *= exp; \
-        load += n*(FIXED_1-exp); \
-        load >>= FSHIFT;
-
-extern unsigned long total_forks;
-extern int nr_threads;
-DECLARE_PER_CPU(unsigned long, process_counts);
-extern int nr_processes(void);
-extern unsigned long nr_running(void);
-extern unsigned long nr_uninterruptible(void);
-extern unsigned long nr_iowait(void);
-extern unsigned long nr_iowait_cpu(int cpu);
-extern unsigned long this_cpu_load(void);
-\end{lstlisting}
-
 \subsection{Ganglia}
 
 When gmond starts, it listens on port 8649/TCP by default, to accept TCP connections and throw XML report for the whole cluster. It also binds to the multicast address on port 8649/UDP to get other hosts messages for metrics changes, and also multicast its own metrics. Listing \ref{lsof} shows the opened sockets of Gmond daemon, and Listing \ref{telnet_gmond} display a sample xml output when connecting to 8649/TCP to transfer metrics through XML.
 
-\begin{lstlisting}[language=bash,caption=Gmond networking,label=lsof]
-[root@gr01 ~]# lsof -i 4 -a -p `pidof gmond`
-COMMAND   PID   USER   FD   TYPE DEVICE SIZE NODE NAME
-gmond   11900 nobody    4u  IPv4  33699       UDP 239.2.11.71:8649 
-gmond   11900 nobody    5u  IPv4  33701       TCP *:8649 (LISTEN)
-gmond   11900 nobody    6u  IPv4  33703       UDP gr01.oslab.teipir.gr:39991->239.2.11.71:8649 
-\end{lstlisting}
-
-\begin{lstlisting}[language=XML,caption=Gmond XML cluster report,label=telnet_gmond]
-<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<GANGLIA_XML VERSION="3.1.7" SOURCE="gmond">
-	<CLUSTER NAME="RDLAB" LOCALTIME="1297198943" OWNER="TEIPIR" LATLONG="unspecified" URL="unspecified">
-		<HOST NAME="gr02.oslab.teipir.gr" IP="10.0.0.32" REPORTED="1297198934" TN="8" TMAX="20" DMAX="0" LOCATION="unspecified" GMOND_STARTED="1296569542">
-			<METRIC NAME="load_one" VAL="0.01" TYPE="float" UNITS=" " TN="50" TMAX="70" DMAX="0" SLOPE="both">
-			<EXTRA_DATA>
-			<EXTRA_ELEMENT NAME="GROUP" VAL="load"/>
-			<EXTRA_ELEMENT NAME="DESC" VAL="One minute load average"/>
-			<EXTRA_ELEMENT NAME="TITLE" VAL="One Minute Load Average"/>
-			</EXTRA_DATA>
-			</METRIC>
-		</HOST>
-	</CLUSTER>
-</GANGLIA_XML>
-\end{lstlisting}
-
-Worker nodes are configured to transfer metrics data using multicast. Each Gmond daemon of each Computing Element node, by Ganglia definition has to know the state of the whole Computing Element cluster. Using standard UNIX commands to listen to the data transferred on the multicast network, a sample transfer of load\_one metric is observed. As described in Subsection \ref{subsec:ganglia}, metric data are multicasted by Gmond when there is a change in the value, or when the time threshold is reached.
-
-\begin{lstlisting}[language=bash,caption=XDR sample]
-[root@gr01 ~]# tcpdump -A -i eth2 dst host 239.2.11.71
-22:38:26.062266 IP gr01.oslab.teipir.gr.39991 > 239.2.11.71.8649: UDP, length 56
-E..T..@..........G.7!..@.X........gr01.oslab.teipir.gr....load_one........%.2f..
-\end{lstlisting}
+Worker nodes are configured to transfer metrics data using multicast. Each Gmond daemon of each Computing Element node, by Ganglia definition has to know the state of the whole Computing Element cluster. Using standard UNIX commands to listen to the data transferred on the multicast network, a sample transfer of load\_one metric is observed (Listing \ref{tcpdump}). As described in Subsection \ref{subsec:ganglia}, metric data are multicasted by Gmond when there is a change in the value, or when the time threshold is reached.
 
 Using Ganglia build-in command $gstat$, a nice output of Processor Load metrics is shown for the whole cluster in Listing \ref{gstat}
 
@@ -112,38 +53,9 @@ In WSRF the $wsrf-query$ command is executed using the URL of the container wher
 
 The result of the above query returns a list of all cluster nodes. An abstract result is displayed here in Listing \ref{wsrfquery}.
 
-\begin{lstlisting}[language=XML,caption=WSRF query output,label=wsrfquery]
- <ns1:GLUECE xmlns:ns1="http://mds.globus.org/glue/ce/1.1">
-  <ns1:Cluster ns1:Name="OSLAB" ns1:UniqueID="OSLAB">
-   <ns1:SubCluster ns1:Name="main" ns1:UniqueID="main">
-    <ns1:Host ns1:Name="gr03.oslab.teipir.gr" 
-    ns1:UniqueID="gr03.oslab.teipir.gr" 
-    xmlns:ns1="http://mds.globus.org/glue/ce/1.1">
-     <ns1:Processor ns1:CacheL1="0" ns1:CacheL1D="0" 
-     ns1:CacheL1I="0" ns1:CacheL2="0" ns1:ClockSpeed="2392" 
-     ns1:InstructionSet="x86"/>
-     <ns1:MainMemory ns1:RAMAvailable="299" ns1:RAMSize="1010" 
-     ns1:VirtualAvailable="2403" ns1:VirtualSize="3132"/>
-     <ns1:OperatingSystem ns1:Name="Linux"
-     ns1:Release="2.6.18-194.26.1.el5"/>
-     <ns1:Architecture ns1:SMPSize="2"/>
-     <ns1:FileSystem ns1:AvailableSpace="201850" 
-     ns1:Name="entire-system" ns1:ReadOnly="false"
-     ns1:Root="/" ns1:Size="214584"/>
-     <ns1:NetworkAdapter ns1:IPAddress="10.0.0.33" 
-     ns1:InboundIP="true" ns1:MTU="0" 
-     ns1:Name="gr03.oslab.teipir.gr" ns1:OutboundIP="true"/>
-     <ns1:ProcessorLoad ns1:Last15Min="45" ns1:Last1Min="337"
-     ns1:Last5Min="126"/>
-    </ns1:Host>
-   </ns1:SubCluster>
-  </ns1:Cluster>
- </ns1:GLUECE>
-\end{lstlisting}
-
 \subsubsection{WebMDS and XPath}
 
-The role-based access control model of the grid security context allow queries only by authenticated and authorized users. Building a testbed with full grid security in mind would be out of this project scope, so XML result of Web Service calls is taken through WebMDS instead of WSDL discovery and SOAP messaging.
+The role-based access control model of the grid security context allow queries only by authenticated and authorized users. Building a testbed with full grid security in mind would be out of this project scope, so XML result of Web Service calls is taken through WebMDS instead of \ac{WSDL} discovery and \ac{SOAP} messaging.
 
 Using the following XPath query in the WebMDS form, a request to get the metrics of Host node with name $ltsp.oslab.teipir.gr$ was sent.
 
@@ -152,30 +64,6 @@ Using the following XPath query in the WebMDS form, a request to get the metrics
 \end{verbatim}
 
 WebMDS match the query in its cache and replies only the specific node that was requested. If the cache was expired (its default value is 60 seconds) the information system uses the Resource Provider to fetch the XML from Gmond and transform it using XSLT to Glue schema and serve the new values as shown in Listing \ref{xpath_result}.
-
-\begin{lstlisting}[language=XML,caption=WebMDS results from XPath query,label=xpath_result]
-<WebmdsResults>
- <ns1:Host ns1:Name="ltsp.oslab.teipir.gr" 
- ns1:UniqueID="ltsp.oslab.teipir.gr">
-   <ns1:Processor ns1:CacheL1="0" ns1:CacheL1D="0" 
-   ns1:CacheL1I="0" ns1:CacheL2="0" ns1:ClockSpeed="1600" 
-   ns1:InstructionSet="x86_64"/>
-   <ns1:MainMemory ns1:RAMAvailable="17806" ns1:RAMSize="20121" 
-   ns1:VirtualAvailable="22137" ns1:VirtualSize="24508"/>
-   <ns1:OperatingSystem ns1:Name="Linux" 
-   ns1:Release="2.6.32-24-server"/>
-   <ns1:Architecture ns1:SMPSize="8"/>
-   <ns1:FileSystem ns1:AvailableSpace="34243" 
-   ns1:Name="entire-system" ns1:ReadOnly="false" ns1:Root="/" 
-   ns1:Size="251687"/>
-   <ns1:NetworkAdapter ns1:IPAddress="192.168.0.101" 
-   ns1:InboundIP="true" ns1:MTU="0" ns1:Name="ltsp.oslab.teipir.gr" 
-   ns1:OutboundIP="true"/>
-   <ns1:ProcessorLoad ns1:Last15Min="9" ns1:Last1Min="1" 
-   ns1:Last5Min="9"/>
- </ns1:Host>
-</WebmdsResults>
-\end{lstlisting}
 
 \subsection{BDII}
 
@@ -196,71 +84,7 @@ GlueHostProcessorLoadLast5Min: 20
 
 The above information has been given by the BDII LDAP instance which used the wrapper of Ganglia Resource Provider, a customized Perl script to export MDS format as shown in Listing \ref{perlbdii}.
 
-\begin{lstlisting}[language=bash,caption=Perl Ganglia Information Provider for MDS,label=perlbdii]
-[root@mon ~]# ./ganglia_ip -h mon -p 8649 -o mds | grep -A 22 host=gr03
-
-dn: host=gr03.oslab.teipir.gr, cl=RDLAB, \
- mds-vo-name=local, o=grid
-objectclass: GlueHost
-GlueHostName: gr03.oslab.teipir.gr
-GlueHostUniqueID: RDLAB-TEIPIR-gr03.oslab.teipir.gr
-objectclass: GlueHostProcessorLoad
-GlueHostProcessorLoadLast1Min: 2.57
-GlueHostProcessorLoadLast5Min: 1.48
-GlueHostProcessorLoadLast15Min: 0.58
-objectclass: GlueHostSMPLoad
-GlueHostSMPLoadLast1Min: 2.57
-GlueHostSMPLoadLast5Min: 1.48
-GlueHostSMPLoadLast15Min: 0.58
-objectclass: GlueHostArchitecture
-GlueHostArchitectureSMPSize: 2
-objectclass: GlueHostProcessor
-GlueHostProcessorClockSpeed: 2392
-objectclass: GlueHostNetworkAdapter
-GlueHostNetworkAdapterName: gr03.oslab.teipir.gr
-GlueHostNetworkAdapterIPAddress: 10.0.0.33
-objectclass: GlueHostMainMemory
-GlueHostMainMemoryRAMSize: 1035104
-GlueHostMainMemoryRAMAvailable: 306280
-\end{lstlisting}
-
 Using the Ganglia official python client (Listing \ref{pythonbdii}) which is distributed with the source code of Ganglia Client, rejected as an option because Perl is easier in handling regular expressions for string operations and transformation.
-
-\begin{lstlisting}[language=bash,caption=Python Ganglia client MDS export,label=pythonbdii]
-[root@mon ~]# /opt/ganglia/bin/ganglia --format=MDS | grep -A 30 host=gr03
-
-dn: host=gr03.oslab.teipir.gr, scl=sub2, cl=datatag-CNAF, \
- mds-vo-name=local, o=grid
-objectclass: GlueHost
-GlueHostName: gr03.oslab.teipir.gr
-GlueHostUniqueID: RDLAB-TEIPIR-gr03.oslab.teipir.gr
-objectclass: GlueHostArchitecture
-GlueHostArchitecturePlatformType: x86-Linux
-GlueHostArchitectureSMPSize: 2
-objectclass: GlueHostProcessor
-GlueHostProcessorClockSpeed: 2392
-objectclass: GlueHostMainMemory
-GlueHostMainMemoryRAMSize: 1035104
-GlueHostMainMemoryRAMAvailable: 306280
-objectclass: GlueHostNetworkAdapter
-GlueHostNetworkAdapterName: gr03.oslab.teipir.gr
-GlueHostNetworkAdapterIPAddress: 10.0.0.33
-GlueHostNetworkAdapterMTU: unknown
-GlueHostNetworkAdapterOutboundIP: 1
-GlueHostNetworkAdapterInboundIP: 1
-objectclass: GlueHostProcessorLoad
-GlueHostProcessorLoadLast1Min: 2.57
-GlueHostProcessorLoadLast5Min: 1.48
-GlueHostProcessorLoadLast15Min: 0.58
-objectclass: GlueHostSMPLoad
-GlueHostSMPLoadLast1Min: 2.57
-GlueHostSMPLoadLast5Min: 1.48
-GlueHostSMPLoadLast15Min: 0.58
-objectclass: GlueHostStorageDevice
-GlueHostStorageDeviceSize: 209555000
-GlueHostStorageDeviceAvailableSpace: 197120000
-GlueHostStorageDeviceType: disk
-\end{lstlisting}
 
 \section{Presentation}
 
@@ -285,9 +109,11 @@ Finally, to present the information, two custom interfaces have been developed i
 \label{tab:html_output}
 \end{table}
 
+Page \url{http://people.brunel.ac.uk/~dc09ttp} contains complete results using both DOM and LDAP methods.
+
 \subsection{DOM}
 
-The first interface uses PHP DOM functions to call the WebMDS and get the XML as it would happened by calling the WSRF Web Service with native SOAP messages and authentication. Listing \ref{wsrf.php} is an abstraction of the code deployed in Brunel's webserver and returns only one value. The purpose of this listing is to present the use of functions and not the HTML stuff.
+The first interface uses PHP \ac{DOM} functions to call the WebMDS and get the XML as it would happened by calling the WSRF Web Service with native SOAP messages and authentication. Listing \ref{wsrf.php} is an abstraction of the code deployed in Brunel's webserver and returns only one value. The purpose of this listing is to present the use of functions and not the HTML stuff.
 
 \begin{lstlisting}[language=PHP,caption=PHP DOM call to WebMDS,label=wsrf.php]
 $url="http://osweb.teipir.gr:8080/webmds/webmds?info=indexinfo&xsl=&xmlSource.indexinfo.param.xpathQuery=%2F%2F*[local-name%28%29%3D%27Host%27]";
@@ -320,18 +146,8 @@ ldap_close($ds);
 \subsection{Nagios}
 
 Nagios calls check\_ganglia periodically (configured as check interval) and logs the state of each service and host check. Load averages are described as services. Listing \ref{nagioslog} shows the log file of nagios service check for these values straight from Ganglia.
-\begin{lstlisting}[caption=Nagios log with load check,label=nagioslog,nolol]
-[1297634400] CURRENT SERVICE STATE: xenia.oslab.teipir.gr;load_fifteen;OK;HARD;1;CHECKGANGLIA OK: load_fifteen is 0.00
-[1297634400] CURRENT SERVICE STATE: xenia.oslab.teipir.gr;load_five;OK;HARD;1;CHECKGANGLIA OK: load_five is 0.00
-[1297634400] CURRENT SERVICE STATE: xenia.oslab.teipir.gr;load_one;OK;HARD;1;CHECKGANGLIA OK: load_one is 0.00
-\end{lstlisting}
 
-NPCD is configured in bulk mode so a file may be found in the spool directory before the interval passes to process it with perl script to RRD database. Listing \ref{npcdfile} contains the performance data metrics.
-
-\begin{lstlisting}[caption=NPCD temporary file in spool directory,label=npcdfile]
-[root@osweb ~]# cat /var/spool/pnp4nagios/host-perfdata.1297973378 
-DATATYPE::HOSTPERFDATA	TIMET::1297973368	HOSTNAME::osweb.teipir.gr	HOSTPERFDATA::rta=0.057000ms;3000.000000;5000.000000;0.000000 pl=0%;80;100;0	HOSTCHECKCOMMAND::ncg_check_host_alive	HOSTSTATE::UP	HOSTSTATETYPE::HARD
-\end{lstlisting}
+\ac{NPCD} is configured in bulk mode so a file may be found in the spool directory before the interval passes to process it with perl script to \ac{RRD} database. Listing \ref{npcdfile} contains the performance data metrics.
 
 Finally, Nagios Web interface displays the aggregated values of host performance state in multiple views, as shown in Table \ref{tab:nagios_service_detail}.
 
