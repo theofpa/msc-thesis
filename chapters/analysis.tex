@@ -24,9 +24,7 @@ Gmond code uses the ganglia libmetrics library which in case of Linux operating 
 
 The XML that Ganglia Resource Provider took from Gmond process through TCP, is transformed on WSRF using XSLT technology, to another XML document that follows the Glue-CE schema.
 
-Directory $globus\_wsrf\_mds\_usefulrp$ of globus configuration root, includes the file $ganglia\_to\_glue.xslt$, where we can focus on the transformation rules. A snippet of interest for the case of ProcessorLoad class is seen in Listing \ref{xslt}.
-
-In Listing \ref{xslt}, XPath queries are visible and a multiplication with 100 on CPU load values to get an integer is executed. This is happening in order to avoid the transfer of float values. In the frontend using DOM, a division with 100 is done to get the original CPU load average number back.
+Directory $globus\_wsrf\_mds\_usefulrp$ of globus configuration root, includes the file $ganglia\_to\_glue.xslt$, where we can focus on the transformation rules. A snippet of interest for the case of ProcessorLoad class is seen in Listing \ref{xslt}. There, XPath queries are visible and a multiplication with 100 on CPU load values to get an integer is executed. This is happening in order to avoid the transfer of float values. In the frontend using DOM, a division with 100 is done to get the original CPU load average number back.
 
 \subsubsection{BDII}
 
@@ -64,7 +62,7 @@ On the other side, MDS4 (WSRF) scales better than MDS2 (LDAP) in {\bf large numb
 
 WSRF also supports {\bf many query languages}, unlike BDII which supports only LDAP queries. By default it is distributed only with support of XPath queries, but its architecture which is based in Java container and SOAP/XML standards, allow the distribution of the Information Service with other query languages as well.
 
-Adding a Resource Provider in WSRF was much easier than adding an Information Provider in BDII, which makes MDS4 more {\bf extensible} than MDS2. Even though in BDII a simple wrapper had to be installed in BDII \ac{GIP} configuration directory, the Perl script (or the Python one provider by Ganglia) had to be changed to reach the running BDII instance of Glue schema. MDS4 and WSRF is based in XML and XSLT transformation mechanisms that allow the easy addition of other Providers of a site. It is even allowed to aggregate Index Services from other sites using the $downstream$ option to register them in the local Index Service.
+Adding a Resource Provider in WSRF was much easier than adding an Information Provider in BDII, which makes MDS4 more {\bf extensible} than MDS2. Even though in BDII a simple wrapper had to be installed in BDII \ac{GIP} configuration directory, the Perl script (or the Python one provider by Ganglia) had to be changed to reach the running BDII instance of Glue schema. MDS4 and WSRF are based in XML and XSLT transformation mechanisms that allow the easy addition of other Providers of a site. It is even allowed to aggregate Index Services from other sites using the $downstream$ option to register them in the local Index Service.
 
 BDII LDAP based configuration is complex due to OID namespaces and naming authorities and is not portable with other information systems. WSRF configuration is much easier and {\bf flexible} because of the XML-based information model, which generally is considered more friendly.
 

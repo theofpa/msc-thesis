@@ -222,7 +222,7 @@ Globus on the other hand, since version 4 and later provides the Web Service Res
 
 Globus Toolkit version 4.0.7 was used to install \ac{WSRF}, by extracting its binary distribution in the target system. A PostgreSQL database was installed and a special user and DataBase was created to host the \ac{RFT} schema and data in order to have a minimal globus environment and start the container to service \ac{WSRF}. A custom start/stop script was created for that container and the file rpprovider-config-gluece.xml was created as shown in Listing \ref{wsrfrp}.
 
-File rpprovider-config-gluece.xml was included by the server-config.wsdd of the container as shown in Listing \ref{wsrfwsdd}.
+To use the Ganglia Resource Provider in MDS4, installation instructions from German Astronomy Community Grid \cite{gacgrid} were followed. File rpprovider-config-gluece.xml was included by the server-config.wsdd of the container as shown in Listing \ref{wsrfwsdd}.
 
 When the container started, a user proxy certificate was initialised and an XPath query was issued to test the integration (Listing \ref{wsrfq}.
  

@@ -34,9 +34,9 @@ Using Ganglia build-in command $gstat$, a nice output of Processor Load metrics 
 
 \begin{lstlisting}[language=bash,caption=Gstat output,label=gstat]
 [root@gr01 ~]# gstat -al1
-gr03.oslab.teipir.gr     2 (    0/   87) [  0.00,  0.00,  0.00] [   0.0,   0.0,   0.0,  99.9,   0.1] OFF
-gr01.oslab.teipir.gr     1 (    0/   75) [  0.00,  0.00,  0.00] [   0.0,   0.0,   0.0,  99.9,   0.0] OFF
-gr02.oslab.teipir.gr     1 (    0/   99) [  0.00,  0.00,  0.00] [   0.0,   0.0,   0.1,  99.9,   0.0] OFF
+gr03.oslab.teipir.gr     2 (    0/   87) [  0.00,  0.00,  0.00] [   0.0,   0.0,   0.0,  99.9,   0.1]
+gr01.oslab.teipir.gr     1 (    0/   75) [  0.00,  0.00,  0.00] [   0.0,   0.0,   0.0,  99.9,   0.0]
+gr02.oslab.teipir.gr     1 (    0/   99) [  0.00,  0.00,  0.00] [   0.0,   0.0,   0.1,  99.9,   0.0]
 \end{lstlisting}
 
 \section{Aggregation and transfer}
@@ -51,7 +51,7 @@ In WSRF the $wsrf-query$ command is executed using the URL of the container wher
 /opt/globus/bin/wsrf-query -s https://osweb.teipir.gr:8443/wsrf/services/DefaultIndexService "//*[local-name()='Host']"
 \end{lstlisting}
 
-The result of the above query returns a list of all cluster nodes. An abstract result is displayed here in Listing \ref{wsrfquery}.
+The result of the above query returns a list of all cluster nodes. An abstract result is displayed in Listing \ref{wsrfquery}.
 
 \subsubsection{WebMDS and XPath}
 
