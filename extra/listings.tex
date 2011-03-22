@@ -1,8 +1,7 @@
 \begin{lstlisting}[language=bash,caption=Gmetad installation,label=gmetad_installation]
 # yum install rrdtool perl-rrdtool rrdtool-devel apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
 # GANGLIA_ACK_SYSCONFDIR=1 ./configure --with-gmetad
-# make
-# make install
+# make && make install
 # mkdir -p /var/lib/ganglia/rrds
 # chown -R nobody /var/lib/ganglia
 \end{lstlisting}
@@ -10,8 +9,7 @@
 \begin{lstlisting}[language=bash,caption=Gmond installation,label=gmond_installation]
 # yum install apr-devel libconfuse libconfuse-devel expat expat-devel pcre pcre-devel
 # GANGLIA_ACK_SYSCONFDIR=1 ./configure
-# make
-# make install
+# make && make install
 # iptables -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 8649 -j ACCEPT
 \end{lstlisting}
 
@@ -351,7 +349,6 @@ DATATYPE::HOSTPERFDATA	TIMET::1297973368	HOSTNAME::osweb.teipir.gr	HOSTPERFDATA:
 
 \begin{lstlisting}[language=C,caption=libmetrics code to get load average,label=libmetrics]
 timely_file proc_loadavg = { {0,0} , 5., "/proc/loadavg" };
-/* ... */
 g_val_t
 load_one_func ( void )
 {
@@ -363,28 +360,24 @@ load_one_func ( void )
 
 \begin{lstlisting}[language=XML,caption=WSRF XSLT for Ganglia Information Provider,label=xslt]
 <glue:ProcessorLoad>
-
 <xsl:attribute name="glue:Last1Min">
   <xsl:call-template name="emitProperNumeric">
     <xsl:with-param name="numeric" 
     select="floor(100 * METRIC[@NAME='load_one']/@VAL)"/>
   </xsl:call-template>
 </xsl:attribute>
-
 <xsl:attribute name="glue:Last5Min">
   <xsl:call-template name="emitProperNumeric">
     <xsl:with-param name="numeric" 
     select="floor(100 * METRIC[@NAME='load_five']/@VAL)"/>
   </xsl:call-template>
 </xsl:attribute>
-
 <xsl:attribute name="glue:Last15Min">
   <xsl:call-template name="emitProperNumeric">
     <xsl:with-param name="numeric" 
     select="floor(100 * METRIC[@NAME='load_fifteen']/@VAL)"/>
   </xsl:call-template>
 </xsl:attribute>
-
 </glue:ProcessorLoad>
 \end{lstlisting}
 
@@ -405,3 +398,17 @@ define service{
    }
 \end{lstlisting}
 
+\begin{lstlisting}[caption=WSRF vs BDII reliability,label=wsrfvsbdii]
+# BDII 0 days uptime
+grep VmSize /proc/`pidof slapd`/status
+VmSize: 335472 kB
+# BDII 14 days uptime
+grep VmSize /proc/`pidof slapd`/status
+VmSize: 692568 kB
+# WSRF 0 days uptime
+grep VmSize /proc/`pidof java`/status
+VmSize: 1063320 kB
+# WSRF 14 days uptime
+grep VmSize /proc/`pidof java`/status
+VmSize: 1206320 kB
+\end{lstlisting}

@@ -144,7 +144,7 @@ In the front-end, users are allowed to discover the nodes and services provided 
 \label{figure:nagios_ganglia}
 \end{figure}
 
-To integrate Ganglia with Nagios as shown in Figure \ref{figure:nagios_ganglia}, a custom script has been created. This script queries the Gmond source for the current state of nodes of the cluster. The returned result is being transformed to a Nagios configuration file to configure the host check of the cluster nodes. The Nagios service checks for these hosts are preconfigured. Script source may be found in Listing \ref{nagios_script}.
+To integrate Ganglia with Nagios as shown in Figure \ref{figure:nagios_ganglia}, a custom script has been created. This script queries the Gmond source for the current state of nodes of the cluster. The returned result is being transformed to a Nagios configuration file to configure the host check of the cluster nodes. The Nagios service checks for these hosts are pre-configured. Script source may be found in Listing \ref{nagios_script}.
 
 When a nagios check command is executed, results are stored in a file, and Performance Data are calculated by a perl script. To scale this process, the Bulk Mode method is used to move the file to a spool directory which takes place immediately with no important performance impact to the system, because its only an inode operation. The \ac{NPCD} is a daemon that is running on the Nagios host and its role is to monitor a spool directory for new files and pass the names of the files to process\_perfdata.pl. The script processes the performance data, and this operation is fully Nagios independent so it may be scaled-out more easily. Results are finally delivered to RRDTool, and graphs are being generated. This process is presented in Figure \ref{figure:pnp4nagios}
 
@@ -220,11 +220,11 @@ Globus on the other hand, since version 4 and later provides the Web Service Res
 \label{figure:wsrf}
 \end{figure}
 
-Globus Toolkit version 4.0.7 was used to install \ac{WSRF}, by extracting its binary distribution in the target system. A PostgreSQL database was installed and a special user and DataBase was created to host the \ac{RFT} schema and data in order to have a minimal globus environment and start the container to service \ac{WSRF}. A custom start/stop script was created for that container and the file rpprovider-config-gluece.xml was created as shown in Listing \ref{wsrfrp}.
+Globus Toolkit version 4.0.7 was used to install \ac{WSRF}, by extracting its binary distribution in the target system. A PostgreSQL database was installed and a special user and Database was created to host the \ac{RFT} schema and data in order to have a minimal globus environment and start the container to service \ac{WSRF}. A custom start/stop script was created for that container and the file rpprovider-config-gluece.xml was created as shown in Listing \ref{wsrfrp}.
 
-To use the Ganglia Resource Provider in MDS4, installation instructions from German Astronomy Community Grid \cite{gacgrid} were followed. File rpprovider-config-gluece.xml was included by the server-config.wsdd of the container as shown in Listing \ref{wsrfwsdd}.
+To use the Ganglia resource provider in \ac{MDS}4, installation instructions from \ac{GACG} \cite{gacgrid} were followed. Listing \ref{wsrfwsdd} shows that file $rpprovider-config-gluece.xml$ was included by the $server-config.wsdd$ of the container.
 
-When the container started, a user proxy certificate was initialised and an XPath query was issued to test the integration (Listing \ref{wsrfq}.
+When the container started, a user proxy certificate was initialized and an XPath query was issued to test the integration (Listing \ref{wsrfq}.
  
 \subsubsection{XPath}
 

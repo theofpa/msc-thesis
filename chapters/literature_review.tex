@@ -32,7 +32,7 @@ Globus Toolkit is an open source toolkit used to build grids. It provides standa
 
 \subsection{gLite}
 
-gLite is a middleware which was created to be used in the operation of the experiment \ac{LHC} in CERN. The user community is grouped in \acp{VO} and the security model is \ac{GSI}. A grid using gLite consists of \ac{UI}, \ac{CE}, \ac{SE}, \ac{WMS} and \ac{IS}
+gLite is a middleware which was created to be used in the operation of the experiment \ac{LHC} in CERN. The user community is grouped in \acp{VO} and the security model is \ac{GSI}. A grid using gLite consists of \ac{UI}, \ac{CE}, \ac{SE}, \ac{WMS} and the Information System.
 
 \begin{figure}[htb]
 \centering
@@ -41,7 +41,7 @@ gLite is a middleware which was created to be used in the operation of the exper
 \label{figure:glite}
 \end{figure}
 
-The information service in version 3.1 of gLite is similar to \ac{MDS} of Globus middleware, except that the \ac{GRIS} and \ac{GIIS} are provided by \ac{BDII} (see Section \nameref{subsec:BDII}) which is an LDAP based service.
+The information service in version $3.1$ of gLite is almost similar to \ac{MDS} of Globus middleware. The only difference is that the \ac{GRIS} and \ac{GIIS} are provided by \ac{BDII} (see Section \nameref{subsec:BDII}) which is an LDAP based service.
 
 \section{Information Services}
 A \ac{GMA} \cite{tierney2002grid} was proposed in early 2000's. Information systems were developed to create repositories of information needed to be stored for monitoring and statistical reporting reasons. Such an organized system later was specified by the \ac{ATP} definition. The largest world grids adopt that model, forming \ac{OIM} in \ac{OSG} (USA) and \ac{GOCDB} as that information base in \ac{EGEE} (Europe). Message Bus was also defined as a mean to transfer the underlying data, and many tools came up such as Gstat, \ac{GOCDB} and \ac{BDII} with Glue specification. Grid performance monitoring and keeping of such an information system has also impact in the performance of the system itself \cite{zhang2003performance}, so various methods were developed to give the solution to the scaling and performance problem, such as \ac{MDS}2 (\ac{GIIS} \& \ac{GRIS}), \ac{GMA} and \ac{R-GMA} \cite{wilson2004information}, which offers relational environment \cite{fisher2001relational}, has experience on production systems \cite{byrom-production} and scales to reach huge needs such as \ac{CMS} project \cite{Bonacorsi2004,Byrom}.
@@ -64,7 +64,7 @@ External software components that are used to collect information (such as Gangl
 
 
 \subsection{Glue}
-As long as Information Services are used to connect different infrastructures, the schema of its structure had to be standardized. To inter-operate EU and USA grids, DataTAG developed the \ac{GLUE} schema implementation. \ac{GLUE} specification quickly was adopted by the communities and currently its recommended LDAP \ac{DIT} is specified in \ac{GLUE} specification v.$2.0$ from GLUE Working Group of \ac{OSG}.
+As long as Information Services are used to connect different infrastructures, the schema of its structure had to be standardized. To interoperate EU and USA grids, DataTAG developed the \ac{GLUE} schema implementation. \ac{GLUE} specification quickly was adopted by the communities and currently its recommended LDAP \ac{DIT} is specified in \ac{GLUE} specification v.$2.0$ from GLUE Working Group of \ac{OSG}.
 
 Many objectclasses of the Glue schema define a \ac{CE}, a \ac{SE}, etc. As seen in Figure \ref{figure:gluece_ext} in later chapter, performance monitoring attributes such as processor load, are defined in objectclasses that extend Computer Element objectclass.
 
@@ -130,6 +130,6 @@ Latest \ac{EGI} directive to form regional operation tools forced the use of Nag
 Finally, there has been proposed an integration of \ac{SAM} views to a Nagios customized interface, to offer the last good known \ac{SAM} interface to the old users. Nagios also integrates with \ac{GGUS}, a ticketing system that european grid initiative uses. Monitoring infrastructure in EGI is fully distributed using regional Nagios servers and the corresponding regional MyEGI portals.
 
 \subsection{UK Initiatives}
-Brunel University takes part in regional and european initiatives. 5 different \acp{CE} exist, and 3 \acp{SE}, consisting the UKI-LT2-Brunel site. LT2 stands for London Grid, a co-operation with other London Universities. \ac{GridPP} and \ac{NGS} are two collaboration groups that Brunel University is member of, and papers on the web interface \cite{Hobson2007} and real time visualization of the grid status were presented \cite{Huang2007} by \ac{GridPP}.
+Brunel University takes part in regional and european initiatives. 5 different \acp{CE} exist, and 3 \acp{SE}, consisting the UKI-LT2-Brunel site. LT2 stands for London Grid, a co-operation with other London Universities. \ac{GridPP} and \ac{NGS} are two collaboration groups that Brunel University is member of.
 
 In \ac{GridPP}, regional monitoring tools exist to provide distributed monitoring services in UK. Regional Nagios and MyEGI/MyEGEE instances co-exist in Oxford University that offer service availability monitoring for all UK sites. Ganglia installations exist in site level deployments, and a Ganglia frontend which aggregates Tier-1 sites is offered through \ac{RAL}.
