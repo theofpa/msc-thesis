@@ -41,3 +41,6 @@ presentation:
 	latex $(PRES)
 	dvips -Ppdf -G0 $(PRES) -o
 	ps2pdf $(PRES).ps $(PRES).pdf
+
+print:
+	lpr -o media=A4 $(MAIN).printed.ps

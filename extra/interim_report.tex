@@ -28,7 +28,7 @@ Latest EGI directive to form regional operation tools pushed the use of Nagios \
 
 Brunel University takes part in regional and european initiatives. 4 different Computer Elements exist, and 3 Storage Elements, consisting the UKI-LT2-Brunel site. LT2 stands for London Grid, a co-operation with other London Universities. GridPP and NGS are two collaboration groups that Brunel University is member of, and papers on the web interface \cite{Hobson2007} and real time visualization of the grid status were presented \cite{Huang2007} by GridPP.
 
-\section[Experimental]{Experimental/investigative methods to be adopted}
+\section[Experimental]{Experimental methods to be adopted}
 
 To develop the interface of customized views of aggregated performance metrics, an initial evaluation of the underlying information systems must be made. Data repositories and technologies that specifies the message bus, such as LDAP/BDII, SQL/R-GMA, XML multicast/Ganglia and file logging/ndo2db-SQL of Nagios should be evaluated. 
 
@@ -43,41 +43,37 @@ Finally, security using authentication should be checked in the whole tree of th
 \begin{table}[ht]
 \begin{tabular}{ | l | l | l | l | r |}
 \hline
-Task & Start date & End date & Duration in days \\ \hline
-  Preliminary & 03/29/10 & 04/24/10 & 20 \\ \hline 
-  -  Identify Concepts & 03/29/10 & 04/08/10 & 8 \\ \hline 
-  -  Gain Access & 04/08/10 & 04/24/10 & 12 \\ \hline 
-  Planning & 05/12/10 & 06/04/10 & 17 \\ \hline 
-  -  Explore existing technologies & 05/12/10 & 05/28/10 & 12 \\ \hline 
-  -  Write Interim Report & 05/28/10 & 06/04/10 & 5 \\ \hline 
-  Experimental-Development & 06/04/10 & 08/14/10 & 51 \\ \hline 
-  -  Evaluate performance monitoring tools & 06/04/10 & 06/25/10 & 15 \\ \hline 
-  -  Information/topology databases & 06/17/10 & 06/29/10 & 8 \\ \hline 
-  -  Develop Customized Interface & 06/29/10 & 08/14/10 & 34 \\ \hline 
-  ---    Coding of information aggregation & 06/29/10 & 07/21/10 & 16 \\ \hline 
-  ---    Development of the frontend & 07/21/10 & 08/10/10 & 14 \\ \hline 
-  ---    Complete the interface (auth, scale, etc) & 08/10/10 & 08/14/10 & 4 \\
-      \hline Report & 08/16/10 & 09/29/10 & 32 \\ \hline 
-  -  Begin Writing & 08/17/10 & 09/01/10 & 11 \\ \hline 
-  -  Submit Draft \& Make Changes & 09/01/10 & 09/14/10 & 9 \\ \hline 
-  -  Prepare Final & 09/14/10 & 09/29/10 & 11 \\ \hline 
+Task & Start date & End date & Days \\ \hline
+  Preliminary & 09/29/10 & 10/24/10 & 20 \\ \hline 
+  -  Identify Concepts & 09/29/10 & 10/08/10 & 8 \\ \hline 
+  -  Gain Access & 10/08/10 & 10/24/10 & 12 \\ \hline 
+  Planning & 11/12/10 & 12/04/10 & 17 \\ \hline 
+  -  Explore existing technologies & 11/12/10 & 11/28/10 & 12 \\ \hline 
+  -  Write Interim Report & 11/28/10 & 12/04/10 & 5 \\ \hline 
+  Experimental-Development & 12/04/10 & 02/14/11 & 51 \\ \hline 
+  -  Evaluate performance monitoring tools & 12/04/10 & 12/25/10 & 15 \\ \hline 
+  -  Information Services evaluation & 12/17/10 & 12/29/10 & 8 \\ \hline 
+  -  Build a testbed and test cases & 12/29/10 & 31/01/11 & 20 \\ \hline 
+  -  Develop interface & 01/02/11 & 02/14/11 & 14 \\ \hline 
+  Report & 02/16/11 & 03/29/11 & 32 \\ \hline 
+  -  Begin Writing & 02/17/11 & 03/01/11 & 11 \\ \hline 
+  -  Submit Draft \& Make Changes & 03/01/11 & 03/14/11 & 9 \\ \hline 
+  -  Prepare Final & 03/14/11 & 03/29/11 & 11 \\ \hline 
 \end{tabular}
-%\caption{Key activities necessary to complete the project}
+\caption{Key activities necessary to complete the project}
 \label{tab:tasks}
 \end{table}
-
 
 \section[Time plan]{Time-plan (Gantt Chart)}
 
 \input {extra/gantt}
-\pagebreak
 \section[Deliverables]{Deliverables or specific outcomes}
 
 \begin{itemize}
   \item Standards based monitoring environment for the UKI-LT2-Brunel site
   \item Site level Nagios web interface with PNP visualization graphs for the report of Nagios check commands, NRPE installations if needed for the different CEs/SEs for the UKI-LT2-Brunel
   \item Site level Ganglia monitoring. Gmond \& Gmetad installations in every node of every CE/SE of UKI-LT2-Brunel
-  \item Region level customized MyEGEE, to offer basic customization of taken metrics. The aggregation should be made based on the previous SAM views. That MyEGEE will be installed in validation/testing UKI MyEGEE.
+  \item Region level customized MyEGEE, to offer basic customization of taken metrics. The aggregation should be made based on the previous SAM views. That MyEGEE will be installed in validation and testing UKI MyEGEE.
   \item Region level Nagios web interface, with PNP visualization graphs for the report of member-sites availability based on the taken metric at a higher level.
   \item A number of submissions to the MyOSG/MyEGEE project at Indiana University and CERN repositories.
 \end{itemize}
