@@ -1,6 +1,6 @@
 MSc thesis on Grid Computing Monitoring
 ==========
-[![zenodo doi](https://zenodo.org/badge/3944/theofpa/msc-thesis.png)](http://dx.doi.org/10.5281/zenodo.9927)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.9927.svg)](https://doi.org/10.5281/zenodo.9927)
 
 My MSc thesis on Grid Monitoring
 
